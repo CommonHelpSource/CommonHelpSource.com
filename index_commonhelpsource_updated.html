@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CommonHelpSource - Housing Navigator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://tse3.mm.bing.net/th?id=OIP.YD_nDC504SR1P5krTyy1YAHaC9&pid=Api') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    header, footer {
+      background-color: rgba(32, 67, 92, 0.9);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+    nav {
+      background: #e4eff4;
+      padding: 1rem;
+      text-align: center;
+    }
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #20435c;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.95);
+    }
+    h1, h2 {
+      color: #20435c;
+    }
+    button {
+      background-color: #20435c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    section {
+      margin-bottom: 2rem;
+    }
+    .question {
+      margin-top: 20px;
+    }
+    .results {
+      margin-top: 20px;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      background-color: #f0f0f0;
+    }
+    a.download {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 15px;
+      background-color: #20435c;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .icon-tile {
+      display: flex;
+      align-items: center;
+      background: #f5faff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .icon-tile img {
+      width: 60px;
+      height: 60px;
+      margin-right: 1rem;
+    }
+    .icon-tile h3 {
+      margin: 0 0 0.3rem 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CommonHelpSource</h1>
+    <p>Your guide to housing support in Western Massachusetts</p>
+  </header>
+
+  <nav>
+    <a href="#housing">Housing</a>
+    <a href="#food">Food</a>
+    <a href="#id">ID & Benefits</a>
+    <a href="#older">65+ Services</a>
+  </nav>
+
+  <div class="container">
+    <section id="housing">
+      <h2>Housing Self-Assessment Tool</h2>
+      <div class="question">
+        <label for="status">What is your current housing situation?</label><br>
+        <select id="status">
+          <option value="">-- Select One --</option>
+          <option value="homeless">I am currently homeless</option>
+          <option value="couch">I am staying temporarily with others</option>
+          <option value="unsafe">I am in unsafe or unstable housing</option>
+          <option value="housed">I am stably housed but need more affordable options</option>
+        </select>
+      </div>
+      <div class="question">
+        <label for="income">What is your estimated monthly income?</label><br>
+        <select id="income">
+          <option value="">-- Select One --</option>
+          <option value="none">No income</option>
+          <option value="low">Less than $1,500</option>
+          <option value="high">More than $1,500</option>
+        </select>
+      </div>
+      <button onclick="generateResults()">See My Resources</button>
+      <div id="results" class="results"></div>
+    </section>
+
+    <section>
+      <h2>Low-Income Housing Resources in Springfield</h2>
+      <p>📄 <strong>CHAMP Application for State-Aided Housing</strong></p>
+      <p>Download the official application for state-funded public housing, MRVP, and AHVP programs in Massachusetts.</p>
+      <a class="download" href="/mnt/data/a70a4663-7510-458a-83e9-81239d141fb5.pdf" download>Download CHAMP Application (PDF)</a>
+    </section>
+
+    <section>
+      <h2>Springfield Homeless Shelter Resources</h2>
+      <ul>
+        <li><strong>Friends of the Homeless</strong> – 755 Worthington St, Springfield | 413-732-3069</li>
+        <li><strong>Open Pantry Emergency Shelter</strong> – 769 Worthington St, Springfield | 413-737-5354</li>
+        <li><strong>YWCA of Western MA (Domestic Violence Support)</strong> – 1 Clough St, Springfield | 24/7 Hotline: 800-796-8711</li>
+      </ul>
+    </section>
+
+    <section id="food">
+      <div class="icon-tile">
+        <img src="https://img.icons8.com/color/96/meal.png" alt="Food Security Icon" />
+        <div>
+          <h3>Food Security</h3>
+          <p>Access food pantries, SNAP benefits, and emergency meal programs. Start here if you need help putting food on the table.</p>
+          <ul>
+            <li><a href="https://dtaconnect.eohhs.mass.gov/apply" target="_blank">Apply for SNAP</a></li>
+            <li><a href="https://www.foodbankwma.org/get-help/" target="_blank">Find a Food Pantry (Western MA)</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>📍 Western Massachusetts Resource Hub</p>
+    <p><a href="#" style="color:white;">About</a> | <a href="#" style="color:white;">Contact</a> | <a href="#" style="color:white;">Accessibility</a> | In Spanish – coming soon</p>
+    <p>© 2025 CommonHelpSource</p>
+  </footer>
+
+  <script>
+    function generateResults() {
+      const status = document.getElementById('status').value;
+      const income = document.getElementById('income').value;
+      let output = "<h3>Your Housing Resources:</h3><ul>";
+
+      if (status === "homeless" || status === "unsafe") {
+        output += "<li><strong>Emergency Shelter:</strong> Apply via <a href='https://www.mass.gov/how-to/apply-for-emergency-assistance-ea-shelter' target='_blank'>DHCD EA Shelter</a>.</li>";
+      }
+
+      if (income === "none" || income === "low") {
+        output += "<li><strong>Rental Assistance:</strong> You may qualify for <a href='https://www.wayfinders.org/RAFT' target='_blank'>RAFT</a>.</li>";
+        output += "<li><strong>Food Access:</strong> Apply for SNAP or use <a href='https://www.foodbankwma.org' target='_blank'>Food Bank of Western MA</a>.</li>";
+      }
+
+      output += "<li><strong>Public Housing Waitlists:</strong> Submit your application via <a href='https://publichousingapplication.ocd.state.ma.us' target='_blank'>CHAMP</a>.</li>";
+
+      if (!status || !income) {
+        output = "<p style='color:red;'>Please select both your housing situation and income level to see results.</p>";
+      } else {
+        output += "</ul><p><em>These are starting points. Contact local providers for help with applications or further guidance.</em></p>";
+      }
+
+      document.getElementById('results').innerHTML = output;
+    }
+  </script>
+</body>
+</html>
