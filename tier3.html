@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Housing Assessment - Tier 3</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Tier 3: Barriers & Next Steps</h1>
+    <form id="tier3Form">
+      <label>1. Are you facing any of the following barriers to securing housing?</label><br>
+      <select name="housing_barriers" required>
+        <option value="">--Select--</option>
+        <option value="credit">Poor credit history</option>
+        <option value="criminal">Criminal record</option>
+        <option value="docs">Lack of documents (ID, SSN, etc.)</option>
+        <option value="income_proof">No proof of income</option>
+        <option value="none">None of the above</option>
+      </select><br><br>
+
+      <label>2. Would you like help navigating housing options or programs?</label><br>
+      <select name="wants_help" required>
+        <option value="">--Select--</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select><br><br>
+
+      <label>3. What is your top priority for housing stability right now?</label><br>
+      <select name="housing_priority" required>
+        <option value="">--Select--</option>
+        <option value="affordability">Affordability</option>
+        <option value="location">Location</option>
+        <option value="speed">Finding something fast</option>
+        <option value="safety">Safety or accessibility</option>
+      </select><br><br>
+
+      <button type="submit">View Summary</button>
+    </form>
+
+    <hr>
+    <h2>💬 ChatGPT Prompt</h2>
+    <p>Use this prompt to ask ChatGPT for housing suggestions:</p>
+    <textarea id="chatPrompt" rows="6" style="width: 100%;"></textarea><br>
+    <button onclick="copyPrompt()">Copy to Clipboard</button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const prompt = localStorage.getItem("chat_prompt") || "Prompt not found.";
+        document.getElementById("chatPrompt").value = prompt;
+      });
+
+      function copyPrompt() {
+        const textarea = document.getElementById("chatPrompt");
+        textarea.select();
+        document.execCommand("copy");
+        alert("Prompt copied to clipboard!");
+      }
+
+      document.getElementById("tier3Form").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const form = event.target;
+        localStorage.setItem("tier3_housing_barriers", form.housing_barriers.value);
+        localStorage.setItem("tier3_wants_help", form.wants_help.value);
+        localStorage.setItem("tier3_housing_priority", form.housing_priority.value);
+        window.location.href = "print.html?tier=3";
+      });
+    </script>
+  </div>
+</body>
+</html>

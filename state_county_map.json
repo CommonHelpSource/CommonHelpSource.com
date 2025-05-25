@@ -1,0 +1,307 @@
+{
+  "Alabama": [
+    "Autauga",
+    "Baldwin",
+    "Barbour",
+    "Bibb"
+  ],
+  "Alaska": [
+    "Aleutians East",
+    "Anchorage",
+    "Bethel",
+    "Bristol Bay"
+  ],
+  "Arizona": [
+    "Apache",
+    "Cochise",
+    "Coconino",
+    "Gila"
+  ],
+  "Arkansas": [
+    "Arkansas",
+    "Ashley",
+    "Baxter",
+    "Benton"
+  ],
+  "California": [
+    "Alameda",
+    "Alpine",
+    "Amador",
+    "Butte"
+  ],
+  "Colorado": [
+    "Adams",
+    "Alamosa",
+    "Arapahoe",
+    "Archuleta"
+  ],
+  "Connecticut": [
+    "Fairfield",
+    "Hartford",
+    "Litchfield",
+    "Middlesex"
+  ],
+  "Delaware": [
+    "Kent",
+    "New Castle",
+    "Sussex"
+  ],
+  "Florida": [
+    "Alachua",
+    "Baker",
+    "Bay",
+    "Bradford"
+  ],
+  "Georgia": [
+    "Appling",
+    "Atkinson",
+    "Bacon",
+    "Baker"
+  ],
+  "Hawaii": [
+    "Hawaii",
+    "Honolulu",
+    "Kalawao",
+    "Kauai"
+  ],
+  "Idaho": [
+    "Ada",
+    "Adams",
+    "Bannock",
+    "Bear Lake"
+  ],
+  "Illinois": [
+    "Adams",
+    "Alexander",
+    "Bond",
+    "Boone"
+  ],
+  "Indiana": [
+    "Adams",
+    "Allen",
+    "Bartholomew",
+    "Benton"
+  ],
+  "Iowa": [
+    "Adair",
+    "Adams",
+    "Allamakee",
+    "Appanoose"
+  ],
+  "Kansas": [
+    "Allen",
+    "Anderson",
+    "Atchison",
+    "Barber"
+  ],
+  "Kentucky": [
+    "Adair",
+    "Allen",
+    "Anderson",
+    "Ballard"
+  ],
+  "Louisiana": [
+    "Acadia",
+    "Allen",
+    "Ascension",
+    "Assumption"
+  ],
+  "Maine": [
+    "Androscoggin",
+    "Aroostook",
+    "Cumberland",
+    "Franklin"
+  ],
+  "Maryland": [
+    "Allegany",
+    "Anne Arundel",
+    "Baltimore",
+    "Calvert"
+  ],
+  "Massachusetts": [
+    "Barnstable",
+    "Berkshire",
+    "Bristol",
+    "Dukes"
+  ],
+  "Michigan": [
+    "Alcona",
+    "Alger",
+    "Allegan",
+    "Alpena"
+  ],
+  "Minnesota": [
+    "Aitkin",
+    "Anoka",
+    "Becker",
+    "Beltrami"
+  ],
+  "Mississippi": [
+    "Adams",
+    "Alcorn",
+    "Amite",
+    "Attala"
+  ],
+  "Missouri": [
+    "Adair",
+    "Andrew",
+    "Atchison",
+    "Audrain"
+  ],
+  "Montana": [
+    "Beaverhead",
+    "Big Horn",
+    "Blaine",
+    "Broadwater"
+  ],
+  "Nebraska": [
+    "Adams",
+    "Antelope",
+    "Arthur",
+    "Banner"
+  ],
+  "Nevada": [
+    "Churchill",
+    "Clark",
+    "Douglas",
+    "Elko"
+  ],
+  "New Hampshire": [
+    "Belknap",
+    "Carroll",
+    "Cheshire",
+    "Coos"
+  ],
+  "New Jersey": [
+    "Atlantic",
+    "Bergen",
+    "Burlington",
+    "Camden"
+  ],
+  "New Mexico": [
+    "Bernalillo",
+    "Catron",
+    "Chaves",
+    "Cibola"
+  ],
+  "New York": [
+    "Albany",
+    "Allegany",
+    "Bronx",
+    "Broome"
+  ],
+  "North Carolina": [
+    "Alamance",
+    "Alexander",
+    "Alleghany",
+    "Anson"
+  ],
+  "North Dakota": [
+    "Adams",
+    "Barnes",
+    "Benson",
+    "Billings"
+  ],
+  "Ohio": [
+    "Adams",
+    "Allen",
+    "Ashland",
+    "Ashtabula"
+  ],
+  "Oklahoma": [
+    "Adair",
+    "Alfalfa",
+    "Atoka",
+    "Beaver"
+  ],
+  "Oregon": [
+    "Baker",
+    "Benton",
+    "Clackamas",
+    "Clatsop"
+  ],
+  "Pennsylvania": [
+    "Adams",
+    "Allegheny",
+    "Armstrong",
+    "Beaver"
+  ],
+  "Rhode Island": [
+    "Bristol",
+    "Kent",
+    "Newport",
+    "Providence"
+  ],
+  "South Carolina": [
+    "Abbeville",
+    "Aiken",
+    "Allendale",
+    "Anderson"
+  ],
+  "South Dakota": [
+    "Aurora",
+    "Beadle",
+    "Bennett",
+    "Bon Homme"
+  ],
+  "Tennessee": [
+    "Anderson",
+    "Bedford",
+    "Benton",
+    "Bledsoe"
+  ],
+  "Texas": [
+    "Anderson",
+    "Andrews",
+    "Angelina",
+    "Aransas"
+  ],
+  "Utah": [
+    "Beaver",
+    "Box Elder",
+    "Cache",
+    "Carbon"
+  ],
+  "Vermont": [
+    "Addison",
+    "Bennington",
+    "Caledonia",
+    "Chittenden"
+  ],
+  "Virginia": [
+    "Accomack",
+    "Albemarle",
+    "Alleghany",
+    "Amelia"
+  ],
+  "Washington": [
+    "Adams",
+    "Asotin",
+    "Benton",
+    "Chelan"
+  ],
+  "West Virginia": [
+    "Barbour",
+    "Berkeley",
+    "Boone",
+    "Braxton"
+  ],
+  "Wisconsin": [
+    "Adams",
+    "Ashland",
+    "Barron",
+    "Bayfield"
+  ],
+  "Wyoming": [
+    "Albany",
+    "Big Horn",
+    "Campbell",
+    "Carbon"
+  ],
+  "Puerto Rico": [
+    "Adjuntas",
+    "Aguada",
+    "Aguadilla",
+    "Aguas Buenas"
+  ]
+}

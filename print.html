@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Assessment Summary</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Your Housing Assessment Summary</h1>
+
+    <div id="tier1Section" style="display: none;">
+      <h2>Tier 1 Responses</h2>
+      <p><strong>Current Housing Situation:</strong> <span id="tier1_housing_status"></span></p>
+      <p><strong>Eviction Risk:</strong> <span id="tier1_eviction_risk"></span></p>
+      <p><strong>Housing Safety/Stability:</strong> <span id="tier1_safety_status"></span></p>
+      <p><strong>Accessibility Needs:</strong> <span id="tier1_accessibility_needs"></span></p>
+    </div>
+
+    <div id="tier2Section" style="display: none;">
+      <h2>Tier 2 Responses</h2>
+      <p><strong>Monthly Income:</strong> <span id="tier2_monthly_income"></span></p>
+      <p><strong>Monthly Rent:</strong> <span id="tier2_monthly_rent"></span></p>
+      <p><strong>Searching for Housing:</strong> <span id="tier2_searching_housing"></span></p>
+      <p><strong>Applied to Programs:</strong> <span id="tier2_applied_programs"></span></p>
+    </div>
+
+    <div id="tier3Section" style="display: none;">
+      <h2>Tier 3 Responses</h2>
+      <p><strong>Housing Barriers:</strong> <span id="tier3_housing_barriers"></span></p>
+      <p><strong>Wants Help:</strong> <span id="tier3_wants_help"></span></p>
+      <p><strong>Housing Priority:</strong> <span id="tier3_housing_priority"></span></p>
+
+      <h2>💬 ChatGPT Prompt for Housing Search</h2>
+      <textarea id="chatPrompt" rows="6" style="width: 100%;" readonly></textarea>
+    </div>
+
+    <br>
+    <button onclick="window.print()">Print This Page</button>
+
+    <script>
+      function fillData(id) {
+        document.getElementById(id).innerText = localStorage.getItem(id) || "Not provided";
+      }
+
+      function getTierFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        return parseInt(params.get("tier")) || 1;
+      }
+
+      const tier = getTierFromURL();
+
+      if (tier >= 1) {
+        document.getElementById("tier1Section").style.display = "block";
+        ["tier1_housing_status", "tier1_eviction_risk", "tier1_safety_status", "tier1_accessibility_needs"].forEach(fillData);
+      }
+
+      if (tier >= 2) {
+        document.getElementById("tier2Section").style.display = "block";
+        ["tier2_monthly_income", "tier2_monthly_rent", "tier2_searching_housing", "tier2_applied_programs"].forEach(fillData);
+      }
+
+      if (tier >= 3) {
+        document.getElementById("tier3Section").style.display = "block";
+        ["tier3_housing_barriers", "tier3_wants_help", "tier3_housing_priority"].forEach(fillData);
+        document.getElementById("chatPrompt").value = localStorage.getItem("chat_prompt") || "Prompt not available.";
+      }
+    </script>
+  </div>
+</body>
+</html>
