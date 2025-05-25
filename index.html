@@ -8,23 +8,16 @@
   <div class="container">
     <h1>Welcome to CommonHelpSource</h1>
     <p>Please select your location to begin the housing assessment.</p>
-    <div>
-      <label><input type="radio" name="locationType" value="zip" checked onchange="toggleInputMode()"> Enter ZIP Code</label><br>
-      <input type="text" id="zipCode" placeholder="e.g. 01109" />
-
-      <br><br>
-
-      <label><input type="radio" name="locationType" value="region" onchange="toggleInputMode()"> Select State and County</label><br>
-      <select id="stateSelect" disabled onchange="populateCounties()">
-        <option value="">Select a state</option>
-      </select>
-      <select id="countySelect" disabled>
-        <option value="">Select a county</option>
-      </select>
-
-      <br><br>
-      <button onclick="startAssessment()">Begin Assessment</button>
-    </div>
+    <label><input type="radio" name="locationType" value="zip" checked onchange="toggleInputMode()"> Enter ZIP Code</label><br>
+    <input type="text" id="zipCode" placeholder="e.g. 01109" /><br><br>
+    <label><input type="radio" name="locationType" value="region" onchange="toggleInputMode()"> Select State and County</label><br>
+    <select id="stateSelect" disabled onchange="populateCounties()">
+      <option value="">Select a state</option>
+    </select>
+    <select id="countySelect" disabled>
+      <option value="">Select a county</option>
+    </select><br><br>
+    <button onclick="startAssessment()">Begin Assessment</button>
   </div>
   <script src="script.js"></script>
 </body>

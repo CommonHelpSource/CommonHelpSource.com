@@ -17,9 +17,7 @@ function toggleInputMode() {
   const zipInput = document.getElementById("zipCode");
   const stateSelect = document.getElementById("stateSelect");
   const countySelect = document.getElementById("countySelect");
-
   const selectedMode = document.querySelector('input[name="locationType"]:checked').value;
-
   if (selectedMode === "zip") {
     zipInput.disabled = false;
     zipInput.style.opacity = 1;
@@ -66,5 +64,3 @@ function startAssessment() {
   }
   window.location.href = "assessment_start.html";
 }
-
-document.addEventListener("DOMContentLoaded", toggleInputMode);
