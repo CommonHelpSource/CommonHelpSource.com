@@ -66,5 +66,50 @@
       }
     </script>
   </div>
+
+<hr>
+<h2>💬 AI-Powered Suggestions (Preview)</h2>
+<p>This mock output simulates what ChatGPT might return when connected via the OpenAI API:</p>
+<div id="aiSuggestions" style="background: #f3f3f3; padding: 15px; border-radius: 8px;">
+  <p><strong>Suggested Action:</strong> Based on your income and rent range, explore housing listings between $700–$1,000/month in your selected region. Try filtering by income-restricted or subsidized housing on platforms like Zillow or Apartments.com.</p>
+  <p><strong>Next Steps:</strong> Consider completing a CHAMP application and contacting local housing authorities in <span id="aiRegion"></span> for availability.</p>
+</div>
+
+<script>
+  // Optional future integration: this is where you'd load ChatGPT API results
+  document.addEventListener("DOMContentLoaded", function() {
+    const type = localStorage.getItem("location_type");
+    let region = "your area";
+    if (type === "zip") {
+      region = "ZIP code " + (localStorage.getItem("zip_code") || "");
+    } else if (type === "region") {
+      const state = localStorage.getItem("state");
+      const county = localStorage.getItem("county");
+      region = county + ", " + state;
+    }
+    document.getElementById("aiRegion").innerText = region;
+  });
+</script>
+
+
+<hr>
+<h2>💬 Final ChatGPT Prompt</h2>
+<p>This is your complete housing support prompt, combining your responses from all tiers. You can copy this and paste it directly into ChatGPT for suggestions:</p>
+<textarea id="finalChatPrompt" rows="8" style="width: 100%;"></textarea>
+<button onclick="copyFinalPrompt()">Copy to Clipboard</button>
+
+<script>
+  function displayFinalPrompt() {
+    document.getElementById("finalChatPrompt").value = localStorage.getItem("chat_prompt") || "Prompt not generated.";
+  }
+  function copyFinalPrompt() {
+    const textarea = document.getElementById("finalChatPrompt");
+    textarea.select();
+    document.execCommand("copy");
+    alert("Final prompt copied to clipboard!");
+  }
+  document.addEventListener("DOMContentLoaded", displayFinalPrompt);
+</script>
+
 </body>
 </html>

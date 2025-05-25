@@ -42,20 +42,54 @@
         <option value="not_sure">Not Sure</option>
       </select><br><br>
 
-      <button type="submit">Next</button>
+      <button type="submit">Save and Choose Next Step</button>
     </form>
-  </div>
 
-  <script>
-    document.getElementById("tier1Form").addEventListener("submit", function(event) {
-      event.preventDefault();
-      const form = event.target;
-      localStorage.setItem("tier1_housing_status", form.housing_status.value);
-      localStorage.setItem("tier1_eviction_risk", form.eviction_risk.value);
-      localStorage.setItem("tier1_safety_status", form.safety_status.value);
-      localStorage.setItem("tier1_accessibility_needs", form.accessibility_needs.value);
-      window.location.href = "print.html?tier=1";
-    });
-  </script>
+    <div id="nextSteps" style="display:none;">
+      <h2>What would you like to do next?</h2>
+      <button onclick="window.location.href='tier2.html'">Continue to Tier 2</button>
+      <button onclick="window.location.href='print.html?tier=1'">View Summary</button>
+    </div>
+
+    <script>
+      document.getElementById("tier1Form").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const form = event.target;
+        localStorage.setItem("tier1_housing_status", form.housing_status.value);
+        localStorage.setItem("tier1_eviction_risk", form.eviction_risk.value);
+        localStorage.setItem("tier1_safety_status", form.safety_status.value);
+        localStorage.setItem("tier1_accessibility_needs", form.accessibility_needs.value);
+        form.style.display = "none";
+        
+      // Build ChatGPT prompt after Tier 1
+      let tier1Prompt = "The person is experiencing housing instability. They reported: ";
+      tier1Prompt += "Current housing: " + form.housing_status.value + ". ";
+      tier1Prompt += "Eviction risk: " + form.eviction_risk.value + ". ";
+      tier1Prompt += "Safety: " + form.safety_status.value + ". ";
+      tier1Prompt += "Accessibility needs: " + form.accessibility_needs.value + ". ";
+      localStorage.setItem("chat_prompt", tier1Prompt);
+      document.getElementById("nextSteps").style.display = "block";
+    
+      });
+    </script>
+  </div>
 </body>
 </html>
+<hr>
+<h2>💬 Current ChatGPT Prompt</h2>
+<p>This is your evolving housing support prompt. You can copy it and use it in ChatGPT or other AI tools to get personalized guidance:</p>
+<textarea id="chatPrompt" rows="6" style="width: 100%;"></textarea>
+<button onclick="copyPrompt()">Copy to Clipboard</button>
+<script>
+  function updatePromptDisplay() {
+    const prompt = localStorage.getItem("chat_prompt") || "Prompt not yet generated.";
+    document.getElementById("chatPrompt").value = prompt;
+  }
+  function copyPrompt() {
+    const textarea = document.getElementById("chatPrompt");
+    textarea.select();
+    document.execCommand("copy");
+    alert("Prompt copied to clipboard!");
+  }
+  document.addEventListener("DOMContentLoaded", updatePromptDisplay);
+</script>

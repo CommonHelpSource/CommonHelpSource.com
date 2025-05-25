@@ -36,6 +36,12 @@
 
       <button type="submit">View Summary</button>
     </form>
+<div id="nextSteps" style="display:none;">
+  <h2>You're almost done!</h2>
+  <p>View your complete summary below:</p>
+  <button onclick="window.location.href='print.html?tier=3'">View Full Summary</button>
+</div>
+
 
     <hr>
     <h2>💬 ChatGPT Prompt</h2>
@@ -62,9 +68,37 @@
         localStorage.setItem("tier3_housing_barriers", form.housing_barriers.value);
         localStorage.setItem("tier3_wants_help", form.wants_help.value);
         localStorage.setItem("tier3_housing_priority", form.housing_priority.value);
-        window.location.href = "print.html?tier=3";
+        
+      document.getElementById("tier3Form").style.display = "none";
+      
+      let prompt = localStorage.getItem("chat_prompt") || "";
+      prompt += "Barriers to housing: " + form.housing_barriers.value + ". ";
+      prompt += "They " + (form.wants_help.value === "yes" ? "would like" : "do not want") + " help navigating housing programs. ";
+      prompt += "Priority: " + form.housing_priority.value + ". ";
+      localStorage.setItem("chat_prompt", prompt);
+      document.getElementById("nextSteps").style.display = "block";
+    
+    
       });
     </script>
   </div>
 </body>
 </html>
+<hr>
+<h2>💬 Current ChatGPT Prompt</h2>
+<p>This is your evolving housing support prompt. You can copy it and use it in ChatGPT or other AI tools to get personalized guidance:</p>
+<textarea id="chatPrompt" rows="6" style="width: 100%;"></textarea>
+<button onclick="copyPrompt()">Copy to Clipboard</button>
+<script>
+  function updatePromptDisplay() {
+    const prompt = localStorage.getItem("chat_prompt") || "Prompt not yet generated.";
+    document.getElementById("chatPrompt").value = prompt;
+  }
+  function copyPrompt() {
+    const textarea = document.getElementById("chatPrompt");
+    textarea.select();
+    document.execCommand("copy");
+    alert("Prompt copied to clipboard!");
+  }
+  document.addEventListener("DOMContentLoaded", updatePromptDisplay);
+</script>
