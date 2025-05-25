@@ -62,7 +62,8 @@
         form.style.display = "none";
         
       // Build ChatGPT prompt after Tier 1
-      let tier1Prompt = "The person is experiencing housing instability. They reported: ";
+      let zip = localStorage.getItem("zip_code") || "unknown area";
+      let tier1Prompt = "This person is seeking help in ZIP code " + zip + ". They are experiencing housing instability. They reported: ";
       tier1Prompt += "Current housing: " + form.housing_status.value + ". ";
       tier1Prompt += "Eviction risk: " + form.eviction_risk.value + ". ";
       tier1Prompt += "Safety: " + form.safety_status.value + ". ";

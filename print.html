@@ -78,6 +78,9 @@
 <script>
   // Optional future integration: this is where you'd load ChatGPT API results
   document.addEventListener("DOMContentLoaded", function() {
+  
+document.getElementById("zipCodeDisplay").innerText = localStorage.getItem("zip_code") || "Not provided";
+
     const type = localStorage.getItem("location_type");
     let region = "your area";
     if (type === "zip") {
@@ -109,6 +112,38 @@
     alert("Final prompt copied to clipboard!");
   }
   document.addEventListener("DOMContentLoaded", displayFinalPrompt);
+</script>
+
+
+<hr>
+<h2>📧 Email This Summary</h2>
+<p>You can copy this summary into your email app or service to save or share it:</p>
+<button onclick="emailSummary()">Email Summary</button>
+
+<script>
+  function emailSummary() {
+    let summary = "";
+    const fields = [
+      "tier1_housing_status", "tier1_eviction_risk", "tier1_safety_status", "tier1_accessibility_needs",
+      "tier2_monthly_income", "tier2_monthly_rent", "tier2_searching_housing", "tier2_applied_programs",
+      "tier3_housing_barriers", "tier3_wants_help", "tier3_housing_priority"
+    ];
+    fields.forEach(id => {
+      const label = document.querySelector("span#" + id);
+      if (label) {
+        summary += id.replace(/_/g, " ") + ": " + label.textContent + "\n";
+      }
+    });
+
+    const zip = localStorage.getItem("zip_code") || "Not provided";
+    summary = "ZIP Code: " + zip + "\n" + summary;
+
+    const prompt = localStorage.getItem("chat_prompt") || "Prompt not generated.";
+    summary += "\nChatGPT Prompt:\n" + prompt;
+
+    const mailtoLink = "mailto:?subject=Housing Assessment Summary&body=" + encodeURIComponent(summary);
+    window.location.href = mailtoLink;
+  }
 </script>
 
 </body>
