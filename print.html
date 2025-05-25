@@ -1,150 +1,71 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Assessment Summary</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Your Housing Assessment Summary</h1>
+  <h1>Assessment Summary</h1>
+  <div id="summaryContent"></div>
 
-    <div id="tier1Section" style="display: none;">
-      <h2>Tier 1 Responses</h2>
-      <p><strong>Current Housing Situation:</strong> <span id="tier1_housing_status"></span></p>
-      <p><strong>Eviction Risk:</strong> <span id="tier1_eviction_risk"></span></p>
-      <p><strong>Housing Safety/Stability:</strong> <span id="tier1_safety_status"></span></p>
-      <p><strong>Accessibility Needs:</strong> <span id="tier1_accessibility_needs"></span></p>
-    </div>
+  <h2>Live AI Suggestions</h2>
+  <button onclick="fetchAISuggestions()">Get Live Suggestions</button>
+  <div id="aiResponse" style="background: #eef; margin-top: 10px; padding: 10px;"></div>
 
-    <div id="tier2Section" style="display: none;">
-      <h2>Tier 2 Responses</h2>
-      <p><strong>Monthly Income:</strong> <span id="tier2_monthly_income"></span></p>
-      <p><strong>Monthly Rent:</strong> <span id="tier2_monthly_rent"></span></p>
-      <p><strong>Searching for Housing:</strong> <span id="tier2_searching_housing"></span></p>
-      <p><strong>Applied to Programs:</strong> <span id="tier2_applied_programs"></span></p>
-    </div>
+  <h2>Email This Summary</h2>
+  <label for="email">Enter your email:</label>
+  <input type="email" id="email" placeholder="your@email.com">
+  <button onclick="sendEmail()">Send</button>
+  <div id="emailStatus"></div>
 
-    <div id="tier3Section" style="display: none;">
-      <h2>Tier 3 Responses</h2>
-      <p><strong>Housing Barriers:</strong> <span id="tier3_housing_barriers"></span></p>
-      <p><strong>Wants Help:</strong> <span id="tier3_wants_help"></span></p>
-      <p><strong>Housing Priority:</strong> <span id="tier3_housing_priority"></span></p>
+  <script>
+    // Populate summary from localStorage
+    const summaryDiv = document.getElementById("summaryContent");
+    let content = "";
 
-      <h2>💬 ChatGPT Prompt for Housing Search</h2>
-      <textarea id="chatPrompt" rows="6" style="width: 100%;" readonly></textarea>
-    </div>
-
-    <br>
-    <button onclick="window.print()">Print This Page</button>
-
-    <script>
-      function fillData(id) {
-        document.getElementById(id).innerText = localStorage.getItem(id) || "Not provided";
-      }
-
-      function getTierFromURL() {
-        const params = new URLSearchParams(window.location.search);
-        return parseInt(params.get("tier")) || 1;
-      }
-
-      const tier = getTierFromURL();
-
-      if (tier >= 1) {
-        document.getElementById("tier1Section").style.display = "block";
-        ["tier1_housing_status", "tier1_eviction_risk", "tier1_safety_status", "tier1_accessibility_needs"].forEach(fillData);
-      }
-
-      if (tier >= 2) {
-        document.getElementById("tier2Section").style.display = "block";
-        ["tier2_monthly_income", "tier2_monthly_rent", "tier2_searching_housing", "tier2_applied_programs"].forEach(fillData);
-      }
-
-      if (tier >= 3) {
-        document.getElementById("tier3Section").style.display = "block";
-        ["tier3_housing_barriers", "tier3_wants_help", "tier3_housing_priority"].forEach(fillData);
-        document.getElementById("chatPrompt").value = localStorage.getItem("chat_prompt") || "Prompt not available.";
-      }
-    </script>
-  </div>
-
-<hr>
-<h2>💬 AI-Powered Suggestions (Preview)</h2>
-<p>This mock output simulates what ChatGPT might return when connected via the OpenAI API:</p>
-<div id="aiSuggestions" style="background: #f3f3f3; padding: 15px; border-radius: 8px;">
-  <p><strong>Suggested Action:</strong> Based on your income and rent range, explore housing listings between $700–$1,000/month in your selected region. Try filtering by income-restricted or subsidized housing on platforms like Zillow or Apartments.com.</p>
-  <p><strong>Next Steps:</strong> Consider completing a CHAMP application and contacting local housing authorities in <span id="aiRegion"></span> for availability.</p>
-</div>
-
-<script>
-  // Optional future integration: this is where you'd load ChatGPT API results
-  document.addEventListener("DOMContentLoaded", function() {
-  
-document.getElementById("zipCodeDisplay").innerText = localStorage.getItem("zip_code") || "Not provided";
-
-    const type = localStorage.getItem("location_type");
-    let region = "your area";
-    if (type === "zip") {
-      region = "ZIP code " + (localStorage.getItem("zip_code") || "");
-    } else if (type === "region") {
-      const state = localStorage.getItem("state");
-      const county = localStorage.getItem("county");
-      region = county + ", " + state;
+    if (localStorage.getItem("tier1")) {
+      content += "<h3>Tier 1</h3><p>" + localStorage.getItem("tier1") + "</p>";
     }
-    document.getElementById("aiRegion").innerText = region;
-  });
-</script>
+    if (localStorage.getItem("tier2")) {
+      content += "<h3>Tier 2</h3><p>" + localStorage.getItem("tier2") + "</p>";
+    }
+    if (localStorage.getItem("tier3")) {
+      content += "<h3>Tier 3</h3><p>" + localStorage.getItem("tier3") + "</p>";
+    }
 
+    summaryDiv.innerHTML = content;
 
-<hr>
-<h2>💬 Final ChatGPT Prompt</h2>
-<p>This is your complete housing support prompt, combining your responses from all tiers. You can copy this and paste it directly into ChatGPT for suggestions:</p>
-<textarea id="finalChatPrompt" rows="8" style="width: 100%;"></textarea>
-<button onclick="copyFinalPrompt()">Copy to Clipboard</button>
+    async function fetchAISuggestions() {
+      const promptParts = [];
+      if (localStorage.getItem("tier1")) promptParts.push("Tier 1: " + localStorage.getItem("tier1"));
+      if (localStorage.getItem("tier2")) promptParts.push("Tier 2: " + localStorage.getItem("tier2"));
+      if (localStorage.getItem("tier3")) promptParts.push("Tier 3: " + localStorage.getItem("tier3"));
 
-<script>
-  function displayFinalPrompt() {
-    document.getElementById("finalChatPrompt").value = localStorage.getItem("chat_prompt") || "Prompt not generated.";
-  }
-  function copyFinalPrompt() {
-    const textarea = document.getElementById("finalChatPrompt");
-    textarea.select();
-    document.execCommand("copy");
-    alert("Final prompt copied to clipboard!");
-  }
-  document.addEventListener("DOMContentLoaded", displayFinalPrompt);
-</script>
+      const prompt = "This person completed the following housing assessment:
+" + promptParts.join("
+") + "
+Provide next-step guidance and resources.";
 
+      const res = await fetch("https://f664b9af-0e6d-47ed-a486-24684f20aa44-00-3c83wqqi42ouj.riker.replit.dev/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ prompt })
+      });
 
-<hr>
-<h2>📧 Email This Summary</h2>
-<p>You can copy this summary into your email app or service to save or share it:</p>
-<button onclick="emailSummary()">Email Summary</button>
+      const data = await res.json();
+      document.getElementById("aiResponse").innerText = data.reply || "No response received.";
+    }
 
-<script>
-  function emailSummary() {
-    let summary = "";
-    const fields = [
-      "tier1_housing_status", "tier1_eviction_risk", "tier1_safety_status", "tier1_accessibility_needs",
-      "tier2_monthly_income", "tier2_monthly_rent", "tier2_searching_housing", "tier2_applied_programs",
-      "tier3_housing_barriers", "tier3_wants_help", "tier3_housing_priority"
-    ];
-    fields.forEach(id => {
-      const label = document.querySelector("span#" + id);
-      if (label) {
-        summary += id.replace(/_/g, " ") + ": " + label.textContent + "\n";
-      }
-    });
-
-    const zip = localStorage.getItem("zip_code") || "Not provided";
-    summary = "ZIP Code: " + zip + "\n" + summary;
-
-    const prompt = localStorage.getItem("chat_prompt") || "Prompt not generated.";
-    summary += "\nChatGPT Prompt:\n" + prompt;
-
-    const mailtoLink = "mailto:?subject=Housing Assessment Summary&body=" + encodeURIComponent(summary);
-    window.location.href = mailtoLink;
-  }
-</script>
-
+    function sendEmail() {
+      const email = document.getElementById("email").value;
+      const subject = "CommonHelpSource Assessment Summary";
+      const body = document.getElementById("summaryContent").innerText;
+      window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      document.getElementById("emailStatus").innerText = "Opening your email client to send the summary...";
+    }
+  </script>
 </body>
 </html>

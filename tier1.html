@@ -1,96 +1,27 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Housing Assessment - Tier 1</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <title>Tier 1 - Housing Status</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Tier 1: Housing Assessment</h1>
-    <form id="tier1Form">
-      <label>1. What is your current housing situation?</label><br>
-      <select name="housing_status" required>
-        <option value="">--Select--</option>
-        <option value="homeless">I am currently homeless</option>
-        <option value="shelter">I am staying in a shelter</option>
-        <option value="couchsurfing">I am couchsurfing or staying with friends/family</option>
-        <option value="renting">I am renting a place</option>
-        <option value="own_home">I own my home</option>
-      </select><br><br>
+  <h2>Tier 1: Current Housing Status</h2>
+  <label>What is your current living situation?</label><br/>
+  <textarea id="tier1Input" rows="4" cols="50"></textarea><br/>
+  <button onclick="saveAndNext()">Continue to Tier 2</button>
+  <button onclick="saveAndPrint()">View Summary</button>
 
-      <label>2. Are you at risk of eviction or losing your housing in the next 30 days?</label><br>
-      <select name="eviction_risk" required>
-        <option value="">--Select--</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-        <option value="not_sure">Not Sure</option>
-      </select><br><br>
-
-      <label>3. Is your current housing situation safe and stable?</label><br>
-      <select name="safety_status" required>
-        <option value="">--Select--</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-        <option value="not_sure">Not Sure</option>
-      </select><br><br>
-
-      <label>4. Do you need a unit with accessibility features (ramp, elevator, etc.)?</label><br>
-      <select name="accessibility_needs" required>
-        <option value="">--Select--</option>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-        <option value="not_sure">Not Sure</option>
-      </select><br><br>
-
-      <button type="submit">Save and Choose Next Step</button>
-    </form>
-
-    <div id="nextSteps" style="display:none;">
-      <h2>What would you like to do next?</h2>
-      <button onclick="window.location.href='tier2.html'">Continue to Tier 2</button>
-      <button onclick="window.location.href='print.html?tier=1'">View Summary</button>
-    </div>
-
-    <script>
-      document.getElementById("tier1Form").addEventListener("submit", function(event) {
-        event.preventDefault();
-        const form = event.target;
-        localStorage.setItem("tier1_housing_status", form.housing_status.value);
-        localStorage.setItem("tier1_eviction_risk", form.eviction_risk.value);
-        localStorage.setItem("tier1_safety_status", form.safety_status.value);
-        localStorage.setItem("tier1_accessibility_needs", form.accessibility_needs.value);
-        form.style.display = "none";
-        
-      // Build ChatGPT prompt after Tier 1
-      let zip = localStorage.getItem("zip_code") || "unknown area";
-      let tier1Prompt = "This person is seeking help in ZIP code " + zip + ". They are experiencing housing instability. They reported: ";
-      tier1Prompt += "Current housing: " + form.housing_status.value + ". ";
-      tier1Prompt += "Eviction risk: " + form.eviction_risk.value + ". ";
-      tier1Prompt += "Safety: " + form.safety_status.value + ". ";
-      tier1Prompt += "Accessibility needs: " + form.accessibility_needs.value + ". ";
-      localStorage.setItem("chat_prompt", tier1Prompt);
-      document.getElementById("nextSteps").style.display = "block";
-    
-      });
-    </script>
-  </div>
+  <script>
+    function saveAndNext() {
+      localStorage.setItem("tier1", document.getElementById("tier1Input").value);
+      window.location.href = "tier2.html";
+    }
+    function saveAndPrint() {
+      localStorage.setItem("tier1", document.getElementById("tier1Input").value);
+      window.location.href = "print.html";
+    }
+  </script>
 </body>
 </html>
-<hr>
-<h2>💬 Current ChatGPT Prompt</h2>
-<p>This is your evolving housing support prompt. You can copy it and use it in ChatGPT or other AI tools to get personalized guidance:</p>
-<textarea id="chatPrompt" rows="6" style="width: 100%;"></textarea>
-<button onclick="copyPrompt()">Copy to Clipboard</button>
-<script>
-  function updatePromptDisplay() {
-    const prompt = localStorage.getItem("chat_prompt") || "Prompt not yet generated.";
-    document.getElementById("chatPrompt").value = prompt;
-  }
-  function copyPrompt() {
-    const textarea = document.getElementById("chatPrompt");
-    textarea.select();
-    document.execCommand("copy");
-    alert("Prompt copied to clipboard!");
-  }
-  document.addEventListener("DOMContentLoaded", updatePromptDisplay);
-</script>
