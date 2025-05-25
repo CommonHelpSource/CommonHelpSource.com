@@ -1,9 +1,12 @@
-
 body {
   font-family: Arial, sans-serif;
   background: #fff0e6;
   color: #333;
   padding: 20px;
+}
+.container {
+  max-width: 600px;
+  margin: auto;
 }
 button {
   background-color: #ff6600;
@@ -17,8 +20,7 @@ button {
 h1 {
   color: #cc3300;
 }
-footer {
-  margin-top: 50px;
-  font-size: 14px;
-  text-align: center;
+textarea {
+  width: 100%;
+  font-family: Arial;
 }
