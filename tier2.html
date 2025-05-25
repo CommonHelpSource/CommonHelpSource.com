@@ -1,25 +1,57 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Tier 2 - Affordability</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>Tier 2: Housing Costs</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h2>Tier 2: Housing Affordability</h2>
-  <label>What is your average monthly housing cost?</label><br/>
-  <textarea id="tier2Input" rows="4" cols="50"></textarea><br/>
-  <button onclick="saveAndNext()">Continue to Tier 3</button>
-  <button onclick="saveAndPrint()">View Summary</button>
+  <h1>Tier 2: Affordability and Income</h1>
+  <form id="tier2Form">
+    <label>1. What is your total monthly income?</label><br/>
+    <input type="text" id="income" placeholder="$0" /><br/><br/>
+
+    <label>2. What is your monthly rent or housing cost?</label><br/>
+    <input type="text" id="rent" placeholder="$0" /><br/><br/>
+
+    <label>3. Are you actively looking for new housing?</label><br/>
+    <select id="searching">
+      <option value="">Select...</option>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select><br/><br/>
+
+    <label>4. Have you already applied for subsidized housing programs?</label><br/>
+    <select id="applied">
+      <option value="">Select...</option>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select><br/><br/>
+
+    <button type="submit">Continue to Tier 3</button>
+    <button type="button" onclick="saveAndPrint()">View Summary</button>
+  </form>
 
   <script>
-    function saveAndNext() {
-      localStorage.setItem("tier2", document.getElementById("tier2Input").value);
+    const form = document.getElementById("tier2Form");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      saveTier2();
       window.location.href = "tier3.html";
+    });
+
+    function saveTier2() {
+      const summary =
+        "Monthly income: " + document.getElementById("income").value + ". " +
+        "Monthly rent: " + document.getElementById("rent").value + ". " +
+        "Actively searching: " + document.getElementById("searching").value + ". " +
+        "Applied for assistance: " + document.getElementById("applied").value + ".";
+      localStorage.setItem("tier2", summary);
     }
+
     function saveAndPrint() {
-      localStorage.setItem("tier2", document.getElementById("tier2Input").value);
+      saveTier2();
       window.location.href = "print.html";
     }
   </script>

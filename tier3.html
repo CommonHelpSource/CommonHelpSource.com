@@ -1,22 +1,41 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Tier 3 - Future Planning</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>Tier 3: Barriers and Priorities</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h2>Tier 3: Planning Ahead</h2>
-  <label>What would improve your housing situation?</label><br/>
-  <textarea id="tier3Input" rows="4" cols="50"></textarea><br/>
-  <button onclick="saveAndPrint()">View Full Summary</button>
+  <h1>Tier 3: Barriers and Priorities</h1>
+  <form id="tier3Form">
+    <label>1. What are your biggest barriers to stable housing?</label><br/>
+    <textarea id="barriers" rows="4" cols="50"></textarea><br/><br/>
+
+    <label>2. Would you like help navigating housing resources?</label><br/>
+    <select id="wants_help">
+      <option value="">Select...</option>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select><br/><br/>
+
+    <label>3. What is your top priority right now?</label><br/>
+    <textarea id="priority" rows="2" cols="50"></textarea><br/><br/>
+
+    <button type="submit">View Full Summary</button>
+  </form>
 
   <script>
-    function saveAndPrint() {
-      localStorage.setItem("tier3", document.getElementById("tier3Input").value);
+    const form = document.getElementById("tier3Form");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const summary =
+        "Barriers: " + document.getElementById("barriers").value + ". " +
+        "Wants help: " + document.getElementById("wants_help").value + ". " +
+        "Priority: " + document.getElementById("priority").value + ".";
+      localStorage.setItem("tier3", summary);
       window.location.href = "print.html";
-    }
+    });
   </script>
 </body>
 </html>

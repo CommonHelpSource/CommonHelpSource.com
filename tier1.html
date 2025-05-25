@@ -1,25 +1,69 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Tier 1 - Housing Status</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>Tier 1: Housing Situation</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h2>Tier 1: Current Housing Status</h2>
-  <label>What is your current living situation?</label><br/>
-  <textarea id="tier1Input" rows="4" cols="50"></textarea><br/>
-  <button onclick="saveAndNext()">Continue to Tier 2</button>
-  <button onclick="saveAndPrint()">View Summary</button>
+  <h1>Tier 1: Current Housing Situation</h1>
+  <form id="tier1Form">
+    <label>1. What is your current housing status?</label><br/>
+    <select id="housing_status">
+      <option value="">Select...</option>
+      <option value="homeless">I am currently homeless</option>
+      <option value="shelter">I am staying in a shelter</option>
+      <option value="couchsurfing">I am staying with friends/family temporarily</option>
+      <option value="renting">I am renting a place</option>
+      <option value="own_home">I own my home</option>
+    </select><br/><br/>
+
+    <label>2. Are you at risk of eviction in the next 30 days?</label><br/>
+    <select id="eviction_risk">
+      <option value="">Select...</option>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+      <option value="unsure">I'm not sure</option>
+    </select><br/><br/>
+
+    <label>3. Do you feel safe in your current housing?</label><br/>
+    <select id="safe_housing">
+      <option value="">Select...</option>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select><br/><br/>
+
+    <label>4. Do you require accessible housing (e.g., wheelchair ramp, elevator)?</label><br/>
+    <select id="accessibility_needs">
+      <option value="">Select...</option>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select><br/><br/>
+
+    <button type="submit">Continue to Tier 2</button>
+    <button type="button" onclick="saveAndPrint()">View Summary</button>
+  </form>
 
   <script>
-    function saveAndNext() {
-      localStorage.setItem("tier1", document.getElementById("tier1Input").value);
+    const form = document.getElementById("tier1Form");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      saveTier1();
       window.location.href = "tier2.html";
+    });
+
+    function saveTier1() {
+      const summary = 
+        "Housing status: " + document.getElementById("housing_status").value + ". " +
+        "Eviction risk: " + document.getElementById("eviction_risk").value + ". " +
+        "Safe housing: " + document.getElementById("safe_housing").value + ". " +
+        "Accessibility needs: " + document.getElementById("accessibility_needs").value + ".";
+      localStorage.setItem("tier1", summary);
     }
+
     function saveAndPrint() {
-      localStorage.setItem("tier1", document.getElementById("tier1Input").value);
+      saveTier1();
       window.location.href = "print.html";
     }
   </script>
