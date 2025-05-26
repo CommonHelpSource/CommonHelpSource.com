@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Caveat&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: #f5f6f7;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      max-width: 1100px;
+      padding: 60px 20px 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo {
+      max-width: 200px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.75rem;
+      margin: 0;
+      text-align: center;
+    }
+
+    .tagline {
+      font-family: 'Caveat', cursive;
+      font-size: 1.75rem;
+      color: #444;
+      margin-top: 10px;
+      margin-bottom: 40px;
+      text-align: center;
+      max-width: 700px;
+    }
+
+    .zip-container {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    input[type="text"] {
+      padding: 12px 16px;
+      font-size: 1rem;
+      width: 250px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #e53935;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #d32f2f;
+    }
+
+    .site-name span:nth-child(1) { color: orange; }
+    .site-name span:nth-child(2) { color: red; }
+    .site-name span:nth-child(3) { color: teal; }
+
+    .grid-container {
+      width: 100%;
+      max-width: 1100px;
+      padding: 40px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .tile {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .tile:hover {
+      transform: translateY(-5px);
+    }
+
+    .tile h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="assets/images/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="logo">
+    <h1 class="site-name">
+      <span>Common</span>
+      <span>Help</span>
+      <span>Source</span>
+    </h1>
+    <div class="tagline">Smart Access to Community Help, Powered by AI</div>
+    <div class="zip-container">
+      <input type="text" id="zip" placeholder="e.g., 01109">
+      <button onclick="startAssessment()">Begin Assessment</button>
+    </div>
+  </header>
+
+  <section class="grid-container">
+    <div class="tile" onclick="checkZipAndGo('housing_assessment.html')"><h3>Housing</h3></div>
+    <div class="tile" onclick="checkZipAndGo('id_assessment.html')"><h3>Identification (ID)</h3></div>
+    <div class="tile" onclick="checkZipAndGo('food_assessment.html')"><h3>Food & Nutrition</h3></div>
+    <div class="tile" onclick="checkZipAndGo('utilities_assessment.html')"><h3>Utilities & Energy</h3></div>
+    <div class="tile" onclick="checkZipAndGo('internet_assessment.html')"><h3>Digital Access</h3></div>
+    <div class="tile" onclick="checkZipAndGo('transportation_assessment.html')"><h3>Transportation</h3></div>
+  </section>
+
+  <script>
+    function startAssessment() {
+      const zip = document.getElementById("zip").value;
+      if (zip) {
+        localStorage.setItem("zip", zip);
+        window.location.href = "assessment_start.html";
+      } else {
+        alert("Please enter your ZIP code to begin the assessment.");
+      }
+    }
+
+    async function getZipFromIP() {
+      try {
+        const response = await fetch("https://ipapi.co/json/");
+        const data = await response.json();
+        return data.postal || null;
+      } catch (error) {
+        console.error("IP lookup failed:", error);
+        return null;
+      }
+    }
+
+    async function checkZipAndGo(url) {
+      let zip = localStorage.getItem("zip");
+      if (!zip) {
+        zip = await getZipFromIP();
+        if (!zip) {
+          zip = prompt("Enter your ZIP code to continue:");
+        }
+        if (zip) {
+          localStorage.setItem("zip", zip);
+          window.location.href = url;
+        } else {
+          alert("ZIP code is required to continue.");
+        }
+      } else {
+        window.location.href = url;
+      }
+    }
+  </script>
+</body>
+</html>
