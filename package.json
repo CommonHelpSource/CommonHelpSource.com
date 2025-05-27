@@ -2,6 +2,24 @@
   "name": "commonhelpsource-functions",
   "version": "1.0.0",
   "dependencies": {
-    "node-fetch": "^2.6.1"
-  }
+    "dotenv": "^16.5.0",
+    "node-fetch": "^2.6.1",
+    "openai": "^4.103.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CommonHelpSource/CommonHelpSource.com.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CommonHelpSource/CommonHelpSource.com/issues"
+  },
+  "homepage": "https://github.com/CommonHelpSource/CommonHelpSource.com#readme",
+  "description": ""
 }

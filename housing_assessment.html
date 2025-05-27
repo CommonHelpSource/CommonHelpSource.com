@@ -48,13 +48,92 @@
     button:hover {
       background: #c62828;
     }
+    .chat-container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .chat-messages {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 5px;
+    }
+
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .user-message {
+      background: #e3f2fd;
+      margin-left: 20px;
+    }
+
+    .assistant-message {
+      background: #f5f5f5;
+      margin-right: 20px;
+    }
+
+    .chat-input {
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input input {
+      flex: 1;
+    }
+
+    #loadingIndicator {
+      text-align: center;
+      color: #666;
+      display: none;
+    }
+
+    .feedback-container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .feedback-message {
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+
+    .resource-list {
+      margin-top: 15px;
+      padding-left: 20px;
+    }
+
+    .resource-item {
+      margin: 10px 0;
+      padding: 10px;
+      background: #fff;
+      border-radius: 5px;
+      border-left: 4px solid #e53935;
+    }
   </style>
 </head>
 <body>
   <h1>Housing Assessment – Tier 1</h1>
+  
+  <!-- Assessment Form -->
   <form id="housingForm">
     <label>1. What is your current housing status?</label>
-    <select id="status">
+    <select id="status" onchange="updateFeedback()">
       <option value="">Select...</option>
       <option value="homeless">Currently homeless</option>
       <option value="shelter">Living in a shelter</option>
@@ -64,7 +143,7 @@
     </select>
 
     <label>2. Are you at risk of eviction in the next 30 days?</label>
-    <select id="eviction">
+    <select id="eviction" onchange="updateFeedback()">
       <option value="">Select...</option>
       <option value="yes">Yes</option>
       <option value="no">No</option>
@@ -72,14 +151,14 @@
     </select>
 
     <label>3. Do you feel safe in your current housing?</label>
-    <select id="safe">
+    <select id="safe" onchange="updateFeedback()">
       <option value="">Select...</option>
       <option value="yes">Yes</option>
       <option value="no">No</option>
     </select>
 
     <label>4. Do you require accessible housing (e.g., wheelchair access)?</label>
-    <select id="access">
+    <select id="access" onchange="updateFeedback()">
       <option value="">Select...</option>
       <option value="yes">Yes</option>
       <option value="no">No</option>
@@ -89,6 +168,13 @@
     <button type="button" onclick="saveAndPrint()">View Summary</button>
   </form>
 
+  <!-- AI Feedback Container -->
+  <div class="feedback-container">
+    <div id="feedbackMessages"></div>
+    <div id="loadingIndicator">Analyzing your responses...</div>
+  </div>
+
+  <script src="assets/js/chat.js"></script>
   <script>
     if (!localStorage.getItem("zip")) {
       alert("ZIP code is required. Returning to homepage.");
@@ -115,6 +201,53 @@
     function saveAndPrint() {
       saveHousingData();
       window.location.href = "print.html";
+    }
+
+    async function updateFeedback() {
+      const status = document.getElementById("status").value;
+      const eviction = document.getElementById("eviction").value;
+      const safe = document.getElementById("safe").value;
+      const access = document.getElementById("access").value;
+      const zip = localStorage.getItem("zip");
+
+      // Only proceed if at least one field has been filled out
+      if (!status && !eviction && !safe && !access) return;
+
+      document.getElementById("loadingIndicator").style.display = "block";
+
+      try {
+        const messages = [
+          {
+            role: "system",
+            content: "You are a helpful assistant specializing in housing assistance and resources. Provide specific, actionable feedback based on the assessment answers."
+          },
+          {
+            role: "user",
+            content: `Please provide specific housing resources and recommendations based on this assessment:
+            - Housing Status: ${status || 'Not specified'}
+            - Eviction Risk: ${eviction || 'Not specified'}
+            - Safety Concerns: ${safe || 'Not specified'}
+            - Accessibility Needs: ${access || 'Not specified'}
+            - ZIP Code: ${zip}
+            
+            Format your response with clear sections for immediate actions, available resources, and next steps.`
+          }
+        ];
+
+        const response = await sendMessage(messages);
+        
+        // Display the feedback
+        const feedbackDiv = document.getElementById("feedbackMessages");
+        feedbackDiv.innerHTML = `<div class="feedback-message">${response.content}</div>`;
+      } catch (error) {
+        console.error('Feedback Error:', error);
+        const feedbackDiv = document.getElementById("feedbackMessages");
+        feedbackDiv.innerHTML = `<div class="feedback-message" style="color: #d32f2f;">
+          Unable to generate feedback at this time. Please try again later.
+        </div>`;
+      } finally {
+        document.getElementById("loadingIndicator").style.display = "none";
+      }
     }
   </script>
 </body>
