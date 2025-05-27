@@ -32,6 +32,16 @@ exports.handler = async function(event, context) {
       throw new Error('Invalid messages format');
     }
 
+    // Add formatting instructions if not already present
+    if (messages[0].role === "system" && !messages[0].content.includes("Format your response")) {
+      messages[0].content += `\n\nFormat your responses with clear structure:
+      - Use proper spacing between sections
+      - Bold organization names using **Name**
+      - Include specific contact information in a clear format
+      - Number steps and recommendations
+      - Keep information relevant to the user's location and needs`;
+    }
+
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: messages,
@@ -39,11 +49,26 @@ exports.handler = async function(event, context) {
       max_tokens: 1000
     });
 
+    // Check if the response needs to be parsed as JSON
+    let responseContent = completion.choices[0].message;
+    if (messages[0].content.includes("Format your response in JSON")) {
+      try {
+        // Attempt to parse the response as JSON
+        const jsonContent = JSON.parse(responseContent.content);
+        responseContent = {
+          content: jsonContent
+        };
+      } catch (e) {
+        console.error('Failed to parse JSON response:', e);
+        // If JSON parsing fails, return the original response
+      }
+    }
+
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        response: completion.choices[0].message
+        response: responseContent
       })
     };
   } catch (error) {
