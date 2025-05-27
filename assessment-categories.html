@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment Categories - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: #f5f6f7;
+      color: #333;
+    }
+    .content-wrapper {
+      padding: 40px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2rem;
+    }
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .category-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .category-card.active:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+    .category-card.inactive {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .category-card.inactive::after {
+      content: "Coming Soon";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #666;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+    .category-card h2 {
+      margin: 0 0 15px;
+      font-size: 1.5rem;
+    }
+    .category-card p {
+      margin: 0;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .zip-display {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      display: inline-block;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .zip-display span {
+      font-weight: 600;
+      color: #e53935;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header will be inserted by header.js -->
+  <div class="content-wrapper">
+    <div class="zip-display">
+      Selected ZIP Code: <span id="selectedZip"></span>
+      <button onclick="changeZip()" style="margin-left: 15px; padding: 5px 10px; border: none; background: #f0f0f0; border-radius: 4px; cursor: pointer;">Change</button>
+    </div>
+
+    <h1>Select an Assessment Category</h1>
+    
+    <div class="categories-grid">
+      <div class="category-card active" onclick="startAssessment('housing')">
+        <h2>Housing</h2>
+        <p>Find housing assistance, eviction prevention, and shelter resources</p>
+      </div>
+      
+      <div class="category-card inactive">
+        <h2>Food & Nutrition</h2>
+        <p>Access food banks, meal programs, and nutrition assistance</p>
+      </div>
+      
+      <div class="category-card inactive">
+        <h2>Utilities & Energy</h2>
+        <p>Get help with utility bills and energy assistance programs</p>
+      </div>
+      
+      <div class="category-card inactive">
+        <h2>Identification</h2>
+        <p>Obtain ID cards, birth certificates, and other vital documents</p>
+      </div>
+      
+      <div class="category-card inactive">
+        <h2>Digital Access</h2>
+        <p>Connect to internet services and computer resources</p>
+      </div>
+      
+      <div class="category-card inactive">
+        <h2>Transportation</h2>
+        <p>Find transportation assistance and transit resources</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/header.js"></script>
+  <script>
+    // Check for ZIP code on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      const zip = localStorage.getItem('zip');
+      if (!zip) {
+        window.location.href = 'index.html';
+        return;
+      }
+      document.getElementById('selectedZip').textContent = zip;
+    });
+
+    function changeZip() {
+      localStorage.removeItem('zip');
+      window.location.href = 'index.html';
+    }
+
+    function startAssessment(category) {
+      if (category === 'housing') {
+        window.location.href = 'housing-phase1.html';
+      }
+    }
+  </script>
+</body>
+</html> 

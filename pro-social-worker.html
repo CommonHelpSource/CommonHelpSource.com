@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Pro Social Worker - Note Formatter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #ff6b35;
+      --primary-hover: #ff8659;
+      --text-color: #2d3436;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: #f5f6f7;
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .note-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 40px;
+      margin-bottom: 30px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 2px solid #f0f2f5;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin: 0 0 15px;
+      color: var(--text-color);
+    }
+
+    .subtitle {
+      color: #636e72;
+      font-size: 1.1rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #f0f2f5;
+      padding-bottom: 10px;
+    }
+
+    .tab {
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #f0f2f5;
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    .tab.active {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .tab:hover:not(.active) {
+      background: #e4e7eb;
+    }
+
+    .section {
+      display: none;
+      margin-top: 30px;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 1rem;
+      border: 2px solid #dfe6e9;
+      border-radius: 8px;
+      background-color: white;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1em;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: 16px;
+      font-size: 1rem;
+      border: 2px solid #dfe6e9;
+      border-radius: 8px;
+      resize: vertical;
+      font-family: inherit;
+      line-height: 1.6;
+      box-sizing: border-box;
+    }
+
+    select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .file-label {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #f0f2f5;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .file-label:hover {
+      background: #e4e7eb;
+    }
+
+    .mic-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 16px;
+      background: #f0f2f5;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    .mic-button.recording {
+      background: #ff4757;
+      color: white;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--primary-color);
+      color: white;
+      margin-top: 20px;
+    }
+
+    .action-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .action-btn:disabled {
+      background: #b2bec3;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .result-box {
+      display: none;
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .result-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .copy-btn {
+      background: #00b894;
+      color: white;
+    }
+
+    .copy-btn:hover {
+      background: #00d1a7;
+    }
+
+    .download-btn {
+      background: #0984e3;
+      color: white;
+    }
+
+    .download-btn:hover {
+      background: #0a93ff;
+    }
+
+    .email-btn {
+      background: #6c5ce7;
+      color: white;
+    }
+
+    .email-btn:hover {
+      background: #8067ff;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .loading-text {
+      color: #636e72;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .tabs {
+        flex-direction: column;
+      }
+      
+      .result-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="note-card">
+      <div class="header">
+        <h1>The Pro Social Worker</h1>
+        <div class="subtitle">Professional Note Formatter & Structure Assistant</div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showSection('format')">Pre-Built Format</button>
+        <button class="tab" onclick="showSection('custom')">Custom Format</button>
+        <button class="tab" onclick="showSection('dictate')">Dictate Note</button>
+      </div>
+
+      <!-- Pre-Built Format Section -->
+      <div id="format" class="section active">
+        <div class="input-group">
+          <label for="noteFormat">Select Note Format</label>
+          <select id="noteFormat" onchange="updatePlaceholder()">
+            <option value="">Choose a format...</option>
+            <option value="mha">MHA Progress Note</option>
+            <option value="chw">CHW Progress Note</option>
+            <option value="soap">SOAP Note</option>
+            <option value="dap">DAP Note</option>
+            <option value="narrative">Narrative Note</option>
+          </select>
+          <div class="format-info" id="formatInfo" style="margin-top: 10px; padding: 12px; background: #f8f9fa; border-radius: 8px; display: none;">
+            <div id="formatDescription"></div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="noteText">Type your note here</label>
+          <div style="margin-bottom: 10px; color: #636e72; font-size: 0.9rem;">
+            Write freely - the AI will organize your content into the appropriate sections.
+          </div>
+          <textarea id="noteText" placeholder="Enter your progress note content..."></textarea>
+        </div>
+
+        <button class="action-btn" onclick="formatNote('format')">Format My Note</button>
+      </div>
+
+      <!-- Custom Format Section -->
+      <div id="custom" class="section">
+        <div class="input-group">
+          <label for="customFormat">Paste your note or custom format here</label>
+          <div style="margin-bottom: 10px; color: #636e72; font-size: 0.9rem;">
+            Paste any existing note - the AI will improve its structure and clarity while maintaining your key information.
+          </div>
+          <textarea id="customFormat" placeholder="Example:
+Met with client today to discuss housing goals.
+- Reviewed progress on job applications
+- Discussed barriers to stable housing
+- Created action plan for next week
+- Scheduled follow-up appointment"></textarea>
+        </div>
+
+        <div class="input-group">
+          <label for="fileUpload" class="file-label">
+            📎 Upload .txt or .docx file
+          </label>
+          <input type="file" id="fileUpload" class="file-input" accept=".txt,.docx" onchange="handleFileUpload(event)">
+          <div style="margin-top: 10px; color: #636e72; font-size: 0.9rem;">
+            Supported file types: .txt, .docx
+          </div>
+        </div>
+
+        <button class="action-btn" onclick="formatNote('custom')">Reorganize My Note</button>
+      </div>
+
+      <!-- Dictation Section -->
+      <div id="dictate" class="section">
+        <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+          <h4 style="margin: 0 0 10px; color: #2d3436;">How to use dictation:</h4>
+          <ol style="margin: 0; padding-left: 20px; color: #636e72;">
+            <li>Click "Start Dictation" and allow microphone access</li>
+            <li>Speak clearly and naturally</li>
+            <li>Use phrases like "new paragraph" or "next section"</li>
+            <li>Click the button again to stop recording</li>
+          </ol>
+        </div>
+
+        <button id="micButton" class="mic-button" onclick="toggleDictation()">
+          🎤 Start Dictation
+        </button>
+
+        <div class="input-group">
+          <label for="dictatedText">Live Transcription</label>
+          <textarea id="dictatedText" placeholder="Your dictation will appear here in real-time..." readonly></textarea>
+        </div>
+
+        <button class="action-btn" onclick="formatNote('dictate')">Structure This Note</button>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loading" class="loading">
+        <div class="loading-text">Processing your note...</div>
+      </div>
+
+      <!-- Results Section -->
+      <div id="result" class="result-box">
+        <pre id="formattedNote"></pre>
+        <div class="result-actions">
+          <button class="result-btn copy-btn" onclick="copyToClipboard()">
+            📋 Copy to Clipboard
+          </button>
+          <button class="result-btn download-btn" onclick="downloadNote()">
+            📥 Download as .txt
+          </button>
+          <button class="result-btn email-btn" onclick="emailNote()">
+            📧 Email Note
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let recognition = null;
+    let isRecording = false;
+
+    function showSection(sectionId) {
+      // Update tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Show selected section
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(sectionId).classList.add('active');
+    }
+
+    function setupSpeechRecognition() {
+      if ('webkitSpeechRecognition' in window) {
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onresult = (event) => {
+          let finalTranscript = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+              finalTranscript += event.results[i][0].transcript + ' ';
+            }
+          }
+          if (finalTranscript) {
+            const dictatedText = document.getElementById('dictatedText');
+            dictatedText.value = dictatedText.value + finalTranscript;
+          }
+        };
+
+        recognition.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          stopDictation();
+        };
+      }
+    }
+
+    function toggleDictation() {
+      const micButton = document.getElementById('micButton');
+      
+      if (!isRecording) {
+        if (!recognition) {
+          setupSpeechRecognition();
+        }
+        if (recognition) {
+          recognition.start();
+          isRecording = true;
+          micButton.textContent = '🔴 Stop Dictation';
+          micButton.classList.add('recording');
+        } else {
+          alert('Speech recognition is not supported in your browser.');
+        }
+      } else {
+        stopDictation();
+      }
+    }
+
+    function stopDictation() {
+      if (recognition) {
+        recognition.stop();
+      }
+      isRecording = false;
+      const micButton = document.getElementById('micButton');
+      micButton.textContent = '🎤 Start Dictation';
+      micButton.classList.remove('recording');
+    }
+
+    let formatDescriptions = {
+      mha: `<h4 style="margin: 0 0 10px;">MHA Progress Note Format:</h4>
+            <ol style="margin: 0; padding-left: 20px;">
+              <li>Person's progress toward goals since last session</li>
+              <li>Comments on therapeutic interventions</li>
+              <li>Person's response to intervention</li>
+              <li>Plan and additional information</li>
+            </ol>`,
+      chw: `<h4 style="margin: 0 0 10px;">CHW Progress Note Format:</h4>
+            <ol style="margin: 0; padding-left: 20px;">
+              <li>Client needs and concerns</li>
+              <li>Services provided/referrals made</li>
+              <li>Follow-up actions</li>
+              <li>Barriers and solutions discussed</li>
+            </ol>`,
+      soap: `<h4 style="margin: 0 0 10px;">SOAP Note Format:</h4>
+             <ol style="margin: 0; padding-left: 20px;">
+               <li>Subjective: Client's statements and concerns</li>
+               <li>Objective: Observable facts and findings</li>
+               <li>Assessment: Analysis of the situation</li>
+               <li>Plan: Next steps and interventions</li>
+             </ol>`,
+      dap: `<h4 style="margin: 0 0 10px;">DAP Note Format:</h4>
+            <ol style="margin: 0; padding-left: 20px;">
+              <li>Data: Observations and information</li>
+              <li>Assessment: Clinical interpretation</li>
+              <li>Plan: Treatment plan and next steps</li>
+            </ol>`,
+      narrative: `<h4 style="margin: 0 0 10px;">Narrative Note Format:</h4>
+                  <ul style="margin: 0; padding-left: 20px;">
+                    <li>Chronological description of the session</li>
+                    <li>Key observations and interventions</li>
+                    <li>Client progress and outcomes</li>
+                    <li>Future directions and recommendations</li>
+                  </ul>`
+    };
+
+    function updatePlaceholder() {
+      const format = document.getElementById('noteFormat').value;
+      const formatInfo = document.getElementById('formatInfo');
+      const formatDescription = document.getElementById('formatDescription');
+      const noteText = document.getElementById('noteText');
+
+      if (format) {
+        formatInfo.style.display = 'block';
+        formatDescription.innerHTML = formatDescriptions[format];
+        
+        // Update placeholder based on selected format
+        switch(format) {
+          case 'mha':
+            noteText.placeholder = `Example note content:
+
+Client reports making progress on housing search, having submitted three rental applications this week. Expressed ongoing anxiety about the process.
+
+Used motivational interviewing to explore client's strengths and past successes. Practiced deep breathing exercises to manage anxiety.
+
+Client was receptive to breathing techniques and reported feeling more confident about the housing search process.
+
+Plan: Follow up on rental applications next week. Continue anxiety management strategies. Schedule housing inspection for approved units.`;
+            break;
+          case 'soap':
+            noteText.placeholder = `Example note content:
+
+Client reports increased stress at work and difficulty sleeping. Mentions trying meditation apps but finding it hard to maintain practice.
+
+Client appears tired, speaks slowly. Observed fidgeting during discussion of work situations.
+
+Client showing signs of work-related anxiety, potentially developing unhealthy coping mechanisms.
+
+Will introduce structured relaxation techniques. Scheduled follow-up in 1 week. Provided referral to sleep specialist.`;
+            break;
+          // Add more format-specific examples as needed
+        }
+      } else {
+        formatInfo.style.display = 'none';
+        noteText.placeholder = "Enter your progress note content...";
+      }
+    }
+
+    async function formatNote(type) {
+      let content = '';
+      let prompt = '';
+      let format = '';
+
+      switch (type) {
+        case 'format':
+          format = document.getElementById('noteFormat').value;
+          if (!format) {
+            alert('Please select a note format first.');
+            return;
+          }
+          content = document.getElementById('noteText').value;
+          prompt = `Reformat this note into a ${format} format following these guidelines:
+
+${formatDescriptions[format].replace(/<[^>]*>/g, '')}
+
+Improve grammar, add clarity, and ensure professional clinical language.`;
+          break;
+        case 'custom':
+          content = document.getElementById('customFormat').value;
+          prompt = 'Reorganize this note into a clean, professional clinical progress note. Clarify vague parts, correct grammar, and ensure proper clinical documentation standards.';
+          break;
+        case 'dictate':
+          content = document.getElementById('dictatedText').value;
+          prompt = 'Take this dictated progress note and format it into a structured clinical note. Improve clarity, ensure professional language, and organize into appropriate sections.';
+          break;
+      }
+
+      if (!content) {
+        alert('Please enter or record some content first.');
+        return;
+      }
+
+      // Show loading state
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('result').style.display = 'none';
+
+      try {
+        const response = await fetch('/.netlify/functions/chatgpt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            messages: [
+              {
+                role: "system",
+                content: prompt
+              },
+              {
+                role: "user",
+                content: content
+              }
+            ]
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to format note');
+        }
+
+        const result = await response.json();
+        document.getElementById('formattedNote').textContent = result.choices[0].message.content;
+        document.getElementById('result').style.display = 'block';
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error formatting note. Please try again.');
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+      }
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById('customFormat').value = e.target.result;
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById('formattedNote').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copied to clipboard!');
+      });
+    }
+
+    function downloadNote() {
+      const text = document.getElementById('formattedNote').textContent;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'formatted-note.txt';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
+
+    function emailNote() {
+      const text = document.getElementById('formattedNote').textContent;
+      const subject = 'Formatted Clinical Note';
+      window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+    }
+  </script>
+</body>
+</html> 

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Housing Assessment - Phase 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    .content-wrapper {
+      padding: 40px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    form {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .question-group {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    .question-group:last-child {
+      border-bottom: none;
+      margin-bottom: 20px;
+      padding-bottom: 0;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: 500;
+    }
+    select, textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    .help-text {
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 5px;
+    }
+    button {
+      padding: 12px 24px;
+      border: none;
+      background: #e53935;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+      font-size: 1rem;
+    }
+    button:hover {
+      background: #c62828;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: #eee;
+      margin-bottom: 30px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      width: 100%;
+      height: 100%;
+      background: #e53935;
+      transition: width 0.3s ease;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header will be inserted by header.js -->
+  <div class="content-wrapper">
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+
+    <h1>Housing Assessment - Phase 2</h1>
+    
+    <form id="housingForm">
+      <div class="question-group">
+        <h3>Financial Information</h3>
+        <label>What is your monthly household income? ($)</label>
+        <input type="number" id="income" required min="0" step="100">
+
+        <label>What is your current monthly rent/housing payment? ($)</label>
+        <input type="number" id="housingCost" required min="0" step="100">
+
+        <label>Do you have any past due rent or utility bills?</label>
+        <select id="pastDue" required>
+          <option value="">Select...</option>
+          <option value="no">No</option>
+          <option value="rent">Yes, rent only</option>
+          <option value="utilities">Yes, utilities only</option>
+          <option value="both">Yes, both rent and utilities</option>
+        </select>
+      </div>
+
+      <div class="question-group">
+        <h3>Housing Barriers</h3>
+        <label>Do you have any of the following barriers to housing? (Select all that apply)</label>
+        <div style="margin: 10px 0;">
+          <label style="display: inline-block; margin-right: 20px;">
+            <input type="checkbox" name="barriers" value="eviction"> Past eviction
+          </label>
+          <label style="display: inline-block; margin-right: 20px;">
+            <input type="checkbox" name="barriers" value="credit"> Poor credit
+          </label>
+          <label style="display: inline-block; margin-right: 20px;">
+            <input type="checkbox" name="barriers" value="criminal"> Criminal record
+          </label>
+          <label style="display: inline-block;">
+            <input type="checkbox" name="barriers" value="none"> None of these
+          </label>
+        </div>
+
+        <label>Are you currently employed?</label>
+        <select id="employment" required>
+          <option value="">Select...</option>
+          <option value="full">Yes, full-time</option>
+          <option value="part">Yes, part-time</option>
+          <option value="no">No, currently unemployed</option>
+          <option value="unable">Unable to work</option>
+        </select>
+      </div>
+
+      <div class="question-group">
+        <h3>Additional Information</h3>
+        <label>What type of housing assistance are you looking for?</label>
+        <select id="assistanceType" required>
+          <option value="">Select...</option>
+          <option value="emergency">Emergency shelter</option>
+          <option value="rental">Rental assistance</option>
+          <option value="permanent">Permanent housing</option>
+          <option value="transitional">Transitional housing</option>
+          <option value="other">Other</option>
+        </select>
+
+        <label>Please describe any other housing needs or concerns:</label>
+        <textarea id="additionalNeeds"></textarea>
+      </div>
+
+      <button type="submit">Submit Assessment</button>
+      <button type="button" onclick="window.location.href='housing-phase1.html'">Back to Phase 1</button>
+    </form>
+  </div>
+
+  <script src="assets/js/header.js"></script>
+  <script>
+    // Check for required data on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      const zip = localStorage.getItem('zip');
+      const phase1Data = localStorage.getItem('housing_phase1');
+      
+      if (!zip || !phase1Data) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Load saved data if it exists
+      const savedData = localStorage.getItem('housing_phase2');
+      if (savedData) {
+        const data = JSON.parse(savedData);
+        Object.keys(data).forEach(key => {
+          const element = document.getElementById(key);
+          if (element) {
+            if (key === 'barriers') {
+              data[key].forEach(barrier => {
+                document.querySelector(`input[name="barriers"][value="${barrier}"]`).checked = true;
+              });
+            } else {
+              element.value = data[key];
+            }
+          }
+        });
+      }
+    });
+
+    // Handle form submission
+    document.getElementById('housingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const barriers = Array.from(document.querySelectorAll('input[name="barriers"]:checked'))
+        .map(cb => cb.value);
+
+      const data = {
+        income: document.getElementById('income').value,
+        housingCost: document.getElementById('housingCost').value,
+        pastDue: document.getElementById('pastDue').value,
+        barriers: barriers,
+        employment: document.getElementById('employment').value,
+        assistanceType: document.getElementById('assistanceType').value,
+        additionalNeeds: document.getElementById('additionalNeeds').value
+      };
+
+      localStorage.setItem('housing_phase2', JSON.stringify(data));
+      
+      // Combine data from both phases
+      const phase1Data = JSON.parse(localStorage.getItem('housing_phase1'));
+      const zip = localStorage.getItem('zip');
+      
+      const combinedData = {
+        zip: zip,
+        phase1: phase1Data,
+        phase2: data
+      };
+
+      // Store combined data and redirect to results
+      localStorage.setItem('housing_assessment_complete', JSON.stringify(combinedData));
+      window.location.href = 'housing_assessment.html';
+    });
+  </script>
+</body>
+</html> 
