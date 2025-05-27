@@ -11,23 +11,22 @@
       font-family: 'Montserrat', sans-serif;
       background: #f5f6f7;
       color: #333;
+    }
+
+    .main-content {
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding-top: 40px;
     }
 
-    header {
+    .welcome-section {
       width: 100%;
       max-width: 1100px;
-      padding: 60px 20px 30px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-    }
-
-    .logo {
-      max-width: 200px;
-      margin-bottom: 20px;
     }
 
     h1 {
@@ -112,29 +111,33 @@
   </style>
 </head>
 <body>
-  <header>
-    <img src="assets/images/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="logo">
-    <h1 class="site-name">
-      <span>Common</span>
-      <span>Help</span>
-      <span>Source</span>
-    </h1>
-    <div class="tagline">Smart Access to Community Help, Powered by AI</div>
-    <div class="zip-container">
-      <input type="text" id="zip" placeholder="e.g., 01109">
-      <button onclick="startAssessment()">Begin Assessment</button>
+  <!-- Header will be inserted by header.js -->
+  
+  <div class="main-content">
+    <div class="welcome-section">
+      <h1 class="site-name">
+        <span>Common</span>
+        <span>Help</span>
+        <span>Source</span>
+      </h1>
+      <div class="tagline">Smart Access to Community Help, Powered by AI</div>
+      <div class="zip-container">
+        <input type="text" id="zip" placeholder="e.g., 01109">
+        <button onclick="startAssessment()">Begin Assessment</button>
+      </div>
     </div>
-  </header>
 
-  <section class="grid-container">
-    <div class="tile" onclick="checkZipAndGo('housing_assessment.html')"><h3>Housing</h3></div>
-    <div class="tile" onclick="checkZipAndGo('id_assessment.html')"><h3>Identification (ID)</h3></div>
-    <div class="tile" onclick="checkZipAndGo('food_assessment.html')"><h3>Food & Nutrition</h3></div>
-    <div class="tile" onclick="checkZipAndGo('utilities_assessment.html')"><h3>Utilities & Energy</h3></div>
-    <div class="tile" onclick="checkZipAndGo('internet_assessment.html')"><h3>Digital Access</h3></div>
-    <div class="tile" onclick="checkZipAndGo('transportation_assessment.html')"><h3>Transportation</h3></div>
-  </section>
+    <section class="grid-container">
+      <div class="tile" onclick="checkZipAndGo('housing_assessment.html')"><h3>Housing</h3></div>
+      <div class="tile" onclick="checkZipAndGo('id_assessment.html')"><h3>Identification (ID)</h3></div>
+      <div class="tile" onclick="checkZipAndGo('food_assessment.html')"><h3>Food & Nutrition</h3></div>
+      <div class="tile" onclick="checkZipAndGo('utilities_assessment.html')"><h3>Utilities & Energy</h3></div>
+      <div class="tile" onclick="checkZipAndGo('internet_assessment.html')"><h3>Digital Access</h3></div>
+      <div class="tile" onclick="checkZipAndGo('transportation_assessment.html')"><h3>Transportation</h3></div>
+    </section>
+  </div>
 
+  <script src="assets/js/header.js"></script>
   <script>
     function startAssessment() {
       const zip = document.getElementById("zip").value;

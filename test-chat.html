@@ -10,55 +10,81 @@
             max-width: 800px;
             margin: 20px auto;
             padding: 0 20px;
+            background-color: #f5f5f5;
         }
         #chat-container {
-            border: 1px solid #ccc;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding: 20px;
             margin-top: 20px;
-            border-radius: 5px;
         }
         #message-input {
             width: 100%;
-            padding: 10px;
+            padding: 15px;
             margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
         }
         #send-button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
         }
         #send-button:hover {
             background-color: #0056b3;
         }
         #response-area {
             margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            min-height: 100px;
             white-space: pre-wrap;
+        }
+        .status {
+            color: #666;
+            font-style: italic;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .success {
+            color: #28a745;
         }
     </style>
 </head>
 <body>
     <h1>Chat Function Test</h1>
     <div id="chat-container">
-        <textarea id="message-input" rows="4" placeholder="Type your message here..."></textarea>
+        <textarea 
+            id="message-input" 
+            rows="4" 
+            placeholder="Type your message here..."
+        ></textarea>
         <button id="send-button">Send Message</button>
         <div id="response-area"></div>
     </div>
 
     <script>
-        document.getElementById('send-button').addEventListener('click', async () => {
-            const messageInput = document.getElementById('message-input');
-            const responseArea = document.getElementById('response-area');
-            const message = messageInput.value.trim();
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const responseArea = document.getElementById('response-area');
 
+        async function sendMessage() {
+            const message = messageInput.value.trim();
             if (!message) return;
 
             try {
                 responseArea.textContent = 'Sending message...';
+                responseArea.className = 'status';
                 
                 const response = await fetch('/.netlify/functions/chatgpt', {
                     method: 'POST',
@@ -76,11 +102,26 @@
                 
                 if (response.ok) {
                     responseArea.textContent = `Assistant: ${data.response.content}`;
+                    responseArea.className = 'success';
+                    messageInput.value = ''; // Clear input on success
                 } else {
                     responseArea.textContent = `Error: ${data.error}`;
+                    responseArea.className = 'error';
                 }
             } catch (error) {
                 responseArea.textContent = `Error: ${error.message}`;
+                responseArea.className = 'error';
+            }
+        }
+
+        // Send on button click
+        sendButton.addEventListener('click', sendMessage);
+
+        // Send on Enter key (but Shift+Enter for new line)
+        messageInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
             }
         });
     </script>
