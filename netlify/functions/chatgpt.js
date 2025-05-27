@@ -1,7 +1,4 @@
-const OpenAI = require('openai');
-
-exports.handler = async function(event) {
-  // Ensure we're dealing with POST requests only
+exports.handler = async function (event) {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -9,23 +6,31 @@ exports.handler = async function(event) {
     };
   }
 
-  // Initialize the OpenAI client
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-  });
-
   try {
     const body = JSON.parse(event.body);
-    
+
     if (!body.messages || !Array.isArray(body.messages)) {
       throw new Error("Messages array is required in the request body");
     }
 
-    // Create chat completion with better error handling
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: body.messages,
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: body.messages,
+      }),
     });
+
+    if (!response.ok) {
+      const errorDetails = await response.text();
+      throw new Error(`OpenAI API error: ${errorDetails}`);
+    }
+
+    const data = await response.json();
 
     return {
       statusCode: 200,
@@ -33,21 +38,17 @@ exports.handler = async function(event) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        response: completion.choices[0].message,
+        response: data.choices[0].message,
       }),
     };
   } catch (error) {
     console.error("Error processing request:", error);
-
     return {
       statusCode: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({
         error: error.message,
-        type: error.constructor.name,
       }),
     };
   }
 };
+
