@@ -10,24 +10,17 @@ async function sendMessage(messages) {
       body: JSON.stringify({ messages }),
     });
 
-    const responseText = await response.text();
-    console.log('Raw response:', responseText);
-
-    let data;
-    try {
-      data = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error('Failed to parse response:', responseText);
-      throw new Error(`Server response was not valid JSON: ${responseText}`);
-    }
-
     if (!response.ok) {
-      throw new Error(data.error || data.message || `HTTP error! status: ${response.status}`);
+      const errorData = await response.json();
+      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
     }
 
-    if (!data.response) {
+    const data = await response.json();
+    console.log('Response data:', data);
+
+    if (!data.response || !data.response.content) {
       console.error('Invalid response structure:', data);
-      throw new Error('Response missing message field');
+      throw new Error('Invalid response format from server');
     }
 
     return data.response;
