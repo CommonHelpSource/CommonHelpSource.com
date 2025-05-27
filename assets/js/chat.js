@@ -2,7 +2,7 @@ async function sendMessage(messages) {
   try {
     console.log('Sending messages to chat function:', messages);
     
-    const response = await fetch('/.netlify/functions/chat', {
+    const response = await fetch('/.netlify/functions/chatgpt', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,12 +25,12 @@ async function sendMessage(messages) {
       throw new Error(data.error || data.message || `HTTP error! status: ${response.status}`);
     }
 
-    if (!data.message) {
+    if (!data.response) {
       console.error('Invalid response structure:', data);
       throw new Error('Response missing message field');
     }
 
-    return data.message;
+    return data.response;
   } catch (error) {
     console.error('Chat Error:', {
       name: error.name,
