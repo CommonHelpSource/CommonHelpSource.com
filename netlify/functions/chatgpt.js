@@ -1,54 +1,55 @@
-const OpenAI = require('openai');
-
 exports.handler = async function (event) {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
-      body: JSON.stringify({ error: "Method not allowed" }),
+      body: JSON.stringify({ error: "Method Not Allowed" }),
     };
   }
-
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-  });
 
   try {
     const body = JSON.parse(event.body);
+    const messages = body.messages;
 
-    if (!body.messages || !Array.isArray(body.messages)) {
-      throw new Error("Messages array is required in the request body");
+    if (!messages || !Array.isArray(messages)) {
+      throw new Error("Missing or invalid 'messages' array.");
     }
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: body.messages,
-      temperature: 0.7,
-      max_tokens: 1000
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: messages,
+      }),
     });
+
+    const text = await response.text();
+
+    // Try to parse the text manually
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (jsonErr) {
+      throw new Error("Failed to parse OpenAI response as JSON: " + text);
+    }
+
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      throw new Error("Invalid response from OpenAI: " + JSON.stringify(data));
+    }
 
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        response: completion.choices[0].message,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ response: data.choices[0].message }),
     };
-  } catch (error) {
-    console.error("Error processing request:", error);
-
+  } catch (err) {
+    console.error("Function error:", err);
     return {
       statusCode: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        error: error.message,
-        type: error.constructor.name,
-        details: error.response?.data || error.cause || "Unknown error"
-      }),
+      body: JSON.stringify({ error: err.message }),
     };
   }
 };
-
