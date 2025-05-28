@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Assessment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --primary-color: #ff6b35;
+      --primary-hover: #ff8659;
+      --text-color: #2d3436;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: #f5f6f7;
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .assessment-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 40px;
+      margin-bottom: 30px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 0 0 10px;
+      color: var(--text-color);
+    }
+
+    .location-info {
+      color: #636e72;
+      font-size: 1.1rem;
+    }
+
+    .question-group {
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .radio-option {
+      flex: 1;
+      position: relative;
+    }
+
+    .radio-option input[type="radio"] {
+      display: none;
+    }
+
+    .radio-option label {
+      display: block;
+      padding: 12px 20px;
+      background: #f5f6f7;
+      border: 2px solid #dfe6e9;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .radio-option input[type="radio"]:checked + label {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: white;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 40px;
+    }
+
+    .primary-btn {
+      flex: 1;
+      padding: 12px 24px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .primary-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .primary-btn:disabled {
+      background: #dfe6e9;
+      cursor: not-allowed;
+    }
+
+    .validation-message {
+      color: #e74c3c;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .loading-text {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="assessment-card">
+      <div class="header">
+        <h1>Food Assessment</h1>
+        <div class="location-info">ZIP Code: <span id="zipDisplay"></span></div>
+      </div>
+
+      <form id="assessmentForm">
+        <div class="question-group">
+          <label>Do you currently have enough food for yourself and your household?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="enough_food_yes" name="enough_food" value="yes">
+              <label for="enough_food_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="enough_food_no" name="enough_food" value="no">
+              <label for="enough_food_no">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>Are you receiving SNAP/EBT benefits?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="snap_yes" name="snap" value="yes">
+              <label for="snap_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="snap_no" name="snap" value="no">
+              <label for="snap_no">No</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="snap_unknown" name="snap" value="unknown">
+              <label for="snap_unknown">I don't know</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>Are you able to cook or store food where you live?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="cook_yes" name="cook_store" value="yes">
+              <label for="cook_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="cook_no" name="cook_store" value="no">
+              <label for="cook_no">No</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="cook_sometimes" name="cook_store" value="sometimes">
+              <label for="cook_sometimes">Sometimes</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>Do you have dietary or cultural food needs?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="dietary_yes" name="dietary" value="yes">
+              <label for="dietary_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="dietary_no" name="dietary" value="no">
+              <label for="dietary_no">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>Do you need food today or within 24 hours?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="urgent_yes" name="urgent" value="yes">
+              <label for="urgent_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="urgent_no" name="urgent" value="no">
+              <label for="urgent_no">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div id="validationMessage" class="validation-message">
+          Please answer all questions before continuing
+        </div>
+
+        <div id="loading" class="loading">
+          <div class="loading-text">Processing your assessment...</div>
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="primary-btn back-btn" onclick="window.location.href='index.html'">
+            Back to Home
+          </button>
+          <button type="button" class="primary-btn next-btn" onclick="submitAssessment()" id="submitBtn">
+            Get Results
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Check for ZIP code on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      const zip = localStorage.getItem('zip');
+      if (!zip) {
+        window.location.href = 'index.html';
+        return;
+      }
+      document.getElementById('zipDisplay').textContent = zip;
+
+      // Add change listeners to all radio buttons for validation
+      document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', validateForm);
+      });
+
+      // Initial validation check
+      validateForm();
+    });
+
+    function validateForm() {
+      const questionGroups = document.querySelectorAll('.question-group');
+      const allAnswered = Array.from(questionGroups).every(group => {
+        const name = group.querySelector('input[type="radio"]').name;
+        return document.querySelector(`input[name="${name}"]:checked`);
+      });
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const validationMessage = document.getElementById('validationMessage');
+      
+      submitBtn.disabled = !allAnswered;
+      validationMessage.style.display = allAnswered ? 'none' : 'block';
+    }
+
+    async function submitAssessment() {
+      const zip = localStorage.getItem('zip');
+      if (!zip) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Collect form data
+      const data = {
+        has_enough_food: document.querySelector('input[name="enough_food"]:checked').value,
+        receives_snap: document.querySelector('input[name="snap"]:checked').value,
+        can_cook_store: document.querySelector('input[name="cook_store"]:checked').value,
+        has_dietary_needs: document.querySelector('input[name="dietary"]:checked').value,
+        needs_urgent_food: document.querySelector('input[name="urgent"]:checked').value
+      };
+
+      // Save assessment data
+      localStorage.setItem('food_assessment', JSON.stringify(data));
+
+      // Show loading state
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('submitBtn').disabled = true;
+
+      try {
+        // Generate the prompt based on answers
+        const prompt = `Create a step-by-step Food Assistance Plan for someone who answered the following:
+- Has enough food: ${data.has_enough_food}
+- Receives SNAP/EBT: ${data.receives_snap}
+- Can cook/store food: ${data.can_cook_store}
+- Has dietary needs: ${data.has_dietary_needs}
+- Needs food within 24 hours: ${data.needs_urgent_food}
+They live in ZIP code ${zip}. Recommend 3–5 food resources within 20 miles including pantries, SNAP enrollment support, and meal delivery options. Format the response as an action plan.`;
+
+        // Send to chatbot endpoint
+        const response = await fetch('/.netlify/functions/chatgpt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            zip: zip,
+            messages: [
+              {
+                role: "system",
+                content: "You are a helpful food assistance expert providing personalized recommendations based on assessment responses."
+              },
+              {
+                role: "user",
+                content: prompt
+              }
+            ]
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to process assessment');
+        }
+
+        const result = await response.json();
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        // Redirect to results page
+        window.location.href = 'results.html';
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('validationMessage').textContent = `Error: ${error.message}. Please try again.`;
+        document.getElementById('validationMessage').style.display = 'block';
+        document.getElementById('submitBtn').disabled = false;
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html> 
