@@ -241,13 +241,15 @@
   <script>
     async function init() {
       const assessmentData = localStorage.getItem('complete_assessment');
-      if (!assessmentData) {
+      const zip = localStorage.getItem('zip');
+      
+      if (!assessmentData || !zip) {
         window.location.href = 'index.html';
         return;
       }
 
       const data = JSON.parse(assessmentData);
-      document.getElementById('zipDisplay').textContent = data.zip;
+      document.getElementById('zipDisplay').textContent = zip;
 
       try {
         const response = await fetch('/.netlify/functions/chatgpt', {
@@ -256,10 +258,11 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            zip: zip,
             messages: [
               {
                 role: "system",
-                content: `You are a helpful assistant providing housing assistance recommendations. Format your response in JSON with the following structure:
+                content: `You are a helpful assistant providing housing assistance recommendations for ZIP code ${zip}. Format your response in JSON with the following structure:
                 {
                   "summary": "One sentence summary of the situation",
                   "steps": [
@@ -290,11 +293,17 @@
         const recommendations = JSON.parse(result.choices[0].message.content);
         
         displayResults(recommendations);
+
       } catch (error) {
         console.error('Error:', error);
-        document.getElementById('loading').innerHTML = `
-          <div class="loading-text">
-            Error generating recommendations. Please try again or contact support.
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('results').innerHTML = `
+          <div class="error">
+            <h2>Error Loading Results</h2>
+            <p>Sorry, we couldn't load your assessment results. Please try again later.</p>
+            <button class="action-btn restart-btn" onclick="startOver()">
+              🔄 Start Over
+            </button>
           </div>
         `;
       }

@@ -1,3 +1,28 @@
+<style>
+.site-logo {
+  display: block;
+  max-width: 300px;
+  width: 80%;
+  height: auto;
+  margin: 20px auto;
+  transition: transform 0.2s;
+}
+
+.site-logo:hover {
+  transform: scale(1.02);
+}
+
+@media (max-width: 480px) {
+  .site-logo {
+    width: 90%;
+  }
+}
+</style>
+
+<a href="index.html">
+  <img src="assets/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
+</a>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -201,6 +226,21 @@
         width: 100%;
       }
     }
+
+    .zip-warning {
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+      display: none;
+    }
+
+    .zip-warning a {
+      color: #533f03;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -210,11 +250,14 @@
     <div class="assessment-card">
       <div class="header">
         <h1>Food Access Assessment</h1>
-        <div class="subtitle">Let's find food resources in your area</div>
+        <div class="zip-display">
+          Showing resources for ZIP code: <span id="userZip">Loading...</span>
+          <button onclick="changeZip()" style="margin-left: 10px; padding: 5px 10px; border: none; background: #f0f0f0; border-radius: 4px; cursor: pointer;">Change</button>
+        </div>
       </div>
 
-      <div class="zip-display">
-        Showing resources for ZIP code: <span id="userZip">Loading...</span>
+      <div id="zip-warning" class="zip-warning">
+        Please <a href="index.html">enter your ZIP code</a> to get localized food assistance resources.
       </div>
 
       <div id="enough_food" class="question-section">
@@ -267,18 +310,37 @@
   <script>
     // Store assessment answers
     let assessmentAnswers = {};
+    let userZip = null;
     
-    // Load ZIP code on page load
+    // Load and validate ZIP code on page load
     document.addEventListener('DOMContentLoaded', function() {
-      const zip = localStorage.getItem('zip');
-      if (zip) {
-        document.getElementById('userZip').textContent = zip;
+      userZip = localStorage.getItem('zip');
+      const zipDisplay = document.getElementById('userZip');
+      const zipWarning = document.getElementById('zip-warning');
+      const questionSections = document.querySelectorAll('.question-section');
+
+      if (userZip) {
+        zipDisplay.textContent = userZip;
+        zipWarning.style.display = 'none';
+        questionSections.forEach(section => section.style.display = 'block');
       } else {
-        document.getElementById('userZip').textContent = 'Not available';
+        zipDisplay.textContent = 'Not set';
+        zipWarning.style.display = 'block';
+        questionSections.forEach(section => section.style.display = 'none');
       }
     });
 
+    function changeZip() {
+      localStorage.removeItem('zip');
+      window.location.href = 'index.html';
+    }
+
     async function handleAnswer(questionId, answer) {
+      if (!userZip) {
+        window.location.href = 'index.html';
+        return;
+      }
+
       // Update button styles
       const section = document.getElementById(questionId);
       const buttons = section.querySelectorAll('.option-btn');
@@ -304,10 +366,11 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            zip: userZip,
             messages: [
               {
                 role: "system",
-                content: `You are a helpful food assistance expert. Based on the user's ZIP code (${localStorage.getItem('zip')}) and their answers to the food access assessment, provide specific, actionable resources. Format your response with:
+                content: `You are a helpful food assistance expert. Based on the user's answers to the food access assessment, provide specific, actionable resources. Format your response with:
                 1. A brief acknowledgment of their situation
                 2. 2-3 specific local or online resources they can use
                 3. Clear next steps
@@ -324,26 +387,37 @@
         });
 
         if (!response.ok) {
-          throw new Error('Failed to get resources');
+          throw new Error('Failed to get recommendations');
         }
 
-        const data = await response.json();
-        const content = data.response.content;
+        const result = await response.json();
+        const recommendation = result.choices[0].message.content;
 
-        resourcesDiv.innerHTML = `
-          <div class="resource-content">
-            ${content.replace(/\n/g, '<br>')}
-          </div>
-        `;
+        // Format and display the resources
+        resourcesDiv.innerHTML = formatRecommendation(recommendation);
+
       } catch (error) {
         console.error('Error:', error);
-        resourcesDiv.innerHTML = `
-          <div class="error-message">
-            Unable to load resources. Please try again later.
-          </div>
-        `;
+        resourcesDiv.innerHTML = '<div class="error">Sorry, there was an error getting recommendations. Please try again.</div>';
       }
+    }
+
+    function formatRecommendation(text) {
+      // Split into paragraphs
+      const paragraphs = text.split('\n').filter(p => p.trim());
+      
+      // Format as HTML
+      return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
     }
   </script>
 </body>
 </html>
+<!--
+TASK: Add the site logo at the top of this page. Make it a clickable link to index.html. Use the image at: assets/commonhelpsource-logo.png. Use this structure:
+
+<a href="index.html">
+  <img src="assets/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
+</a>
+
+Style the logo to be mobile-friendly and consistent with the homepage.
+-->
