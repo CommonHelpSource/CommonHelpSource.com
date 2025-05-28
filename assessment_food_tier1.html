@@ -140,9 +140,33 @@
       color: var(--primary-color);
       font-weight: 600;
     }
+
+    .site-logo {
+      display: block;
+      max-width: 300px;
+      width: 80%;
+      height: auto;
+      margin: 20px auto;
+      transition: transform 0.2s;
+    }
+
+    .site-logo:hover {
+      transform: scale(1.02);
+    }
+
+    @media (max-width: 480px) {
+      .site-logo {
+        width: 90%;
+      }
+    }
   </style>
 </head>
 <body>
+  <a href="index.html">
+    <img src="assets/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
+  </a>
+  <script src="assets/js/header.js"></script>
+
   <div class="container">
     <div class="assessment-card">
       <div class="header">
