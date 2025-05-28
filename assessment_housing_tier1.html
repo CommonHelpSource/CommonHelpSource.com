@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Housing Assessment - Part 1</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
   <style>
     :root {
       --primary-color: #ff6b35;
@@ -15,6 +17,15 @@
     }
 
     body {
+      <div id="logo-container"></div>
+<script>
+  fetch('logo.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('logo-container').innerHTML = html;
+    });
+</script>
+
       margin: 0;
       font-family: 'Open Sans', sans-serif;
       background: #f5f6f7;
