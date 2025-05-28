@@ -1,14 +1,17 @@
 {
-  "name": "commonhelpsource-functions",
+  "name": "commonhelpsource",
   "version": "1.0.0",
-  "dependencies": {
-    "dotenv": "^16.5.0",
-    "node-fetch": "^2.6.1",
-    "openai": "^4.103.0"
-  },
+  "description": "Smart access to community help resources",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "openai": "^4.0.0",
+    "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "netlify-cli": "^12.0.0"
   },
   "repository": {
     "type": "git",
@@ -20,6 +23,5 @@
   "bugs": {
     "url": "https://github.com/CommonHelpSource/CommonHelpSource.com/issues"
   },
-  "homepage": "https://github.com/CommonHelpSource/CommonHelpSource.com#readme",
-  "description": ""
+  "homepage": "https://github.com/CommonHelpSource/CommonHelpSource.com#readme"
 }

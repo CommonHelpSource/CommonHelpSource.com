@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "language": "Español",
+    "code": "es",
+    "direction": "ltr"
+  },
+  "notifications": {
+    "languageSwitch": "Hemos cambiado tu idioma a {0}. Puedes cambiarlo en cualquier momento en la esquina superior derecha."
+  },
+  "common": {
+    "start": "Comenzar Evaluación",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "submit": "Enviar",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "close": "Cerrar",
+    "change": "Cambiar",
+    "required": "Requerido"
+  },
+  "header": {
+    "logoAlt": "Logo de CommonHelpSource",
+    "languageSelector": "Seleccionar Idioma"
+  },
+  "home": {
+    "title": "CommonHelpSource",
+    "tagline": "Acceso Inteligente a Ayuda Comunitaria, Impulsado por IA",
+    "zipLabel": "Ingrese su código postal para comenzar",
+    "zipPlaceholder": "ej., 12345",
+    "zipError": "Por favor ingrese un código postal válido de 5 dígitos",
+    "useLocation": "Usar mi ubicación",
+    "assessmentLabel": "Seleccione el Tipo de Evaluación",
+    "assessmentPlaceholder": "Elija una evaluación...",
+    "proButton": "El Trabajador Social Pro"
+  },
+  "buttons": {
+    "downloadWord": {
+      "label": "Descargar como Word",
+      "tooltip": "Guardar su plan de acción como documento Word"
+    },
+    "emailResults": {
+      "label": "Enviar por Email",
+      "tooltip": "Enviar este plan de acción a su correo electrónico"
+    },
+    "startOver": {
+      "label": "Comenzar de Nuevo",
+      "tooltip": "Iniciar una nueva evaluación"
+    },
+    "print": {
+      "label": "Imprimir Plan",
+      "tooltip": "Imprimir su plan de acción"
+    },
+    "share": {
+      "label": "Compartir Plan",
+      "tooltip": "Compartir este plan con alguien"
+    }
+  },
+  "assessmentTypes": {
+    "housing": "Asistencia de Vivienda",
+    "id": "Identificación y Documentación",
+    "food": "Apoyo Alimentario",
+    "utility": "Asistencia de Servicios Públicos",
+    "housingDesc": "Encuentre refugios de emergencia, asistencia de alquiler y recursos de vivienda en su área.",
+    "idDesc": "Obtenga ayuda para obtener identificación, certificados de nacimiento y otros documentos vitales.",
+    "foodDesc": "Conéctese con bancos de alimentos, programas de comidas y servicios de asistencia nutricional.",
+    "utilityDesc": "Acceda a programas de asistencia para facturas de servicios públicos y apoyo energético.",
+    "proDesc": "Herramientas profesionales de formato y estructuración de notas para trabajadores sociales y administradores de casos."
+  },
+  "housing": {
+    "title": "Evaluación de Vivienda",
+    "phase1": "Fase 1",
+    "phase2": "Fase 2",
+    "currentSituation": "Situación Actual de Vivienda",
+    "urgency": "Nivel de Urgencia",
+    "barriers": "Barreras de Vivienda",
+    "income": "Fuentes de Ingresos",
+    "preferences": "Preferencias de Vivienda",
+    "situations": {
+      "homeless": "Actualmente Sin Hogar",
+      "risk": "En Riesgo de Quedarse Sin Hogar",
+      "unstable": "Vivienda Inestable",
+      "stable": "Estable pero Buscando Asistencia"
+    },
+    "urgencyLevels": {
+      "emergency": "Emergencia (24-48 horas)",
+      "urgent": "Urgente (1 semana)",
+      "soon": "Pronto (2-4 semanas)",
+      "planning": "Planificación Anticipada"
+    }
+  },
+  "results": {
+    "title": "Su Plan de Acción de Vivienda",
+    "loading": "Generando su plan personalizado de asistencia de vivienda...",
+    "locationInfo": "Para el Código Postal:",
+    "distance": {
+      "miles": "millas de distancia",
+      "beyondRadius": "Nota: Este recurso está más allá del radio de búsqueda inicial"
+    }
+  },
+  "pro": {
+    "title": "El Trabajador Social Pro",
+    "subtitle": "Asistente de Formato y Estructura de Notas Profesionales",
+    "formats": {
+      "mha": "Nota de Progreso MHA",
+      "chw": "Nota de Progreso CHW",
+      "soap": "Nota SOAP",
+      "dap": "Nota DAP",
+      "narrative": "Nota Narrativa"
+    },
+    "placeholders": {
+      "noteText": "Ingrese el contenido de su nota de progreso..."
+    },
+    "buttons": {
+      "format": "Formatear Mi Nota",
+      "dictate": "Comenzar Dictado",
+      "stop": "Detener Dictado"
+    }
+  }
+} 

@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "language": "English",
+    "code": "en",
+    "direction": "ltr"
+  },
+  "notifications": {
+    "languageSwitch": "We've switched your language to {0}. You can change it anytime in the top-right corner."
+  },
+  "common": {
+    "start": "Start Assessment",
+    "next": "Next",
+    "back": "Back",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "change": "Change",
+    "required": "Required"
+  },
+  "header": {
+    "logoAlt": "CommonHelpSource Logo",
+    "languageSelector": "Select Language"
+  },
+  "home": {
+    "title": "CommonHelpSource",
+    "tagline": "Smart Access to Community Help, Powered by AI",
+    "zipLabel": "Enter your ZIP code to get started",
+    "zipPlaceholder": "e.g., 12345",
+    "zipError": "Please enter a valid 5-digit ZIP code",
+    "useLocation": "Use my location",
+    "assessmentLabel": "Select Assessment Type",
+    "assessmentPlaceholder": "Choose an assessment...",
+    "proButton": "The Pro Social Worker"
+  },
+  "buttons": {
+    "downloadWord": {
+      "label": "Download as Word",
+      "tooltip": "Save your action plan as a Word document"
+    },
+    "emailResults": {
+      "label": "Email Results",
+      "tooltip": "Send this action plan to your email"
+    },
+    "startOver": {
+      "label": "Start Over",
+      "tooltip": "Begin a new assessment"
+    },
+    "print": {
+      "label": "Print Plan",
+      "tooltip": "Print your action plan"
+    },
+    "share": {
+      "label": "Share Plan",
+      "tooltip": "Share this plan with someone"
+    }
+  },
+  "assessmentTypes": {
+    "housing": "Housing Assistance",
+    "id": "ID & Documentation",
+    "food": "Food Support",
+    "utility": "Utility Assistance",
+    "housingDesc": "Find emergency shelter, rental assistance, and housing resources in your area.",
+    "idDesc": "Get help obtaining identification, birth certificates, and other vital documents.",
+    "foodDesc": "Connect with food banks, meal programs, and nutrition assistance services.",
+    "utilityDesc": "Access programs for utility bill assistance and energy support services.",
+    "proDesc": "Professional note formatting and structuring tools for social workers and case managers."
+  },
+  "housing": {
+    "title": "Housing Assessment",
+    "phase1": "Phase 1",
+    "phase2": "Phase 2",
+    "currentSituation": "Current Housing Situation",
+    "urgency": "Level of Urgency",
+    "barriers": "Housing Barriers",
+    "income": "Income Sources",
+    "preferences": "Housing Preferences",
+    "situations": {
+      "homeless": "Currently Homeless",
+      "risk": "At Risk of Homelessness",
+      "unstable": "Unstable Housing",
+      "stable": "Stable but Seeking Assistance"
+    },
+    "urgencyLevels": {
+      "emergency": "Emergency (24-48 hours)",
+      "urgent": "Urgent (1 week)",
+      "soon": "Soon (2-4 weeks)",
+      "planning": "Planning Ahead"
+    }
+  },
+  "results": {
+    "title": "Your Housing Action Plan",
+    "loading": "Generating your personalized housing assistance plan...",
+    "locationInfo": "For ZIP Code:",
+    "distance": {
+      "miles": "miles away",
+      "beyondRadius": "Note: This resource is beyond the initial search radius"
+    }
+  },
+  "pro": {
+    "title": "The Pro Social Worker",
+    "subtitle": "Professional Note Formatter & Structure Assistant",
+    "formats": {
+      "mha": "MHA Progress Note",
+      "chw": "CHW Progress Note",
+      "soap": "SOAP Note",
+      "dap": "DAP Note",
+      "narrative": "Narrative Note"
+    },
+    "placeholders": {
+      "noteText": "Enter your progress note content..."
+    },
+    "buttons": {
+      "format": "Format My Note",
+      "dictate": "Start Dictation",
+      "stop": "Stop Dictation"
+    }
+  }
+} 
