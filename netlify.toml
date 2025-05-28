@@ -1,2 +1,24 @@
-[functions]
-  directory = "netlify/functions"
+[build]
+  publish = "/"
+  functions = "netlify/functions"
+
+[dev]
+  publish = "/"
+  port = 8888
+  targetPort = 3999
+  framework = "#static"
+  autoLaunch = true
+
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self' https://api.openai.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.openai.com https://api.bigdatacloud.net;"

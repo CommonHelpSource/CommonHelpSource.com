@@ -248,10 +248,12 @@
         return;
       }
 
-      const data = JSON.parse(assessmentData);
       document.getElementById('zipDisplay').textContent = zip;
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('results').style.display = 'none';
 
       try {
+        const data = JSON.parse(assessmentData);
         const response = await fetch('/.netlify/functions/chatgpt', {
           method: 'POST',
           headers: {
@@ -290,17 +292,31 @@
         }
 
         const result = await response.json();
-        const recommendations = JSON.parse(result.choices[0].message.content);
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        let recommendations;
+        try {
+          recommendations = typeof result.response.content === 'string' 
+            ? JSON.parse(result.response.content)
+            : result.response.content;
+        } catch (e) {
+          throw new Error('Invalid response format from AI');
+        }
+
+        if (!recommendations.summary || !Array.isArray(recommendations.steps)) {
+          throw new Error('Invalid response structure from AI');
+        }
         
         displayResults(recommendations);
-
       } catch (error) {
         console.error('Error:', error);
         document.getElementById('loading').style.display = 'none';
         document.getElementById('results').innerHTML = `
           <div class="error">
             <h2>Error Loading Results</h2>
-            <p>Sorry, we couldn't load your assessment results. Please try again later.</p>
+            <p>${error.message}</p>
             <button class="action-btn restart-btn" onclick="startOver()">
               🔄 Start Over
             </button>
@@ -314,35 +330,26 @@
       document.getElementById('results').style.display = 'block';
 
       // Display summary
-      document.getElementById('summary').textContent = data.summary;
+      document.getElementById('summary').innerHTML = `
+        <div class="situation-summary">
+          ${data.summary}
+        </div>
+      `;
 
       // Display steps
       const stepsHtml = data.steps.map((step, index) => `
-        <div class="step">
-          <div class="step-header">
-            <div class="step-number">${index + 1}</div>
-            <h3 class="organization">${step.organization}</h3>
+        <div class="action-step">
+          <div class="step-title">
+            <span class="step-number">${index + 1}</span>
+            ${step.organization}
           </div>
-          <div class="details">
-            <div class="detail-group">
-              <div class="detail-label">Action:</div>
-              <div class="detail-value">${step.action}</div>
-            </div>
-            <div class="detail-group">
-              <div class="detail-label">Eligibility:</div>
-              <div class="detail-value">${step.eligibility}</div>
-            </div>
-            <div class="detail-group">
-              <div class="detail-label">Hours:</div>
-              <div class="detail-value">${step.hours}</div>
-            </div>
-            <div class="detail-group">
-              <div class="detail-label">Address:</div>
-              <div class="detail-value">${step.address}</div>
-            </div>
-            <div class="detail-group">
-              <div class="detail-label">Phone:</div>
-              <div class="detail-value">${step.phone}</div>
+          <div class="step-description">
+            <strong>Action:</strong> ${step.action}<br>
+            <strong>Eligibility:</strong> ${step.eligibility}<br>
+            <div class="contact-info">
+              <strong>Hours:</strong> ${step.hours}<br>
+              <strong>Address:</strong> ${step.address}<br>
+              <strong>Phone:</strong> ${step.phone}
             </div>
           </div>
         </div>

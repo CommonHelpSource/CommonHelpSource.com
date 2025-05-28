@@ -391,23 +391,48 @@
         }
 
         const result = await response.json();
-        const recommendation = result.choices[0].message.content;
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        const recommendation = result.response.content;
+        if (!recommendation) {
+          throw new Error('Empty response from AI');
+        }
 
         // Format and display the resources
         resourcesDiv.innerHTML = formatRecommendation(recommendation);
 
+        // Show next question if available
+        const nextSection = section.nextElementSibling;
+        if (nextSection && nextSection.classList.contains('question-section')) {
+          nextSection.style.display = 'block';
+          nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
       } catch (error) {
         console.error('Error:', error);
-        resourcesDiv.innerHTML = '<div class="error">Sorry, there was an error getting recommendations. Please try again.</div>';
+        resourcesDiv.innerHTML = `
+          <div class="error">
+            <p>Error: ${error.message}</p>
+            <button class="retry-btn" onclick="handleAnswer('${questionId}', '${answer}')">
+              Try Again
+            </button>
+          </div>
+        `;
       }
     }
 
     function formatRecommendation(text) {
-      // Split into paragraphs
+      // Split into paragraphs and filter empty lines
       const paragraphs = text.split('\n').filter(p => p.trim());
       
-      // Format as HTML
-      return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
+      // Format as HTML with improved styling
+      return `
+        <div class="recommendation">
+          ${paragraphs.map(p => `<p>${p.trim()}</p>`).join('')}
+        </div>
+      `;
     }
   </script>
 </body>

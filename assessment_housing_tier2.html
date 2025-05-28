@@ -312,6 +312,11 @@
       const tier1Data = JSON.parse(localStorage.getItem('housing_assessment_1'));
       const zip = localStorage.getItem('zip');
 
+      if (!zip || !tier1Data) {
+        window.location.href = 'index.html';
+        return;
+      }
+
       // Collect current form data
       const tier2Data = {
         income: document.getElementById('income').value,
@@ -343,6 +348,7 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            zip: zip,
             messages: [
               {
                 role: "system",
@@ -360,6 +366,11 @@
           throw new Error('Failed to process assessment');
         }
 
+        const result = await response.json();
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
         // Store the complete assessment data
         localStorage.setItem('complete_assessment', JSON.stringify(assessmentData));
         
@@ -367,7 +378,7 @@
         window.location.href = 'results.html';
       } catch (error) {
         console.error('Error:', error);
-        document.getElementById('validationMessage').textContent = 'Error processing assessment. Please try again.';
+        document.getElementById('validationMessage').textContent = `Error: ${error.message}. Please try again.`;
         document.getElementById('validationMessage').style.display = 'block';
         document.getElementById('submitBtn').disabled = false;
       } finally {
