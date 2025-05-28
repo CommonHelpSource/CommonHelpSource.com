@@ -1,0 +1,329 @@
+{
+  "CT": [
+    "HUSKY Health (Medicaid/CHIP)",
+    "Access Health CT (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "ME": [
+    "MaineCare (Medicaid)",
+    "CoverME.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MA": [
+    "MassHealth (Medicaid)",
+    "Health Connector (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NH": [
+    "NH Medicaid",
+    "Health Insurance Marketplace (via HealthCare.gov)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NJ": [
+    "NJ FamilyCare (Medicaid)",
+    "GetCoveredNJ (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NY": [
+    "Medicaid",
+    "Essential Plan",
+    "Child Health Plus",
+    "NY State of Health (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "PA": [
+    "Medical Assistance (PA Medicaid)",
+    "Pennie (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "RI": [
+    "Rhode Island Medicaid",
+    "HealthSource RI (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "VT": [
+    "Green Mountain Care (Medicaid)",
+    "Vermont Health Connect (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "IL": [
+    "Illinois Medicaid",
+    "All Kids (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "IN": [
+    "Indiana Medicaid (HIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "IA": [
+    "Iowa Medicaid",
+    "Hawki (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "KS": [
+    "KanCare (Kansas Medicaid)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MI": [
+    "MI Bridges (Medicaid)",
+    "Healthy Michigan Plan",
+    "Marketplace via HealthCare.gov",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MN": [
+    "Medical Assistance (Medicaid)",
+    "MinnesotaCare",
+    "MNsure (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MO": [
+    "Missouri Medicaid (MO HealthNet)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NE": [
+    "Nebraska Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "ND": [
+    "North Dakota Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "OH": [
+    "Ohio Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "SD": [
+    "South Dakota Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "WI": [
+    "BadgerCare Plus (Medicaid)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "AL": [
+    "Alabama Medicaid",
+    "ALL Kids (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "AR": [
+    "Arkansas Medicaid",
+    "ARKids First (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "DE": [
+    "Delaware Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "FL": [
+    "Florida Medicaid",
+    "Florida KidCare (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "GA": [
+    "Georgia Medicaid",
+    "PeachCare for Kids (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "KY": [
+    "Kentucky Medicaid",
+    "KCHIP (CHIP)",
+    "kynect (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "LA": [
+    "Louisiana Medicaid",
+    "LaCHIP (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MD": [
+    "Maryland Medicaid",
+    "MCHP (CHIP)",
+    "Maryland Health Connection (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MS": [
+    "Mississippi Medicaid",
+    "CHIP Mississippi",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NC": [
+    "NC Medicaid",
+    "NC Health Choice (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "OK": [
+    "SoonerCare (Oklahoma Medicaid)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "SC": [
+    "Healthy Connections (Medicaid)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "TN": [
+    "TennCare (Medicaid)",
+    "CoverKids (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "TX": [
+    "Texas Medicaid",
+    "CHIP (Children's Health Insurance Program)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "VA": [
+    "Virginia Medicaid",
+    "FAMIS (CHIP)",
+    "Cover Virginia",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "WV": [
+    "West Virginia Medicaid",
+    "CHIP West Virginia",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "AK": [
+    "DenaliCare (Alaska Medicaid)",
+    "Denali KidCare (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "AZ": [
+    "Arizona Health Care Cost Containment System (AHCCCS)",
+    "KidsCare (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "CA": [
+    "Medi-Cal (California Medicaid)",
+    "Covered California (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "CO": [
+    "Health First Colorado (Medicaid)",
+    "Child Health Plan Plus (CHP+)",
+    "Connect for Health Colorado (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "HI": [
+    "Hawaii Medicaid",
+    "QUEST Integration (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "ID": [
+    "Idaho Medicaid",
+    "Your Health Idaho (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MT": [
+    "Montana Medicaid",
+    "Healthy Montana Kids (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NV": [
+    "Nevada Medicaid",
+    "Nevada Check Up (CHIP)",
+    "Nevada Health Link (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NM": [
+    "New Mexico Medicaid",
+    "CHIP New Mexico",
+    "beWellnm (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "OR": [
+    "Oregon Health Plan (Medicaid)",
+    "Oregon Health Insurance Marketplace",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "UT": [
+    "Utah Medicaid",
+    "CHIP Utah",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "WA": [
+    "Washington Apple Health (Medicaid)",
+    "WA Healthplanfinder (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "WY": [
+    "Wyoming Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ]
+} 

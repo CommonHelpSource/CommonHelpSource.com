@@ -309,7 +309,9 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { getLocationInfo } from './assets/js/zip_utils.js';
+
     const zipInput = document.getElementById("zip");
     const zipError = document.getElementById("zipError");
     const typeSelect = document.getElementById("type");
@@ -317,7 +319,7 @@
     const startBtn = document.getElementById("startBtn");
 
     // Add input validation
-    zipInput.addEventListener('input', function(e) {
+    zipInput.addEventListener('input', async function(e) {
       // Remove any non-numeric characters
       this.value = this.value.replace(/[^0-9]/g, '');
       
@@ -326,8 +328,17 @@
 
       // Check if we have a valid ZIP
       if (validateZip(this.value)) {
-        assessmentType.classList.add('visible');
-        updateStartButton();
+        const locationInfo = await getLocationInfo(this.value);
+        if (locationInfo) {
+          assessmentType.classList.add('visible');
+          // Store complete location info
+          localStorage.setItem('locationInfo', JSON.stringify(locationInfo));
+          updateStartButton();
+        } else {
+          assessmentType.classList.remove('visible');
+          startBtn.disabled = true;
+          alert('Sorry, we currently only serve the Northeast region (CT, ME, MA, NH, NJ, NY, PA, RI, and VT). Please enter a ZIP code from one of these states.');
+        }
       } else {
         assessmentType.classList.remove('visible');
         startBtn.disabled = true;
@@ -345,27 +356,6 @@
       return /^\d{5}$/.test(zip);
     }
 
-    function startAssessment() {
-      const zip = zipInput.value;
-      const type = typeSelect.value;
-
-      if (!validateZip(zip)) {
-        zipError.style.display = 'block';
-        zipInput.focus();
-        return;
-      }
-
-      if (!type) {
-        return;
-      }
-
-      // Save ZIP code to localStorage
-      localStorage.setItem("zip", zip);
-      
-      // Redirect to appropriate assessment page
-      window.location.href = `assessment_${type}_tier1.html`;
-    }
-
     async function getLocationZip() {
       try {
         const position = await new Promise((resolve, reject) => {
@@ -379,11 +369,7 @@
         const data = await response.json();
         if (data.postcode) {
           zipInput.value = data.postcode;
-          zipError.style.display = 'none';
-          if (validateZip(data.postcode)) {
-            assessmentType.classList.add('visible');
-            updateStartButton();
-          }
+          zipInput.dispatchEvent(new Event('input')); // Trigger validation
         } else {
           throw new Error('ZIP code not found');
         }
@@ -408,9 +394,26 @@
         selectedBtn.classList.add('selected');
       }
       
-      const typeSelect = document.getElementById('type');
       typeSelect.value = type;
       updateStartButton();
+    }
+
+    async function startAssessment() {
+      const zip = zipInput.value;
+      const type = typeSelect.value;
+
+      if (!validateZip(zip)) {
+        zipError.style.display = 'block';
+        zipInput.focus();
+        return;
+      }
+
+      if (!type) {
+        return;
+      }
+
+      // Location info is already stored in localStorage from validation
+      window.location.href = `assessment_${type}_tier1.html`;
     }
   </script>
 </body>

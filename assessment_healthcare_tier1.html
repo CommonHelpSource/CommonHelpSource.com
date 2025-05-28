@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Healthcare Assessment - CommonHelpSource</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #ffb635;
+      --primary-hover: #ff8659;
+      --text-color: #2d3436;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: #f5f6f7;
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+
+    .site-logo {
+      display: block;
+      max-width: 300px;
+      width: 80%;
+      height: auto;
+      margin: 20px auto;
+      transition: transform 0.2s;
+    }
+
+    .site-logo:hover {
+      transform: scale(1.02);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .location-info {
+      text-align: center;
+      color: #636e72;
+      margin-bottom: 30px;
+    }
+
+    .question {
+      margin-bottom: 30px;
+    }
+
+    .question label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .radio-option {
+      flex: 1;
+      position: relative;
+    }
+
+    .radio-option input[type="radio"] {
+      display: none;
+    }
+
+    .radio-option label {
+      display: block;
+      padding: 12px 20px;
+      background: #f5f6f7;
+      border: 2px solid #dfe6e9;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: normal;
+    }
+
+    .radio-option input[type="radio"]:checked + label {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: white;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #dfe6e9;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-top: 10px;
+      background-color: white;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .next-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 30px;
+      transition: background-color 0.3s ease;
+    }
+
+    .next-btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .next-btn:disabled {
+      background-color: #dfe6e9;
+      cursor: not-allowed;
+    }
+
+    .validation-message {
+      color: #e74c3c;
+      margin-top: 20px;
+      display: none;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .radio-group {
+        flex-direction: column;
+      }
+      
+      .radio-option {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html">
+    <img src="assets/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
+  </a>
+
+  <div class="container">
+    <header>
+      <h1>Healthcare Assessment</h1>
+      <p>Let's find the right healthcare options for you.</p>
+    </header>
+
+    <main>
+      <section id="location-section">
+        <h2>Your Location</h2>
+        <div class="form-group">
+          <label for="zip-input">ZIP Code:</label>
+          <input type="text" id="zip-input" name="zip" maxlength="5" pattern="[0-9]*" inputmode="numeric" placeholder="Enter your ZIP code">
+          <div id="location-error" class="error-message" style="display: none;"></div>
+        </div>
+        <div id="location-info" style="display: none;">
+          <p id="state-display"></p>
+          <div id="insurance-options" class="options-list"></div>
+        </div>
+      </section>
+
+      <form id="healthcare-form">
+        <!-- Hidden inputs for storing location data -->
+        <input type="hidden" id="state-input" name="state">
+        <input type="hidden" id="insurance-input" name="insurance_options">
+
+        <section id="assessment-questions">
+          <h2>Healthcare Needs</h2>
+          <div class="question">
+            <label>1. Do you currently have health insurance?</label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="q1_yes" name="has_insurance" value="yes">
+                <label for="q1_yes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q1_no" name="has_insurance" value="no">
+                <label for="q1_no">No</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q1_unsure" name="has_insurance" value="unsure">
+                <label for="q1_unsure">I'm not sure</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <label>2. Do you have a primary care provider (PCP)?</label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="q2_yes" name="has_pcp" value="yes">
+                <label for="q2_yes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q2_no" name="has_pcp" value="no">
+                <label for="q2_no">No</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <label>3. Do you have any urgent or ongoing health needs that you're not getting care for?</label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="q3_yes" name="has_urgent_needs" value="yes">
+                <label for="q3_yes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q3_no" name="has_urgent_needs" value="no">
+                <label for="q3_no">No</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q3_unsure" name="has_urgent_needs" value="unsure">
+                <label for="q3_unsure">I'm not sure</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <label>4. Do you need help accessing mental health or substance use support?</label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="q4_yes" name="needs_mental_health" value="yes">
+                <label for="q4_yes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q4_no" name="needs_mental_health" value="no">
+                <label for="q4_no">No</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q4_prefer_not" name="needs_mental_health" value="prefer_not_to_say">
+                <label for="q4_prefer_not">Prefer not to say</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <label>5. Do you need help applying for or understanding your health insurance options?</label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="q5_yes" name="needs_insurance_help" value="yes">
+                <label for="q5_yes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q5_no" name="needs_insurance_help" value="no">
+                <label for="q5_no">No</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <label>6. What type of health insurance do you currently have?</label>
+            <select id="insurance-options" name="current_insurance">
+              <option value="">Loading options...</option>
+            </select>
+          </div>
+        </section>
+
+        <div id="validationMessage" class="validation-message">
+          Please answer all questions before continuing
+        </div>
+
+        <button type="submit" class="btn-primary" id="submitBtn" disabled>
+          Get Recommendations
+        </button>
+      </form>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initHealthcareAssessment } from './assets/js/healthcare-assessment.js';
+    document.addEventListener('DOMContentLoaded', initHealthcareAssessment);
+  </script>
+</body>
+</html> 

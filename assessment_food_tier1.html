@@ -273,23 +273,39 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { getStateFromZip } from './assets/js/zip_utils.js';
+
     // Check for ZIP code on page load
-    window.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('DOMContentLoaded', async function() {
       const zip = localStorage.getItem('zip');
       if (!zip) {
         window.location.href = 'index.html';
         return;
       }
-      document.getElementById('zipDisplay').textContent = zip;
 
-      // Add change listeners to all radio buttons for validation
-      document.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', validateForm);
-      });
+      try {
+        const state = await getStateFromZip(zip);
+        if (!state) {
+          alert('Sorry, we currently only serve the Northeast region (CT, ME, MA, NH, NJ, NY, PA, RI, and VT). Please enter a ZIP code from one of these states.');
+          window.location.href = 'index.html';
+          return;
+        }
 
-      // Initial validation check
-      validateForm();
+        document.getElementById('zipDisplay').textContent = `${zip} (${state})`;
+
+        // Add change listeners to all radio buttons for validation
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+          radio.addEventListener('change', validateForm);
+        });
+
+        // Initial validation check
+        validateForm();
+      } catch (error) {
+        console.error('Error validating ZIP code:', error);
+        alert('There was an error validating your ZIP code. Please try again.');
+        window.location.href = 'index.html';
+      }
     });
 
     function validateForm() {

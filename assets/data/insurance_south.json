@@ -1,0 +1,111 @@
+{
+  "AL": [
+    "Alabama Medicaid",
+    "ALL Kids (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "AR": [
+    "Arkansas Medicaid",
+    "ARKids First (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "DE": [
+    "Delaware Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "FL": [
+    "Florida Medicaid",
+    "Florida KidCare (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "GA": [
+    "Georgia Medicaid",
+    "PeachCare for Kids (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "KY": [
+    "Kentucky Medicaid",
+    "KCHIP (CHIP)",
+    "kynect (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "LA": [
+    "Louisiana Medicaid",
+    "LaCHIP (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MD": [
+    "Maryland Medicaid",
+    "MCHP (CHIP)",
+    "Maryland Health Connection (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MS": [
+    "Mississippi Medicaid",
+    "CHIP Mississippi",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NC": [
+    "NC Medicaid",
+    "NC Health Choice (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "OK": [
+    "SoonerCare (Oklahoma Medicaid)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "SC": [
+    "Healthy Connections (Medicaid)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "TN": [
+    "TennCare (Medicaid)",
+    "CoverKids (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "TX": [
+    "Texas Medicaid",
+    "CHIP (Children's Health Insurance Program)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "VA": [
+    "Virginia Medicaid",
+    "FAMIS (CHIP)",
+    "Cover Virginia",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "WV": [
+    "West Virginia Medicaid",
+    "CHIP West Virginia",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ]
+} 

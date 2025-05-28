@@ -1,0 +1,88 @@
+{
+  "AK": [
+    "DenaliCare (Alaska Medicaid)",
+    "Denali KidCare (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "AZ": [
+    "Arizona Health Care Cost Containment System (AHCCCS)",
+    "KidsCare (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "CA": [
+    "Medi-Cal (California Medicaid)",
+    "Covered California (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "CO": [
+    "Health First Colorado (Medicaid)",
+    "Child Health Plan Plus (CHP+)",
+    "Connect for Health Colorado (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "HI": [
+    "Hawaii Medicaid",
+    "QUEST Integration (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "ID": [
+    "Idaho Medicaid",
+    "Your Health Idaho (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MT": [
+    "Montana Medicaid",
+    "Healthy Montana Kids (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NV": [
+    "Nevada Medicaid",
+    "Nevada Check Up (CHIP)",
+    "Nevada Health Link (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NM": [
+    "New Mexico Medicaid",
+    "CHIP New Mexico",
+    "beWellnm (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "OR": [
+    "Oregon Health Plan (Medicaid)",
+    "Oregon Health Insurance Marketplace",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "UT": [
+    "Utah Medicaid",
+    "CHIP Utah",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "WA": [
+    "Washington Apple Health (Medicaid)",
+    "WA Healthplanfinder (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "WY": [
+    "Wyoming Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ]
+} 

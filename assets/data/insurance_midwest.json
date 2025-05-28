@@ -1,0 +1,78 @@
+{
+  "IL": [
+    "Illinois Medicaid",
+    "All Kids (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "IN": [
+    "Indiana Medicaid (HIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "IA": [
+    "Iowa Medicaid",
+    "Hawki (CHIP)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "KS": [
+    "KanCare (Kansas Medicaid)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MI": [
+    "MI Bridges (Medicaid)",
+    "Healthy Michigan Plan",
+    "Marketplace via HealthCare.gov",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MN": [
+    "Medical Assistance (Medicaid)",
+    "MinnesotaCare",
+    "MNsure (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MO": [
+    "Missouri Medicaid (MO HealthNet)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NE": [
+    "Nebraska Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "ND": [
+    "North Dakota Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "OH": [
+    "Ohio Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "SD": [
+    "South Dakota Medicaid",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "WI": [
+    "BadgerCare Plus (Medicaid)",
+    "HealthCare.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ]
+} 

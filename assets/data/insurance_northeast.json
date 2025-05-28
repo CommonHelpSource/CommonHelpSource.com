@@ -1,0 +1,58 @@
+{
+  "CT": [
+    "HUSKY Health (Medicaid/CHIP)",
+    "Access Health CT (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "ME": [
+    "MaineCare (Medicaid)",
+    "CoverME.gov (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "MA": [
+    "MassHealth (Medicaid)",
+    "Health Connector (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NH": [
+    "NH Medicaid",
+    "Health Insurance Marketplace (via HealthCare.gov)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NJ": [
+    "NJ FamilyCare (Medicaid)",
+    "GetCoveredNJ (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "NY": [
+    "Medicaid",
+    "Essential Plan",
+    "Child Health Plus",
+    "NY State of Health (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "PA": [
+    "Medical Assistance (PA Medicaid)",
+    "Pennie (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "RI": [
+    "Rhode Island Medicaid",
+    "HealthSource RI (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ],
+  "VT": [
+    "Green Mountain Care (Medicaid)",
+    "Vermont Health Connect (Marketplace)",
+    "Medicare",
+    "Private Insurance"
+  ]
+} 
