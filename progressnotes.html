@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://ka-f.fontawesome.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://ka-f.fontawesome.com; connect-src 'self' https://ka-f.fontawesome.com">
+  <title>The Confident Progress Noter - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    :root {
+      --primary-color: #00b894;
+      --primary-hover: #00a382;
+      --text-color: #2d3436;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .note-type-buttons {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      justify-content: center;
+    }
+
+    .note-type-button {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .note-type-button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .privacy-box {
+      background: #f0f7f4;
+      border-radius: 12px;
+      padding: 25px;
+      margin: 20px 0 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e7e4;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .privacy-box h2 {
+      color: var(--text-color);
+      font-size: 1.4rem;
+      margin: 0 0 20px;
+      font-weight: 600;
+    }
+
+    .privacy-box p {
+      margin: 15px 0;
+      line-height: 1.6;
+      color: #4a5568;
+    }
+
+    .privacy-box strong {
+      color: var(--text-color);
+      font-weight: 600;
+    }
+
+    .privacy-section {
+      margin: 20px 0;
+    }
+
+    .privacy-section h3 {
+      margin: 0 0 8px;
+      color: var(--text-color);
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .privacy-section p {
+      margin: 0;
+      padding-left: 28px;
+    }
+
+    .emoji {
+      font-size: 1.2rem;
+    }
+
+    .site-logo {
+      display: block;
+      max-width: 300px;
+      width: 80%;
+      height: auto;
+      margin: 20px auto;
+      transition: transform 0.2s;
+    }
+
+    .site-logo:hover {
+      transform: scale(1.02);
+    }
+
+    /* Add styles for note sections */
+    .note-section {
+      display: none;
+      margin-top: 30px;
+    }
+
+    .note-section.active {
+      display: block;
+    }
+
+    .note-input {
+      width: 100%;
+      min-height: 200px;
+      padding: 15px;
+      border: 1px solid #e0e7e4;
+      border-radius: 8px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      resize: vertical;
+    }
+
+    .note-output {
+      background: #fff;
+      padding: 20px;
+      border: 1px solid #e0e7e4;
+      border-radius: 8px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+    }
+
+    .note-controls {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .generate-button {
+      background: var(--primary-color);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .generate-button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .section-title {
+      color: var(--text-color);
+      margin: 0 0 15px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .loading-spinner i {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html">
+      <img src="assets/images/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
+    </a>
+
+    <div class="note-type-buttons">
+      <button class="note-type-button" data-section="initial">Initial Assessment</button>
+      <button class="note-type-button" data-section="progress">Progress Note</button>
+      <button class="note-type-button" data-section="discharge">Discharge Summary</button>
+    </div>
+
+    <div class="privacy-box">
+      <h2>🔐 Your Notes. Your Privacy. Always Protected.</h2>
+
+      <div class="privacy-section">
+        <h3><span class="emoji">🧠</span> Nothing you type is saved or stored.</h3>
+        <p>This tool runs entirely in your browser or through a temporary AI session — <strong>no data is saved on any server</strong>.</p>
+      </div>
+
+      <div class="privacy-section">
+        <h3><span class="emoji">🛡️</span> HIPAA-safe by design.</h3>
+        <p>We automatically replace any names or personal identifiers with safe alternatives like <strong>"member," "client," or "caregiver."</strong> This helps prevent accidental HIPAA violations while you write freely.</p>
+      </div>
+
+      <div class="privacy-section">
+        <h3><span class="emoji">🗂️</span> Your notes are yours.</h3>
+        <p>When you're done, you can copy, print, or email your note — but nothing stays behind.</p>
+      </div>
+    </div>
+
+    <!-- Initial Assessment Section -->
+    <div id="initial-section" class="note-section">
+      <h3 class="section-title">Initial Assessment Note</h3>
+      <textarea class="note-input" placeholder="Enter your initial assessment notes here..."></textarea>
+      <div class="note-controls">
+        <button class="generate-button">Generate My Note</button>
+      </div>
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i> Processing...
+      </div>
+      <div class="note-output"></div>
+    </div>
+
+    <!-- Progress Note Section -->
+    <div id="progress-section" class="note-section">
+      <h3 class="section-title">Progress Note</h3>
+      <textarea class="note-input" placeholder="Enter your progress notes here..."></textarea>
+      <div class="note-controls">
+        <button class="generate-button">Generate My Note</button>
+      </div>
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i> Processing...
+      </div>
+      <div class="note-output"></div>
+    </div>
+
+    <!-- Discharge Summary Section -->
+    <div id="discharge-section" class="note-section">
+      <h3 class="section-title">Discharge Summary</h3>
+      <textarea class="note-input" placeholder="Enter your discharge summary notes here..."></textarea>
+      <div class="note-controls">
+        <button class="generate-button">Generate My Note</button>
+      </div>
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i> Processing...
+      </div>
+      <div class="note-output"></div>
+    </div>
+  </div>
+
+  <script src="https://kit.fontawesome.com/1234567890.js" crossorigin="anonymous"></script>
+  <script>
+    // Function to call OpenAI API via Netlify Function
+    async function generateAINote(text, noteType) {
+      const response = await fetch('/.netlify/functions/openai', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: "system",
+              content: "You are a clinical documentation assistant. Rewrite progress notes in a professional tone and replace any personal names or identifiers with terms like 'member,' 'client,' or 'caregiver.' Format the output clearly."
+            },
+            {
+              role: "user",
+              content: `Please rewrite this ${noteType} note:\n\n${text}`
+            }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.response.content;
+    }
+
+    // Function to handle note generation
+    async function generateNote(section) {
+      const input = section.querySelector('.note-input');
+      const output = section.querySelector('.note-output');
+      const spinner = section.querySelector('.loading-spinner');
+      const button = section.querySelector('.generate-button');
+      const noteType = section.id.replace('-section', '');
+
+      if (!input.value.trim()) {
+        alert('Please enter some text before generating the note.');
+        return;
+      }
+
+      // Show loading state
+      button.disabled = true;
+      spinner.style.display = 'block';
+      output.textContent = 'Generating your note...';
+
+      try {
+        // Call OpenAI API via Netlify Function
+        const aiGeneratedNote = await generateAINote(input.value, noteType);
+        
+        // Update output with AI response
+        output.textContent = aiGeneratedNote;
+      } catch (error) {
+        console.error('Error generating note:', error);
+        output.textContent = 'An error occurred while generating the note. Please try again.';
+      } finally {
+        // Hide loading state
+        button.disabled = false;
+        spinner.style.display = 'none';
+      }
+    }
+
+    // Initialize note sections
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('.note-section');
+      const buttons = document.querySelectorAll('.note-type-button');
+
+      // Show initial section by default
+      document.getElementById('initial-section').classList.add('active');
+
+      // Add click handlers for section buttons
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          const sectionId = `${button.dataset.section}-section`;
+          
+          // Hide all sections
+          sections.forEach(section => section.classList.remove('active'));
+          
+          // Show selected section
+          document.getElementById(sectionId).classList.add('active');
+
+          // Clear previous output
+          document.querySelector(`#${sectionId} .note-output`).textContent = '';
+        });
+      });
+
+      // Add click handlers for generate buttons
+      sections.forEach(section => {
+        const generateButton = section.querySelector('.generate-button');
+        generateButton.addEventListener('click', () => generateNote(section));
+      });
+    });
+  </script>
+</body>
+</html> 
