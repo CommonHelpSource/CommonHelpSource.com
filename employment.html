@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employment Help - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    :root {
+      --primary-color: #e17055;
+      --primary-hover: #d15f45;
+      --text-color: #2d3436;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: #f5f6f7;
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .assessment-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 40px;
+      margin-bottom: 30px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 0 0 10px;
+      color: var(--text-color);
+    }
+
+    .location-info {
+      color: #636e72;
+      font-size: 1.1rem;
+    }
+
+    .question-group {
+      margin-bottom: 30px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .radio-option,
+    .checkbox-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .radio-option input[type="radio"],
+    .checkbox-option input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+    }
+
+    .radio-option label,
+    .checkbox-option label {
+      font-weight: normal;
+      margin: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+
+    .help-text {
+      font-size: 0.9rem;
+      color: #636e72;
+      margin-top: 6px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 40px;
+    }
+
+    .primary-btn {
+      flex: 1;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .submit-btn {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .back-btn {
+      background: #dfe6e9;
+      color: var(--text-color);
+    }
+
+    .back-btn:hover {
+      background: #c8d6e5;
+    }
+
+    .validation-message {
+      color: #d63031;
+      font-size: 0.9rem;
+      margin-top: 20px;
+      text-align: center;
+      display: none;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .loading-text {
+      color: var(--text-color);
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .results-container {
+      display: none;
+      margin-top: 30px;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 40px;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .results-title {
+      font-size: 1.8rem;
+      margin: 0;
+      color: var(--text-color);
+    }
+
+    .results-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .action-btn {
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .print-btn {
+      background: #6c5ce7;
+      color: white;
+    }
+
+    .save-btn {
+      background: #00b894;
+      color: white;
+    }
+
+    .action-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .results-content {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .site-logo {
+      display: block;
+      max-width: 300px;
+      width: 80%;
+      height: auto;
+      margin: 20px auto;
+      transition: transform 0.2s;
+    }
+
+    .site-logo:hover {
+      transform: scale(1.02);
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: white;
+      }
+
+      .container {
+        max-width: none;
+      }
+
+      .assessment-card,
+      .results-container {
+        box-shadow: none;
+        padding: 20px;
+      }
+
+      .site-logo,
+      .back-btn,
+      .action-btn {
+        display: none !important;
+      }
+
+      .results-header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .results-title {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="assessment-card">
+      <div class="header">
+        <a href="index.html">
+          <img src="assets/images/logo.png" alt="CommonHelpSource" class="site-logo">
+        </a>
+        <h1>Employment Help Assessment</h1>
+        <div class="location-info" id="locationInfo"></div>
+      </div>
+
+      <form id="employmentForm" onsubmit="handleSubmit(event)">
+        <div class="question-group">
+          <label>Are you currently employed?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="employed_full" name="employmentStatus" value="full-time" required>
+              <label for="employed_full">Full-time</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="employed_part" name="employmentStatus" value="part-time">
+              <label for="employed_part">Part-time</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="employed_no" name="employmentStatus" value="no">
+              <label for="employed_no">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>Are you actively looking for work?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="looking_yes" name="isLookingForWork" value="yes" required>
+              <label for="looking_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="looking_no" name="isLookingForWork" value="no">
+              <label for="looking_no">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>What are your biggest barriers to employment? (Select all that apply)</label>
+          <div class="checkbox-group">
+            <div class="checkbox-option">
+              <input type="checkbox" id="barrier_transport" name="barriers" value="transportation">
+              <label for="barrier_transport">Transportation</label>
+            </div>
+            <div class="checkbox-option">
+              <input type="checkbox" id="barrier_internet" name="barriers" value="internet">
+              <label for="barrier_internet">Internet/Device Access</label>
+            </div>
+            <div class="checkbox-option">
+              <input type="checkbox" id="barrier_id" name="barriers" value="id">
+              <label for="barrier_id">ID Issues</label>
+            </div>
+            <div class="checkbox-option">
+              <input type="checkbox" id="barrier_childcare" name="barriers" value="childcare">
+              <label for="barrier_childcare">Childcare</label>
+            </div>
+            <div class="checkbox-option">
+              <input type="checkbox" id="barrier_record" name="barriers" value="record">
+              <label for="barrier_record">Criminal Record</label>
+            </div>
+            <div class="checkbox-option">
+              <input type="checkbox" id="barrier_language" name="barriers" value="language">
+              <label for="barrier_language">Language</label>
+            </div>
+            <div class="checkbox-option">
+              <input type="checkbox" id="barrier_health" name="barriers" value="health">
+              <label for="barrier_health">Health</label>
+            </div>
+            <div class="checkbox-option">
+              <input type="checkbox" id="barrier_experience" name="barriers" value="experience">
+              <label for="barrier_experience">Lack of Experience</label>
+            </div>
+            <div class="checkbox-option">
+              <input type="checkbox" id="barrier_other" name="barriers" value="other">
+              <label for="barrier_other">Other</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>Are you interested in job training, resume help, or interview coaching?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="training_yes" name="wantsTraining" value="yes" required>
+              <label for="training_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="training_no" name="wantsTraining" value="no">
+              <label for="training_no">No</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="training_maybe" name="wantsTraining" value="maybe">
+              <label for="training_maybe">Maybe</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>Do you receive any job-related support from a workforce center or agency?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="support_yes" name="hasSupport" value="yes" required>
+              <label for="support_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="support_no" name="hasSupport" value="no">
+              <label for="support_no">No</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="support_unsure" name="hasSupport" value="unsure">
+              <label for="support_unsure">Not Sure</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>Would you like help connecting to job openings or support programs?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="connect_yes" name="wantsConnections" value="yes" required>
+              <label for="connect_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="connect_no" name="wantsConnections" value="no">
+              <label for="connect_no">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div id="validationMessage" class="validation-message">
+          Please answer all required questions
+        </div>
+
+        <div class="button-group">
+          <button type="button" class="primary-btn back-btn" onclick="window.location.href='index.html'">
+            Back to Home
+          </button>
+          <button type="submit" class="primary-btn submit-btn" id="submitBtn">
+            Get Results
+          </button>
+        </div>
+      </form>
+
+      <div id="loading" class="loading">
+        <div class="loading-text">Processing your assessment...</div>
+      </div>
+    </div>
+
+    <div id="resultsContainer" class="results-container">
+      <div class="results-header">
+        <h2 class="results-title">Your Employment Results</h2>
+        <div class="results-actions">
+          <button class="action-btn print-btn" onclick="printResults()">
+            <i class="fas fa-print"></i>
+            Print
+          </button>
+          <button class="action-btn save-btn" onclick="saveResults()">
+            <i class="fas fa-download"></i>
+            Save PDF
+          </button>
+        </div>
+      </div>
+      <div id="resultsContent" class="results-content"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getLocationInfo } from './assets/js/zip_utils.js';
+
+    // Display location info from localStorage
+    const locationInfo = JSON.parse(localStorage.getItem('locationInfo'));
+    if (locationInfo) {
+      document.getElementById('locationInfo').textContent = 
+        `${locationInfo.city}, ${locationInfo.state} ${locationInfo.zip}`;
+    }
+
+    // Handle checkbox values for barriers
+    function getSelectedBarriers() {
+      const checkboxes = document.querySelectorAll('input[name="barriers"]:checked');
+      return Array.from(checkboxes).map(cb => cb.value);
+    }
+
+    window.handleSubmit = async function(event) {
+      event.preventDefault();
+      
+      const form = event.target;
+      const formData = new FormData(form);
+      const formResponses = Object.fromEntries(formData.entries());
+      
+      // Add selected barriers to responses
+      formResponses.barriers = getSelectedBarriers();
+      
+      // Save form responses to localStorage
+      localStorage.setItem('employmentResponses', JSON.stringify(formResponses));
+      
+      // Show loading state
+      document.getElementById('loading').style.display = 'block';
+      form.style.display = 'none';
+      
+      try {
+        // Prepare data for AI prompt
+        const promptData = {
+          location: locationInfo,
+          responses: formResponses
+        };
+        
+        // Call chatbot API
+        const response = await fetch('/.netlify/functions/chatgpt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(promptData)
+        });
+        
+        if (!response.ok) throw new Error('API request failed');
+        
+        const result = await response.json();
+        
+        // Display results
+        document.getElementById('resultsContent').innerHTML = result.content;
+        document.getElementById('resultsContainer').style.display = 'block';
+        document.getElementById('loading').style.display = 'none';
+        
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while processing your assessment. Please try again.');
+        form.style.display = 'block';
+        document.getElementById('loading').style.display = 'none';
+      }
+    };
+
+    window.printResults = function() {
+      window.print();
+    };
+
+    window.saveResults = async function() {
+      const element = document.getElementById('resultsContent');
+      try {
+        const { jsPDF } = await import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+        const doc = new jsPDF();
+        
+        doc.html(element, {
+          callback: function(pdf) {
+            pdf.save('employment-results.pdf');
+          },
+          margin: [10, 10, 10, 10],
+          autoPaging: true,
+          x: 0,
+          y: 0,
+          width: 190,
+          windowWidth: 675
+        });
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('Could not generate PDF. Please try printing instead.');
+      }
+    };
+  </script>
+  <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
+</body>
+</html> 

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Healthcare Assessment - CommonHelpSource</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ... existing styles ... */
+    
+    /* Add new styles for results section */
+    .results-section {
+      display: none;
+      margin-top: 30px;
+      padding: 20px;
+      background: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+
+    .results-section h2 {
+      color: var(--text-color);
+      margin-bottom: 20px;
+    }
+
+    .recommendation {
+      margin-bottom: 25px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .recommendation h3 {
+      color: var(--primary-color);
+      margin: 0 0 10px;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .loading-text {
+      color: var(--text-color);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html">
+    <img src="assets/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
+  </a>
+
+  <div class="container">
+    <header>
+      <h1>Healthcare Assessment</h1>
+      <p>Let's find the right healthcare options for you.</p>
+    </header>
+
+    <main>
+      <section id="location-section">
+        <h2>Your Location</h2>
+        <div class="form-group">
+          <label for="zip-input">ZIP Code:</label>
+          <input type="text" id="zip-input" name="zip" maxlength="5" pattern="[0-9]*" inputmode="numeric" placeholder="Enter your ZIP code">
+          <div id="location-error" class="error-message" style="display: none;"></div>
+        </div>
+        <div id="location-info" style="display: none;">
+          <p id="state-display"></p>
+          <div id="insurance-options" class="options-list"></div>
+        </div>
+      </section>
+
+      <form id="healthcare-form">
+        <!-- Hidden inputs for storing location data -->
+        <input type="hidden" id="state-input" name="state">
+        <input type="hidden" id="insurance-input" name="insurance_options">
+
+        <section id="assessment-questions">
+          <h2>Healthcare Needs</h2>
+          <div class="question">
+            <label>1. Do you currently have health insurance?</label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="q1_yes" name="has_insurance" value="yes">
+                <label for="q1_yes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q1_no" name="has_insurance" value="no">
+                <label for="q1_no">No</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q1_unsure" name="has_insurance" value="unsure">
+                <label for="q1_unsure">I'm not sure</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <label>2. Do you have a primary care provider (PCP)?</label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="q2_yes" name="has_pcp" value="yes">
+                <label for="q2_yes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q2_no" name="has_pcp" value="no">
+                <label for="q2_no">No</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <label>3. Do you have any urgent or ongoing health needs that you're not getting care for?</label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="q3_yes" name="has_urgent_needs" value="yes">
+                <label for="q3_yes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q3_no" name="has_urgent_needs" value="no">
+                <label for="q3_no">No</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q3_unsure" name="has_urgent_needs" value="unsure">
+                <label for="q3_unsure">I'm not sure</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <label>4. Do you need help accessing mental health or substance use support?</label>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="q4_yes" name="needs_mental_health" value="yes">
+                <label for="q4_yes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="q4_no" name="needs_mental_health" value="no">
+                <label for="q4_no">No</label>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="next-btn" id="submit-btn">Get Healthcare Recommendations</button>
+          <div id="validation-message" class="validation-message"></div>
+        </section>
+      </form>
+
+      <div id="loading" class="loading">
+        <div class="loading-text">Processing your assessment...</div>
+      </div>
+
+      <section id="results-section" class="results-section">
+        <h2>Your Healthcare Recommendations</h2>
+        <div id="recommendations-container"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Initialize form with ZIP code from localStorage if available
+    window.addEventListener('DOMContentLoaded', function() {
+      const zip = localStorage.getItem('zip');
+      if (zip) {
+        document.getElementById('zip-input').value = zip;
+      }
+    });
+
+    // Form submission handler
+    document.getElementById('healthcare-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const zip = document.getElementById('zip-input').value;
+      if (!zip) {
+        document.getElementById('validation-message').textContent = 'Please enter your ZIP code';
+        document.getElementById('validation-message').style.display = 'block';
+        return;
+      }
+
+      // Collect form data
+      const formData = {
+        zip: zip,
+        has_insurance: document.querySelector('input[name="has_insurance"]:checked')?.value,
+        has_pcp: document.querySelector('input[name="has_pcp"]:checked')?.value,
+        has_urgent_needs: document.querySelector('input[name="has_urgent_needs"]:checked')?.value,
+        needs_mental_health: document.querySelector('input[name="needs_mental_health"]:checked')?.value
+      };
+
+      // Validate all questions are answered
+      if (!formData.has_insurance || !formData.has_pcp || !formData.has_urgent_needs || !formData.needs_mental_health) {
+        document.getElementById('validation-message').textContent = 'Please answer all questions';
+        document.getElementById('validation-message').style.display = 'block';
+        return;
+      }
+
+      // Show loading state
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('submit-btn').disabled = true;
+      document.getElementById('validation-message').style.display = 'none';
+
+      try {
+        // Generate the prompt for the chatbot
+        const prompt = `Create a Healthcare Assistance Plan for someone with these assessment responses:
+
+Location: ZIP code ${zip}
+
+Assessment Responses:
+- Has health insurance: ${formData.has_insurance}
+- Has primary care provider: ${formData.has_pcp}
+- Has urgent/ongoing health needs: ${formData.has_urgent_needs}
+- Needs mental health/substance use support: ${formData.needs_mental_health}
+
+Format the response as a JSON object with this structure:
+{
+  "recommendations": [
+    {
+      "priority": 1,
+      "title": "Title of recommendation",
+      "description": "Detailed description",
+      "actionSteps": ["Step 1", "Step 2", "Step 3"],
+      "resources": {
+        "name": "Resource name",
+        "contact": "Contact information",
+        "address": "Physical address if applicable",
+        "website": "Website URL if available"
+      },
+      "urgencyLevel": "immediate/high/medium/low"
+    }
+  ],
+  "additionalNotes": "Any important additional information"
+}`;
+
+        // Send to chatbot endpoint
+        const response = await fetch('/.netlify/functions/chatgpt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            messages: [
+              {
+                role: "system",
+                content: "You are a helpful healthcare assistance expert providing personalized recommendations based on assessment responses."
+              },
+              {
+                role: "user",
+                content: prompt
+              }
+            ]
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to process assessment: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        // Parse and display recommendations
+        const recommendations = JSON.parse(result.content);
+        displayRecommendations(recommendations);
+
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('validation-message').textContent = `Error: ${error.message}. Please try again.`;
+        document.getElementById('validation-message').style.display = 'block';
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('submit-btn').disabled = false;
+      }
+    });
+
+    function displayRecommendations(data) {
+      const container = document.getElementById('recommendations-container');
+      container.innerHTML = '';
+
+      data.recommendations.forEach(rec => {
+        const recElement = document.createElement('div');
+        recElement.className = 'recommendation';
+        
+        recElement.innerHTML = `
+          <h3>${rec.title}</h3>
+          <p>${rec.description}</p>
+          <div class="action-steps">
+            <h4>Action Steps:</h4>
+            <ul>
+              ${rec.actionSteps.map(step => `<li>${step}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="resource-info">
+            <h4>Resources:</h4>
+            <p><strong>${rec.resources.name}</strong></p>
+            <p>${rec.resources.contact}</p>
+            <p>${rec.resources.address}</p>
+            ${rec.resources.website ? `<p><a href="${rec.resources.website}" target="_blank">Visit Website</a></p>` : ''}
+          </div>
+        `;
+
+        container.appendChild(recElement);
+      });
+
+      if (data.additionalNotes) {
+        const notesElement = document.createElement('div');
+        notesElement.className = 'additional-notes';
+        notesElement.innerHTML = `
+          <h3>Additional Information</h3>
+          <p>${data.additionalNotes}</p>
+        `;
+        container.appendChild(notesElement);
+      }
+
+      document.getElementById('results-section').style.display = 'block';
+    }
+  </script>
+</body>
+</html> 

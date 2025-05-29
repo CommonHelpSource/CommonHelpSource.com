@@ -255,17 +255,41 @@
         <div class="input-group">
           <label for="type">Select Assessment Type</label>
           <div class="assessment-buttons">
-            <button type="button" class="assessment-btn" onclick="selectAssessment('housing')">
+            <button type="button" class="assessment-btn" onclick="window.location.href='assessment_housing.html'">
               <i class="fas fa-home"></i>
               Housing Assistance
             </button>
-            <button type="button" class="assessment-btn" onclick="selectAssessment('food')">
+            <button type="button" class="assessment-btn" onclick="window.location.href='food.html'">
               <i class="fas fa-utensils"></i>
               Food Assistance
             </button>
-            <button type="button" class="assessment-btn" id="health-btn" onclick="selectAssessment('health')">
+            <button type="button" class="assessment-btn" onclick="window.location.href='health.html'">
               <i class="fas fa-heart"></i>
               Health Insurance Assistance
+            </button>
+            <button type="button" class="assessment-btn" onclick="window.location.href='id.html'">
+              <i class="fas fa-id-card"></i>
+              ID & Documentation Help
+            </button>
+            <button type="button" class="assessment-btn" onclick="window.location.href='utilities.html'">
+              <i class="fas fa-bolt"></i>
+              Utilities & Fuel Assistance
+            </button>
+            <button type="button" class="assessment-btn" onclick="window.location.href='internet.html'">
+              <i class="fas fa-wifi"></i>
+              Internet & Digital Access
+            </button>
+            <button type="button" class="assessment-btn" onclick="window.location.href='transportation.html'">
+              <i class="fas fa-car"></i>
+              Transportation Help
+            </button>
+            <button type="button" class="assessment-btn" onclick="window.location.href='employment.html'">
+              <i class="fas fa-briefcase"></i>
+              Employment Help
+            </button>
+            <button type="button" class="assessment-btn" onclick="window.location.href='childcare.html'">
+              <i class="fas fa-child"></i>
+              Childcare & Education
             </button>
           </div>
           <select id="type" required style="display: none;">
@@ -275,6 +299,10 @@
             <option value="health">Health Insurance Assistance</option>
             <option value="id">ID & Documentation</option>
             <option value="utility">Utility Assistance</option>
+            <option value="internet">Internet & Digital Access</option>
+            <option value="transportation">Transportation Help</option>
+            <option value="employment">Employment Help</option>
+            <option value="childcare">Childcare & Education</option>
           </select>
         </div>
       </div>
