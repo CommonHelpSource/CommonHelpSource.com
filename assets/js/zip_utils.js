@@ -117,39 +117,45 @@ async function loadZipData(region) {
 }
 
 // Get city data for a ZIP code
-async function getCityData(zip) {
+async function getCityData(zip, region) {
   if (cache.city[zip]) {
     console.log("Using cached city data for ZIP:", zip);
     return cache.city[zip];
   }
 
   try {
-    const response = await fetch(
-      `https://api.bigdatacloud.net/data/reverse-geocode-client?zipCode=${zip}&countryCode=US&localityLanguage=en`
-    );
-
+    // Load the cities data file for the region
+    const response = await fetch(`/assets/data/cities_${region}.json`);
     if (!response.ok) {
-      throw new Error('Failed to fetch city data');
+      throw new Error(`Failed to load cities data for ${region}`);
     }
 
-    const data = await response.json();
-    if (!data.city) {
-      throw new Error('City not found for ZIP code');
-    }
+    const citiesData = await response.json();
+    const cityData = citiesData[zip];
 
-    const cityData = {
-      city: data.city,
-      county: data.locality,
-      latitude: data.latitude,
-      longitude: data.longitude
-    };
+    if (!cityData) {
+      console.warn(`No city data found for ZIP ${zip} in region ${region}`);
+      // Fallback to basic city data
+      return {
+        city: "Unknown City", // We'll update this with state data
+        county: null,
+        latitude: null,
+        longitude: null
+      };
+    }
 
     cache.city[zip] = cityData;
     console.log("Successfully loaded city data for ZIP:", zip, cityData);
     return cityData;
   } catch (error) {
     console.error('Error getting city data:', error);
-    return null;
+    // Fallback to basic city data
+    return {
+      city: "Unknown City", // We'll update this with state data
+      county: null,
+      latitude: null,
+      longitude: null
+    };
   }
 }
 
@@ -158,7 +164,7 @@ async function getLocationInfo(zip) {
   console.log("Getting location info for ZIP:", zip);
   
   try {
-    // Get state info
+    // Get state info first
     const stateInfo = await getStateFromZip(zip);
     if (stateInfo.error) {
       console.error("State lookup error:", stateInfo.error);
@@ -169,14 +175,11 @@ async function getLocationInfo(zip) {
     }
 
     // Get city info
-    const cityData = await getCityData(zip);
-    if (!cityData || !cityData.city) {
-      console.error("City lookup failed for ZIP:", zip);
-      return {
-        zip,
-        state: stateInfo.state,
-        error: "Could not find city information for this ZIP code."
-      };
+    const cityData = await getCityData(zip, stateInfo.region);
+    
+    // If we have state data but no city, create a default city name
+    if (!cityData.city || cityData.city === "Unknown City") {
+      cityData.city = `${stateInfo.state} Area`;
     }
 
     // Combine the data
