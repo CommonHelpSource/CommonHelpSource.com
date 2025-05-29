@@ -3,646 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Housing Assistance Plan</title>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.js"></script>
-  <style>
-    :root {
-      --primary-color: #ff6b35;
-      --primary-hover: #ff8659;
-      --text-color: #2d3436;
-      --border-radius: 12px;
-      --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Open Sans', sans-serif;
-      background: #f5f6f7;
-      color: var(--text-color);
-      line-height: 1.8;
-      padding: 40px 20px;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .results-card {
-      background: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
-      padding: 40px;
-      margin-bottom: 30px;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 40px;
-      padding-bottom: 30px;
-      border-bottom: 2px solid #f0f2f5;
-    }
-
-    .plan-title {
-      font-size: 2.5rem;
-      margin: 0 0 15px;
-      color: var(--text-color);
-    }
-
-    .introduction {
-      font-size: 1.2rem;
-      color: #2d3436;
-      margin: 30px 0;
-      line-height: 1.6;
-      padding: 20px;
-      background: #f8f9fa;
-      border-radius: 8px;
-      border-left: 4px solid var(--primary-color);
-    }
-
-    .location-info {
-      color: #636e72;
-      font-size: 1.1rem;
-    }
-
-    .step {
-      margin-bottom: 40px;
-      padding: 25px;
-      background: white;
-      border: 1px solid #e9ecef;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      position: relative;
-    }
-
-    .step.beyond-radius {
-      border-left: 4px solid #ffd43b;
-      background: #fff9db;
-    }
-
-    .step.priority-high {
-      border-left: 4px solid #e03131;
-    }
-
-    .step.priority-medium {
-      border-left: 4px solid #1c7ed6;
-    }
-
-    .step.priority-low {
-      border-left: 4px solid #37b24d;
-    }
-
-    .priority-badge {
-      position: absolute;
-      top: -12px;
-      right: 20px;
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .priority-high .priority-badge {
-      background: #fff5f5;
-      color: #e03131;
-      border: 1px solid #ffc9c9;
-    }
-
-    .priority-medium .priority-badge {
-      background: #e7f5ff;
-      color: #1c7ed6;
-      border: 1px solid #a5d8ff;
-    }
-
-    .priority-low .priority-badge {
-      background: #ebfbee;
-      color: #37b24d;
-      border: 1px solid #b2f2bb;
-    }
-
-    .step-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .step-number {
-      background: var(--primary-color);
-      color: white;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-
-    .organization {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--text-color);
-      margin: 0;
-      flex-grow: 1;
-    }
-
-    .action {
-      font-size: 1.1rem;
-      color: var(--primary-color);
-      font-weight: 600;
-      margin: 15px 0;
-    }
-
-    .description {
-      color: #4a5568;
-      margin-bottom: 20px;
-      line-height: 1.6;
-    }
-
-    .requirements {
-      background: #f8f9fa;
-      padding: 15px;
-      border-radius: 8px;
-      margin: 15px 0;
-    }
-
-    .requirements-title {
-      font-weight: 600;
-      color: #2d3436;
-      margin-bottom: 8px;
-    }
-
-    .final-step {
-      text-align: center;
-      padding: 30px;
-      background: #e7f5ff;
-      border-radius: 8px;
-      margin-top: 40px;
-    }
-
-    .final-step h3 {
-      color: #1c7ed6;
-      margin-bottom: 15px;
-    }
-
-    .final-step p {
-      color: #4a5568;
-      margin-bottom: 20px;
-    }
-
-    .button-group {
-      display: flex;
-      gap: 15px;
-      margin-top: 40px;
-      flex-wrap: wrap;
-    }
-
-    .action-btn {
-      flex: 1;
-      min-width: 200px;
-      padding: 14px 28px;
-      font-size: 1rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-family: inherit;
-    }
-
-    .download-btn {
-      background: var(--primary-color);
-      color: white;
-    }
-
-    .download-btn:hover {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
-    }
-
-    .email-btn {
-      background: #00b894;
-      color: white;
-    }
-
-    .email-btn:hover {
-      background: #00d1a7;
-      transform: translateY(-1px);
-    }
-
-    .restart-btn {
-      background: #dfe6e9;
-      color: var(--text-color);
-    }
-
-    .restart-btn:hover {
-      background: #c8d6e5;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 40px;
-    }
-
-    .loading-text {
-      color: #636e72;
-      margin-top: 15px;
-    }
-
-    .distance {
-      font-size: 0.9rem;
-      color: #636e72;
-      margin-left: auto;
-    }
-
-    .map-link {
-      display: inline-block;
-      margin-left: 10px;
-      color: #0984e3;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-
-    .map-link:hover {
-      text-decoration: underline;
-    }
-
-    @media print {
-      body {
-        background: white;
-        padding: 0;
-      }
-
-      .results-card {
-        box-shadow: none;
-        padding: 20px;
-      }
-
-      .button-group {
-        display: none;
-      }
-    }
-  </style>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://ka-f.fontawesome.com;">
+  <title>Assessment Results - CommonHelpSource</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="https://kit.fontawesome.com/1234567890.js" crossorigin="anonymous"></script>
 </head>
 <body>
+  <a href="index.html">
+    <img src="assets/images/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
+  </a>
+
   <div class="container">
-    <div class="results-card">
-      <div id="loading" class="loading">
-        <div class="loading-text">Generating your personalized housing assistance plan...</div>
+    <header>
+      <h1>Your Assessment Results</h1>
+      <p id="locationInfo"></p>
+    </header>
+
+    <main>
+      <div id="loading" style="display: none;">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Loading your results...</p>
       </div>
 
-      <div id="results" style="display: none;">
-        <div class="header">
-          <h1 class="plan-title">Your Housing Assistance Plan 🏠</h1>
-          <div class="location-info">For ZIP Code: <span id="zipDisplay"></span></div>
-        </div>
-
-        <div class="introduction">
-          <!-- AI-generated introduction will be inserted here -->
-        </div>
-
-        <div id="steps" class="steps">
-          <!-- AI-generated steps will be inserted here -->
-        </div>
-
-        <div class="action-buttons">
-          <button 
-            class="btn btn-primary" 
-            onclick="downloadAsWord()" 
-            data-i18n="buttons.downloadWord.label"
-            data-i18n-title="buttons.downloadWord.tooltip"
-          >
-            <i class="fas fa-file-word"></i>
-            <span>Download as Word</span>
+      <div id="results">
+        <div id="resultsContent"></div>
+        
+        <div class="button-group">
+          <button onclick="window.print()" class="secondary-button">
+            <i class="fas fa-print"></i> Print Results
           </button>
-          <button 
-            class="btn btn-info" 
-            onclick="emailResults()" 
-            data-i18n="buttons.emailResults.label"
-            data-i18n-title="buttons.emailResults.tooltip"
-          >
-            <i class="fas fa-envelope"></i>
-            <span>Email Results</span>
-          </button>
-          <button 
-            class="btn btn-secondary" 
-            onclick="startOver()" 
-            data-i18n="buttons.startOver.label"
-            data-i18n-title="buttons.startOver.tooltip"
-          >
-            <i class="fas fa-redo"></i>
-            <span>Start Over</span>
-          </button>
-          <button 
-            class="btn btn-light" 
-            onclick="printPlan()" 
-            data-i18n="buttons.print.label"
-            data-i18n-title="buttons.print.tooltip"
-          >
-            <i class="fas fa-print"></i>
-            <span>Print Plan</span>
-          </button>
-          <button 
-            class="btn btn-outline-primary" 
-            onclick="sharePlan()" 
-            data-i18n="buttons.share.label"
-            data-i18n-title="buttons.share.tooltip"
-          >
-            <i class="fas fa-share-alt"></i>
-            <span>Share Plan</span>
+          <button onclick="window.location.href='index.html'" class="primary-button">
+            Start New Assessment
           </button>
         </div>
       </div>
-    </div>
+
+      <div id="error" style="display: none;">
+        <p>An error occurred while loading your results. Please try again.</p>
+        <button onclick="window.location.reload()" class="primary-button">
+          Retry
+        </button>
+      </div>
+    </main>
   </div>
 
   <script>
-    async function init() {
-      const assessmentData = localStorage.getItem('complete_assessment');
-      const zip = localStorage.getItem('zip');
-      
-      if (!assessmentData || !zip) {
-        window.location.href = 'index.html';
-        return;
-      }
+    // Display location info from localStorage
+    const locationInfo = JSON.parse(localStorage.getItem('locationInfo'));
+    if (locationInfo) {
+      document.getElementById('locationInfo').textContent = 
+        `${locationInfo.city}, ${locationInfo.state} ${locationInfo.zip}`;
+    }
 
-      document.getElementById('zipDisplay').textContent = zip;
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('results').style.display = 'none';
-
+    // Load and display results
+    const result = localStorage.getItem('assessmentResult');
+    if (result) {
       try {
-        const data = JSON.parse(assessmentData);
-        const response = await fetch('/.netlify/functions/chatgpt', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            zip: zip,
-            messages: [
-              {
-                role: "system",
-                content: `You are a helpful assistant providing housing assistance recommendations for ZIP code ${zip}. Format your response in JSON with the following structure:
-                {
-                  "title": "One sentence summary of the situation",
-                  "introduction": "One paragraph introduction",
-                  "steps": [
-                    {
-                      "organization": "Organization name",
-                      "action": "What to do",
-                      "eligibility": "Who qualifies",
-                      "hours": "Operating hours",
-                      "address": "Physical location",
-                      "phone": "Contact number"
-                    }
-                  ],
-                  "finalStep": {
-                    "title": "Final step title",
-                    "action": "Final step action"
-                  }
-                }`
-              },
-              {
-                role: "user",
-                content: JSON.stringify(data)
-              }
-            ]
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to get recommendations');
-        }
-
-        const result = await response.json();
-        if (result.error) {
-          throw new Error(result.error);
-        }
-
-        let recommendations;
-        try {
-          recommendations = typeof result.response.content === 'string' 
-            ? JSON.parse(result.response.content)
-            : result.response.content;
-        } catch (e) {
-          throw new Error('Invalid response format from AI');
-        }
-
-        if (!recommendations.title || !recommendations.introduction || !Array.isArray(recommendations.steps) || !recommendations.finalStep) {
-          throw new Error('Invalid response structure from AI');
-        }
-        
-        displayResults(recommendations);
+        const data = JSON.parse(result);
+        document.getElementById('resultsContent').innerHTML = data.content;
       } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('results').innerHTML = `
-          <div class="error">
-            <h2>Error Loading Results</h2>
-            <p>${error.message}</p>
-            <button class="action-btn restart-btn" onclick="startOver()">
-              🔄 Start Over
-            </button>
-          </div>
-        `;
+        console.error('Error parsing results:', error);
+        document.getElementById('results').style.display = 'none';
+        document.getElementById('error').style.display = 'block';
       }
-    }
-
-    function displayResults(data) {
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('results').style.display = 'block';
-
-      // Display title and introduction
-      document.getElementById('results').innerHTML = `
-        <div class="header">
-          <h1 class="plan-title">${data.title}</h1>
-          <div class="location-info">For ZIP Code: <span id="zipDisplay"></span></div>
-        </div>
-
-        <div class="introduction">
-          ${data.introduction}
-        </div>
-
-        <div class="steps">
-          ${data.steps.map((step, index) => `
-            <div class="step priority-${step.priority} ${step.isBeyondInitialRadius ? 'beyond-radius' : ''}">
-              <div class="priority-badge">${step.priority} Priority</div>
-              <div class="step-header">
-                <div class="step-number">${step.stepNumber}</div>
-                <h3 class="organization">${step.organization}</h3>
-                ${step.distance ? 
-                  `<span class="distance">(${step.distance.toFixed(1)} miles away)</span>` : 
-                  ''
-                }
-              </div>
-
-              <div class="action">${step.action}</div>
-              <div class="description">${step.description}</div>
-
-              <div class="requirements">
-                <div class="requirements-title">What You'll Need:</div>
-                ${step.requirements}
-              </div>
-
-              <div class="details">
-                <div class="detail-group">
-                  <div class="detail-label">Address:</div>
-                  <div class="detail-value">
-                    ${step.address}
-                    ${step.coordinates ? `
-                      <a href="https://www.google.com/maps/search/?api=1&query=${step.coordinates.latitude},${step.coordinates.longitude}" 
-                         target="_blank" 
-                         class="map-link">
-                        View on Map 🗺️
-                      </a>
-                    ` : ''}
-                  </div>
-                </div>
-                <div class="detail-group">
-                  <div class="detail-label">Phone:</div>
-                  <div class="detail-value">
-                    <a href="tel:${step.phone}">${step.phone}</a>
-                  </div>
-                </div>
-                <div class="detail-group">
-                  <div class="detail-label">Hours:</div>
-                  <div class="detail-value">${step.hours}</div>
-                </div>
-              </div>
-            </div>
-          `).join('')}
-
-          <div class="final-step">
-            <h3>${data.finalStep.title}</h3>
-            <p>${data.finalStep.action}</p>
-            <div class="button-group">
-              <button class="action-btn download-btn" onclick="downloadAsWord()">
-                📄 Download as Word
-              </button>
-              <button class="action-btn email-btn" onclick="emailResults()">
-                📧 Email Results
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('zipDisplay').textContent = localStorage.getItem('zip');
-    }
-
-    function downloadAsWord() {
-      const doc = new docx.Document({
-        sections: [{
-          properties: {},
-          children: [
-            new docx.Paragraph({
-              text: document.querySelector('.plan-title').textContent,
-              heading: docx.HeadingLevel.HEADING_1,
-              spacing: { after: 400 }
-            }),
-            new docx.Paragraph({
-              text: document.querySelector('.introduction').textContent,
-              spacing: { before: 400, after: 400 }
-            }),
-            ...Array.from(document.querySelectorAll('.step')).map(step => [
-              new docx.Paragraph({
-                text: `Step ${step.querySelector('.step-number').textContent}: ${step.querySelector('.organization').textContent}`,
-                heading: docx.HeadingLevel.HEADING_2,
-                spacing: { before: 400 }
-              }),
-              new docx.Paragraph({
-                text: step.querySelector('.action').textContent,
-                spacing: { before: 200 }
-              }),
-              new docx.Paragraph({
-                text: step.querySelector('.description').textContent,
-                spacing: { before: 200 }
-              }),
-              new docx.Paragraph({
-                text: `Requirements: ${step.querySelector('.requirements').textContent}`,
-                spacing: { before: 200 }
-              }),
-              ...Array.from(step.querySelectorAll('.detail-group')).map(detail => 
-                new docx.Paragraph({
-                  text: `${detail.querySelector('.detail-label').textContent} ${detail.querySelector('.detail-value').textContent}`,
-                  spacing: { before: 200 }
-                })
-              )
-            ]).flat(),
-            new docx.Paragraph({
-              text: document.querySelector('.final-step h3').textContent,
-              heading: docx.HeadingLevel.HEADING_2,
-              spacing: { before: 400 }
-            }),
-            new docx.Paragraph({
-              text: document.querySelector('.final-step p').textContent,
-              spacing: { before: 200 }
-            })
-          ]
-        }]
-      });
-
-      docx.Packer.toBlob(doc).then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'Housing-Action-Plan.docx';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      });
-    }
-
-    function emailResults() {
-      const subject = document.querySelector('.plan-title').textContent;
-      const body = `
-${document.querySelector('.plan-title').textContent}
-
-${document.querySelector('.introduction').textContent}
-
-${Array.from(document.querySelectorAll('.step')).map(step => `
-Step ${step.querySelector('.step-number').textContent}: ${step.querySelector('.organization').textContent}
-
-${step.querySelector('.action').textContent}
-
-${step.querySelector('.description').textContent}
-
-Requirements:
-${step.querySelector('.requirements').textContent}
-
-${Array.from(step.querySelectorAll('.detail-group')).map(detail => 
-  `${detail.querySelector('.detail-label').textContent} ${detail.querySelector('.detail-value').textContent}`
-).join('\n')}
-`).join('\n\n')}
-
-${document.querySelector('.final-step h3').textContent}
-${document.querySelector('.final-step p').textContent}`;
-
-      window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    }
-
-    function startOver() {
-      // Clear assessment data
-      localStorage.removeItem('housing_assessment_1');
-      localStorage.removeItem('housing_assessment_2');
-      localStorage.removeItem('complete_assessment');
-      
-      // Keep ZIP code for convenience
+    } else {
       window.location.href = 'index.html';
     }
-
-    // Initialize on page load
-    window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html> 

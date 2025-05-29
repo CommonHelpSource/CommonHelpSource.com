@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://ka-f.fontawesome.com;">
   <title>Utilities & Fuel Assistance - CommonHelpSource</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
@@ -274,7 +275,7 @@
     <div class="assessment-card">
       <div class="header">
         <a href="index.html">
-          <img src="assets/images/logo.png" alt="CommonHelpSource" class="site-logo">
+          <img src="assets/images/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
         </a>
         <h1>Utilities & Fuel Assistance</h1>
         <div class="location-info" id="locationInfo"></div>
@@ -474,34 +475,47 @@
       form.style.display = 'none';
       
       try {
-        // Call chatbot API
+        // Prepare the data for the chatbot
+        const chatData = {
+          locationInfo: {
+            city: locationInfo.city,
+            state: locationInfo.state,
+            zip: locationInfo.zip
+          },
+          responses: {
+            utilityResponses: {
+              needsHelp: 'yes',
+              ...formResponses
+            }
+          }
+        };
+
+        // Call the chatbot API
         const response = await fetch('/.netlify/functions/chatgpt', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            location: locationInfo,
-            responses: {
-              utilityResponses: formResponses
-            }
-          })
+          body: JSON.stringify(chatData)
         });
-        
-        if (!response.ok) throw new Error('API request failed');
-        
+
+        if (!response.ok) {
+          throw new Error(`API request failed with status ${response.status}`);
+        }
+
         const result = await response.json();
         
-        // Display results
-        document.getElementById('resultsContent').innerHTML = result.content;
-        document.getElementById('resultsContainer').style.display = 'block';
-        document.getElementById('loading').style.display = 'none';
+        // Store the result
+        localStorage.setItem('assessmentResult', JSON.stringify(result));
         
+        // Redirect to results page
+        window.location.href = 'results.html';
       } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while processing your assessment. Please try again.');
-        form.style.display = 'block';
+        // Show error message
         document.getElementById('loading').style.display = 'none';
+        form.style.display = 'block';
+        alert('An error occurred while processing your assessment. Please try again.');
       }
     };
 
@@ -532,6 +546,6 @@
       }
     };
   </script>
-  <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/1234567890.js" crossorigin="anonymous"></script>
 </body>
 </html> 
