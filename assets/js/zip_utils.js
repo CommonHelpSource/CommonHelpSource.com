@@ -362,171 +362,139 @@ async function validateZip(zip) {
 
 // Get region based on ZIP code
 function getRegion(zip) {
-  console.log("Checking region for ZIP:", zip);
+  console.log("[getRegion] Checking region for ZIP:", zip);
   const numericZip = parseInt(zip);
   
   // Special handling for Puerto Rico ZIPs
   if (numericZip >= 600 && numericZip <= 999) {
-    // Add leading zeros for Puerto Rico ZIP lookup
-    const prZip = numericZip.toString().padStart(5, '0');
-    console.log("Formatted Puerto Rico ZIP:", prZip);
+    console.log("[getRegion] Identified as Puerto Rico ZIP");
     return 'puerto_rico';
   }
   
-  for (const region of Object.values(REGIONS)) {
+  // Check each region's ranges
+  for (const [regionKey, region] of Object.entries(REGIONS)) {
     for (const [start, end] of region.zipRanges) {
       if (numericZip >= start && numericZip <= end) {
-        console.log("Found region:", region.name);
+        console.log(`[getRegion] Found matching region: ${regionKey} for range [${start}-${end}]`);
         return region.name;
       }
     }
   }
-  console.log("No region found for ZIP:", zip);
+  
+  console.log("[getRegion] No region found for ZIP:", zip);
   return null;
 }
 
 // Load ZIP data for a region with error handling and caching
 async function loadZipData(region) {
-  console.log("Loading ZIP data for region:", region);
+  console.log("[loadZipData] Loading data for region:", region);
   
   // Check memory cache
   if (cache.zip[region]) {
-    console.log("Using memory-cached ZIP data for region:", region);
+    console.log("[loadZipData] Using cached data");
     return cache.zip[region];
   }
 
   try {
+    console.log(`[loadZipData] Fetching zip_${region}.json`);
     const response = await fetch(`/assets/data/zip_${region}.json`);
     if (!response.ok) {
       throw new Error(`Failed to load ${region} ZIP data: ${response.status}`);
     }
     
     const data = await response.json();
+    console.log(`[loadZipData] Loaded ${Object.keys(data).length} ZIP entries for ${region}`);
     
-    // Validate data structure
-    if (typeof data !== 'object' || data === null) {
-      throw new Error(`Invalid ZIP data format for ${region}`);
-    }
-
-    // For Puerto Rico, ensure ZIP codes are properly formatted
-    if (region === 'puerto_rico') {
-      const formattedData = {};
-      for (const [zip, info] of Object.entries(data)) {
-        // Ensure 5-digit format
-        const formattedZip = zip.padStart(5, '0');
-        formattedData[formattedZip] = {
-          ...info,
-          state: 'PR' // Ensure state is always PR
-        };
-      }
-      data = formattedData;
-    }
-    
-    console.log(`Successfully loaded ZIP data for ${region} with ${Object.keys(data).length} entries`);
-    
-    // Update both memory and persistent cache
+    // Update cache
     cache.zip[region] = data;
     saveCache('zip_cache', cache.zip);
     
     return data;
   } catch (error) {
-    console.error(`Error loading ${region} ZIP data:`, error);
-    throw new ZipError(
-      ERROR_TYPES.DATA,
-      `Failed to load ZIP data for ${region}: ${error.message}`,
-      error,
-      { region }
-    );
+    console.error('[loadZipData] Error:', error);
+    throw error;
   }
 }
 
 // Get city data for a ZIP code with improved error handling
 async function getCityData(zip, region) {
+  console.log("[getCityData] Looking up city data for ZIP:", zip, "Region:", region);
+
   // Input validation
-  const validation = validateZip(zip);
+  const validation = await validateZip(zip);
   if (!validation.valid) {
+    console.error("[getCityData] Invalid ZIP:", validation.error.message);
     throw new Error(validation.error.message);
   }
 
   // Check memory cache
   if (cache.city[zip]) {
-    console.log("Using cached city data for ZIP:", zip);
+    console.log("[getCityData] Using cached city data");
     return cache.city[zip];
   }
 
   try {
     // Try local data first
-    const response = await fetch(`/assets/data/cities_${region}.json`);
-    if (!response.ok) {
-      console.warn(`Cities data file not found for ${region}, trying geocoding service...`);
-      throw new Error(`Failed to load cities data for ${region}`);
+    console.log("[getCityData] Attempting to load local data");
+    const zipData = await loadZipData(region);
+    
+    if (zipData[zip]) {
+      console.log("[getCityData] Found local data:", zipData[zip]);
+      // Cache and return the local data
+      cache.city[zip] = zipData[zip];
+      saveCache('city_cache', cache.city);
+      return zipData[zip];
     }
 
-    const citiesData = await response.json();
-    const cityData = citiesData[zip];
+    // If local data not found, try geocoding service
+    console.log("[getCityData] Local data not found, trying geocoding service");
+    const geocodeResponse = await fetch('/.netlify/functions/geocode', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ zip })
+    });
 
-    if (!cityData) {
-      // If local data fails, try geocoding service
-      console.log("No local city data, trying geocoding service...");
-      try {
-        const geocodeResponse = await fetch('/.netlify/functions/geocode', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ zip })
-        });
-
-        if (!geocodeResponse.ok) {
-          if (geocodeResponse.status === 429) {
-            throw new Error('Rate limit exceeded. Please try again later.');
-          } else if (geocodeResponse.status === 404) {
-            throw new Error('ZIP code not found in geocoding service.');
-          } else {
-            throw new Error(`Geocoding service error: ${geocodeResponse.status}`);
-          }
-        }
-
-        const geocodeData = await geocodeResponse.json();
-        if (geocodeData.error) {
-          throw new Error(geocodeData.error);
-        }
-
-        const fallbackData = {
-          city: geocodeData.city,
-          county: null,
-          latitude: geocodeData.latitude,
-          longitude: geocodeData.longitude
-        };
-
-        // Cache the fallback data
-        cache.city[zip] = fallbackData;
-        saveCache('city_cache', cache.city);
-
-        return fallbackData;
-      } catch (geocodeError) {
-        console.error('Geocoding service error:', geocodeError);
-        throw new Error(`Unable to get city data: ${geocodeError.message}`);
+    if (!geocodeResponse.ok) {
+      if (geocodeResponse.status === 429) {
+        throw new Error('Rate limit exceeded. Please try again later.');
+      } else if (geocodeResponse.status === 404) {
+        throw new Error('ZIP code not found in geocoding service.');
+      } else {
+        throw new Error(`Geocoding service error: ${geocodeResponse.status}`);
       }
     }
 
-    // Cache and return the local data
-    cache.city[zip] = cityData;
+    const geocodeData = await geocodeResponse.json();
+    if (geocodeData.error) {
+      throw new Error(geocodeData.error);
+    }
+
+    console.log("[getCityData] Geocoding service returned:", geocodeData);
+    const fallbackData = {
+      city: geocodeData.city,
+      state: geocodeData.state || region === 'puerto_rico' ? 'PR' : null,
+      county: geocodeData.county || null
+    };
+
+    // Cache the fallback data
+    cache.city[zip] = fallbackData;
     saveCache('city_cache', cache.city);
-    
-    console.log("Successfully loaded city data for ZIP:", zip);
-    return cityData;
+
+    return fallbackData;
   } catch (error) {
-    console.error('Error getting city data:', error);
+    console.error('[getCityData] Error:', error);
     throw error;
   }
 }
 
 // Get complete location info including insurance options
 async function getLocationInfo(zip) {
-  console.log("Getting location info for ZIP:", zip);
+  console.log("[getLocationInfo] Processing ZIP:", zip);
   
   // Validate input
-  const validation = validateZip(zip);
+  const validation = await validateZip(zip);
   if (!validation.valid) {
+    console.error("[getLocationInfo] Validation failed:", validation.error.message);
     return {
       zip,
       error: validation.error.message,
@@ -536,24 +504,31 @@ async function getLocationInfo(zip) {
 
   try {
     // Get state info first
-    const stateInfo = await getStateFromZip(validation.zip);
-    if (stateInfo.error) {
+    const region = getRegion(zip);
+    if (!region) {
+      console.error("[getLocationInfo] No region found for ZIP:", zip);
       return {
         zip,
-        error: stateInfo.error,
-        errorDetails: stateInfo.errorDetails
+        error: "ZIP code not in a supported region",
+        errorDetails: { type: ERROR_TYPES.VALIDATION }
       };
     }
 
+    console.log("[getLocationInfo] Found region:", region);
+    
     // Get city info with retries
     let cityData;
     let lastError;
     for (let i = 0; i < CACHE_CONFIG.maxRetries; i++) {
       try {
-        cityData = await getCityData(validation.zip, stateInfo.region);
-        break;
+        cityData = await getCityData(zip, region);
+        if (cityData) {
+          console.log("[getLocationInfo] Successfully got city data:", cityData);
+          break;
+        }
       } catch (error) {
         lastError = error;
+        console.warn(`[getLocationInfo] Retry ${i + 1} failed:`, error);
         if (i < CACHE_CONFIG.maxRetries - 1) {
           await new Promise(resolve => 
             setTimeout(resolve, CACHE_CONFIG.retryDelay * Math.pow(2, i))
@@ -562,8 +537,17 @@ async function getLocationInfo(zip) {
       }
     }
 
-    if (!cityData && lastError) {
-      throw lastError;
+    if (!cityData) {
+      console.error("[getLocationInfo] All retries failed:", lastError);
+      return {
+        zip,
+        error: "Could not find location information for this ZIP code",
+        errorDetails: lastError instanceof ZipError ? lastError.toJSON() : {
+          type: ERROR_TYPES.DATA,
+          message: lastError?.message || "Unknown error",
+          timestamp: new Date()
+        }
+      };
     }
 
     // Validate coordinates if present
@@ -571,40 +555,26 @@ async function getLocationInfo(zip) {
       try {
         validateCoordinates(cityData.latitude, cityData.longitude);
       } catch (error) {
-        console.warn('Invalid coordinates:', error);
-        // Don't fail the request, just remove invalid coordinates
+        console.warn('[getLocationInfo] Invalid coordinates:', error);
         delete cityData.latitude;
         delete cityData.longitude;
       }
     }
     
     const locationInfo = {
-      zip: validation.zip,
-      city: cityData.city || `${stateInfo.state} Area`,
-      state: stateInfo.state,
+      zip,
+      city: cityData.city,
+      state: cityData.state,
       county: cityData.county,
       latitude: cityData.latitude,
       longitude: cityData.longitude,
       timezone: cityData.timezone
     };
 
-    // Add insurance options for healthcare pages
-    if (window.location.pathname.includes('health')) {
-      try {
-        const insuranceOptions = await getInsuranceOptions(stateInfo.state, stateInfo.region);
-        locationInfo.insuranceOptions = insuranceOptions;
-        if (!insuranceOptions) {
-          locationInfo.warning = "Unable to load insurance options for your state.";
-        }
-      } catch (error) {
-        console.error('Error loading insurance options:', error);
-        locationInfo.warning = "Failed to load insurance options.";
-      }
-    }
-
+    console.log("[getLocationInfo] Final location info:", locationInfo);
     return locationInfo;
   } catch (error) {
-    console.error('Error getting location info:', error);
+    console.error('[getLocationInfo] Error:', error);
     return {
       zip,
       error: "An error occurred while processing your request. Please try again.",
