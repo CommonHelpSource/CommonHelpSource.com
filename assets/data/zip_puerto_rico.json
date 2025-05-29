@@ -1,0 +1,392 @@
+{
+  "00601": {
+    "city": "Adjuntas",
+    "state": "PR",
+    "county": "Adjuntas Municipality"
+  },
+  "00602": {
+    "city": "Aguada",
+    "state": "PR",
+    "county": "Aguada Municipality"
+  },
+  "00603": {
+    "city": "Aguadilla",
+    "state": "PR",
+    "county": "Aguadilla Municipality"
+  },
+  "00604": {
+    "city": "Aguirre",
+    "state": "PR",
+    "county": "Salinas Municipality"
+  },
+  "00605": {
+    "city": "Aguas Buenas",
+    "state": "PR",
+    "county": "Aguas Buenas Municipality"
+  },
+  "00606": {
+    "city": "Maricao",
+    "state": "PR",
+    "county": "Maricao Municipality"
+  },
+  "00610": {
+    "city": "Anasco",
+    "state": "PR",
+    "county": "Añasco Municipality"
+  },
+  "00612": {
+    "city": "Arecibo",
+    "state": "PR",
+    "county": "Arecibo Municipality"
+  },
+  "00616": {
+    "city": "Bajadero",
+    "state": "PR",
+    "county": "Arecibo Municipality"
+  },
+  "00617": {
+    "city": "Barceloneta",
+    "state": "PR",
+    "county": "Barceloneta Municipality"
+  },
+  "00622": {
+    "city": "Boqueron",
+    "state": "PR",
+    "county": "Cabo Rojo Municipality"
+  },
+  "00623": {
+    "city": "Cabo Rojo",
+    "state": "PR",
+    "county": "Cabo Rojo Municipality"
+  },
+  "00624": {
+    "city": "Penuelas",
+    "state": "PR",
+    "county": "Peñuelas Municipality"
+  },
+  "00631": {
+    "city": "Castaner",
+    "state": "PR",
+    "county": "Lares Municipality"
+  },
+  "00646": {
+    "city": "Dorado",
+    "state": "PR",
+    "county": "Dorado Municipality"
+  },
+  "00650": {
+    "city": "Florida",
+    "state": "PR",
+    "county": "Florida Municipality"
+  },
+  "00652": {
+    "city": "Garrochales",
+    "state": "PR",
+    "county": "Arecibo Municipality"
+  },
+  "00653": {
+    "city": "Guanica",
+    "state": "PR",
+    "county": "Guánica Municipality"
+  },
+  "00656": {
+    "city": "Guayanilla",
+    "state": "PR",
+    "county": "Guayanilla Municipality"
+  },
+  "00659": {
+    "city": "Hatillo",
+    "state": "PR",
+    "county": "Hatillo Municipality"
+  },
+  "00660": {
+    "city": "Hormigueros",
+    "state": "PR",
+    "county": "Hormigueros Municipality"
+  },
+  "00662": {
+    "city": "Isabela",
+    "state": "PR",
+    "county": "Isabela Municipality"
+  },
+  "00664": {
+    "city": "Jayuya",
+    "state": "PR",
+    "county": "Jayuya Municipality"
+  },
+  "00667": {
+    "city": "Lajas",
+    "state": "PR",
+    "county": "Lajas Municipality"
+  },
+  "00669": {
+    "city": "Lares",
+    "state": "PR",
+    "county": "Lares Municipality"
+  },
+  "00670": {
+    "city": "Las Marias",
+    "state": "PR",
+    "county": "Las Marías Municipality"
+  },
+  "00674": {
+    "city": "Manati",
+    "state": "PR",
+    "county": "Manatí Municipality"
+  },
+  "00676": {
+    "city": "Moca",
+    "state": "PR",
+    "county": "Moca Municipality"
+  },
+  "00677": {
+    "city": "Rincon",
+    "state": "PR",
+    "county": "Rincón Municipality"
+  },
+  "00678": {
+    "city": "Quebradillas",
+    "state": "PR",
+    "county": "Quebradillas Municipality"
+  },
+  "00680": {
+    "city": "Mayaguez",
+    "state": "PR",
+    "county": "Mayagüez Municipality"
+  },
+  "00682": {
+    "city": "Mayaguez",
+    "state": "PR",
+    "county": "Mayagüez Municipality"
+  },
+  "00683": {
+    "city": "San German",
+    "state": "PR",
+    "county": "San Germán Municipality"
+  },
+  "00685": {
+    "city": "San Sebastian",
+    "state": "PR",
+    "county": "San Sebastián Municipality"
+  },
+  "00687": {
+    "city": "Morovis",
+    "state": "PR",
+    "county": "Morovis Municipality"
+  },
+  "00688": {
+    "city": "Sabana Grande",
+    "state": "PR",
+    "county": "Sabana Grande Municipality"
+  },
+  "00690": {
+    "city": "San Antonio",
+    "state": "PR",
+    "county": "Aguadilla Municipality"
+  },
+  "00692": {
+    "city": "Vega Alta",
+    "state": "PR",
+    "county": "Vega Alta Municipality"
+  },
+  "00693": {
+    "city": "Vega Baja",
+    "state": "PR",
+    "county": "Vega Baja Municipality"
+  },
+  "00694": {
+    "city": "Vega Baja",
+    "state": "PR",
+    "county": "Vega Baja Municipality"
+  },
+  "00698": {
+    "city": "Yauco",
+    "state": "PR",
+    "county": "Yauco Municipality"
+  },
+  "00901": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00906": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00907": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00909": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00911": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00915": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00917": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00920": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00921": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00923": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00925": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00926": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00927": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00934": {
+    "city": "Fort Buchanan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00936": {
+    "city": "San Juan",
+    "state": "PR",
+    "county": "San Juan Municipality"
+  },
+  "00949": {
+    "city": "Toa Baja",
+    "state": "PR",
+    "county": "Toa Baja Municipality"
+  },
+  "00950": {
+    "city": "Toa Baja",
+    "state": "PR",
+    "county": "Toa Baja Municipality"
+  },
+  "00951": {
+    "city": "Toa Baja",
+    "state": "PR",
+    "county": "Toa Baja Municipality"
+  },
+  "00952": {
+    "city": "Sabana Seca",
+    "state": "PR",
+    "county": "Toa Baja Municipality"
+  },
+  "00953": {
+    "city": "Toa Alta",
+    "state": "PR",
+    "county": "Toa Alta Municipality"
+  },
+  "00956": {
+    "city": "Bayamon",
+    "state": "PR",
+    "county": "Bayamón Municipality"
+  },
+  "00957": {
+    "city": "Bayamon",
+    "state": "PR",
+    "county": "Bayamón Municipality"
+  },
+  "00959": {
+    "city": "Bayamon",
+    "state": "PR",
+    "county": "Bayamón Municipality"
+  },
+  "00960": {
+    "city": "Bayamon",
+    "state": "PR",
+    "county": "Bayamón Municipality"
+  },
+  "00961": {
+    "city": "Bayamon",
+    "state": "PR",
+    "county": "Bayamón Municipality"
+  },
+  "00962": {
+    "city": "Catano",
+    "state": "PR",
+    "county": "Cataño Municipality"
+  },
+  "00965": {
+    "city": "Guaynabo",
+    "state": "PR",
+    "county": "Guaynabo Municipality"
+  },
+  "00966": {
+    "city": "Guaynabo",
+    "state": "PR",
+    "county": "Guaynabo Municipality"
+  },
+  "00968": {
+    "city": "Guaynabo",
+    "state": "PR",
+    "county": "Guaynabo Municipality"
+  },
+  "00969": {
+    "city": "Guaynabo",
+    "state": "PR",
+    "county": "Guaynabo Municipality"
+  },
+  "00971": {
+    "city": "Saint Just",
+    "state": "PR",
+    "county": "Trujillo Alto Municipality"
+  },
+  "00976": {
+    "city": "Trujillo Alto",
+    "state": "PR",
+    "county": "Trujillo Alto Municipality"
+  },
+  "00979": {
+    "city": "Carolina",
+    "state": "PR",
+    "county": "Carolina Municipality"
+  },
+  "00982": {
+    "city": "Carolina",
+    "state": "PR",
+    "county": "Carolina Municipality"
+  },
+  "00983": {
+    "city": "Carolina",
+    "state": "PR",
+    "county": "Carolina Municipality"
+  },
+  "00985": {
+    "city": "Carolina",
+    "state": "PR",
+    "county": "Carolina Municipality"
+  },
+  "00987": {
+    "city": "Carolina",
+    "state": "PR",
+    "county": "Carolina Municipality"
+  }
+} 

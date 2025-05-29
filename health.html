@@ -160,12 +160,57 @@
     </main>
   </div>
 
-  <script>
+  <script type="module">
+    import { getLocationInfo, validateZip } from './assets/js/zip_utils.js';
+
     // Initialize form with ZIP code from localStorage if available
-    window.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('DOMContentLoaded', async function() {
       const zip = localStorage.getItem('zip');
       if (zip) {
-        document.getElementById('zip-input').value = zip;
+        const validation = await validateZip(zip);
+        if (validation.valid) {
+          document.getElementById('zip-input').value = zip;
+          // Trigger ZIP validation to load location info
+          document.getElementById('zip-input').dispatchEvent(new Event('input'));
+        } else {
+          localStorage.removeItem('zip');
+        }
+      }
+    });
+
+    // Add ZIP input validation
+    document.getElementById('zip-input').addEventListener('input', async function(e) {
+      // Remove any non-numeric characters
+      this.value = this.value.replace(/[^0-9]/g, '');
+      
+      const locationError = document.getElementById('location-error');
+      locationError.style.display = 'none';
+
+      // Check if we have a 5-digit ZIP
+      if (this.value.length === 5) {
+        const validation = await validateZip(this.value);
+        if (!validation.valid) {
+          locationError.textContent = validation.error.message;
+          locationError.style.display = 'block';
+          return;
+        }
+
+        const locationInfo = await getLocationInfo(this.value);
+        if (locationInfo.error) {
+          locationError.textContent = locationInfo.error;
+          locationError.style.display = 'block';
+          return;
+        }
+
+        // Update location display
+        document.getElementById('state-display').textContent = 
+          `${locationInfo.city}, ${locationInfo.state} ${locationInfo.zip}`;
+        document.getElementById('location-info').style.display = 'block';
+
+        // Store location info
+        localStorage.setItem('locationInfo', JSON.stringify(locationInfo));
+      } else {
+        document.getElementById('location-info').style.display = 'none';
       }
     });
 
@@ -174,8 +219,9 @@
       e.preventDefault();
 
       const zip = document.getElementById('zip-input').value;
-      if (!zip) {
-        document.getElementById('validation-message').textContent = 'Please enter your ZIP code';
+      const validation = await validateZip(zip);
+      if (!validation.valid) {
+        document.getElementById('validation-message').textContent = validation.error.message;
         document.getElementById('validation-message').style.display = 'block';
         return;
       }

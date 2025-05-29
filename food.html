@@ -307,22 +307,33 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { validateZip } from './assets/js/zip_utils.js';
+
     // Store assessment answers
     let assessmentAnswers = {};
     let userZip = null;
     
     // Load and validate ZIP code on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
       userZip = localStorage.getItem('zip');
       const zipDisplay = document.getElementById('userZip');
       const zipWarning = document.getElementById('zip-warning');
       const questionSections = document.querySelectorAll('.question-section');
 
       if (userZip) {
-        zipDisplay.textContent = userZip;
-        zipWarning.style.display = 'none';
-        questionSections.forEach(section => section.style.display = 'block');
+        const validation = await validateZip(userZip);
+        if (validation.valid) {
+          zipDisplay.textContent = userZip;
+          zipWarning.style.display = 'none';
+          questionSections.forEach(section => section.style.display = 'block');
+        } else {
+          zipDisplay.textContent = 'Invalid';
+          zipWarning.textContent = validation.error.message;
+          zipWarning.style.display = 'block';
+          questionSections.forEach(section => section.style.display = 'none');
+          localStorage.removeItem('zip');
+        }
       } else {
         zipDisplay.textContent = 'Not set';
         zipWarning.style.display = 'block';
@@ -334,6 +345,9 @@
       localStorage.removeItem('zip');
       window.location.href = 'index.html';
     }
+
+    // Make changeZip available globally
+    window.changeZip = changeZip;
 
     async function handleAnswer(questionId, answer) {
       if (!userZip) {

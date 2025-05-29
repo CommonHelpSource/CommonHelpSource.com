@@ -178,6 +178,12 @@ const REGIONS = {
       [82000, 83199], // WY
       [84000, 84999]  // UT
     ]
+  },
+  puerto_rico: {
+    name: 'puerto_rico',
+    zipRanges: [
+      [600, 999]  // PR (00600-00999)
+    ]
   }
 };
 
@@ -279,7 +285,7 @@ function validateCoordinates(latitude, longitude) {
 }
 
 // Enhanced ZIP validation
-function validateZip(zip) {
+async function validateZip(zip) {
   if (typeof zip !== 'string' && typeof zip !== 'number') {
     return {
       valid: false,
@@ -319,6 +325,33 @@ function validateZip(zip) {
     };
   }
 
+  // Check if ZIP exists in our data files
+  try {
+    const zipData = await loadZipData(region);
+    if (!zipData[zipString]) {
+      return {
+        valid: false,
+        error: new ZipError(
+          ERROR_TYPES.VALIDATION,
+          'ZIP code not found in our database',
+          null,
+          { zip: zipString, region }
+        )
+      };
+    }
+  } catch (error) {
+    console.error('Error loading ZIP data:', error);
+    return {
+      valid: false,
+      error: new ZipError(
+        ERROR_TYPES.DATA,
+        'Unable to verify ZIP code. Please try again later.',
+        error,
+        { zip: zipString, region }
+      )
+    };
+  }
+
   return {
     valid: true,
     zip: zipString,
@@ -331,6 +364,13 @@ function validateZip(zip) {
 function getRegion(zip) {
   console.log("Checking region for ZIP:", zip);
   const numericZip = parseInt(zip);
+  
+  // Special handling for Puerto Rico ZIPs
+  if (numericZip >= 600 && numericZip <= 999) {
+    console.log("Found region: puerto_rico");
+    return 'puerto_rico';
+  }
+  
   for (const region of Object.values(REGIONS)) {
     for (const [start, end] of region.zipRanges) {
       if (numericZip >= start && numericZip <= end) {
@@ -632,7 +672,7 @@ function getRegionFromState(state) {
     'OK': 'south', 'TX': 'south', 'MT': 'west', 'ID': 'west',
     'WY': 'west', 'CO': 'west', 'NM': 'west', 'AZ': 'west',
     'UT': 'west', 'NV': 'west', 'WA': 'west', 'OR': 'west',
-    'CA': 'west', 'AK': 'west', 'HI': 'west'
+    'CA': 'west', 'AK': 'west', 'HI': 'west', 'PR': 'puerto_rico'
   };
   return stateToRegion[state];
 }

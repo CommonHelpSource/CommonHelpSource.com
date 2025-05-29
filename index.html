@@ -343,7 +343,7 @@
   </div>
 
   <script type="module">
-    import { getLocationInfo } from './assets/js/zip_utils.js';
+    import { getLocationInfo, validateZip } from './assets/js/zip_utils.js';
 
     const zipInput = document.getElementById("zip");
     const zipError = document.getElementById("zipError");
@@ -359,8 +359,17 @@
       // Hide error message when user starts typing
       zipError.style.display = 'none';
 
-      // Check if we have a valid ZIP
-      if (validateZip(this.value)) {
+      // Check if we have a 5-digit ZIP
+      if (this.value.length === 5) {
+        const validation = await validateZip(this.value);
+        if (!validation.valid) {
+          zipError.textContent = validation.error.message;
+          zipError.style.display = 'block';
+          assessmentType.classList.remove('visible');
+          startBtn.disabled = true;
+          return;
+        }
+
         const locationInfo = await getLocationInfo(this.value);
         console.log('Location lookup result:', locationInfo);
 
@@ -393,13 +402,20 @@
     // Enable/disable start button based on selections
     typeSelect.addEventListener('change', updateStartButton);
 
-    function updateStartButton() {
-      startBtn.disabled = !validateZip(zipInput.value) || !typeSelect.value;
+    async function updateStartButton() {
+      const validation = await validateZip(zipInput.value);
+      startBtn.disabled = !validation.valid || !typeSelect.value;
     }
 
-    function validateZip(zip) {
-      return /^\d{5}$/.test(zip);
-    }
+    // Allow form submission with Enter key
+    zipInput.addEventListener('keypress', async function(e) {
+      if (e.key === 'Enter') {
+        const validation = await validateZip(this.value);
+        if (validation.valid && !startBtn.disabled) {
+          startAssessment();
+        }
+      }
+    });
 
     async function getLocationZip() {
       try {
@@ -423,13 +439,6 @@
         alert('Could not determine your location. Please enter your ZIP code manually.');
       }
     }
-
-    // Allow form submission with Enter key
-    zipInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter' && !startBtn.disabled) {
-        startAssessment();
-      }
-    });
 
     function selectAssessment(type) {
       const buttons = document.querySelectorAll('.assessment-btn');
