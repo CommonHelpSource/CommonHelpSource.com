@@ -453,24 +453,39 @@
       // Save form responses to localStorage
       localStorage.setItem('utilitiesResponses', JSON.stringify(formResponses));
       
+      // Get location info
+      const locationInfo = JSON.parse(localStorage.getItem('locationInfo'));
+      
+      // Validate location info
+      if (!locationInfo || !locationInfo.city || !locationInfo.state) {
+        alert('Location data incomplete. Please return to the home page and enter a valid ZIP code.');
+        return;
+      }
+
+      // Log location info for debugging
+      console.log('Submitting assessment with location:', {
+        zip: locationInfo.zip,
+        city: locationInfo.city,
+        state: locationInfo.state
+      });
+      
       // Show loading state
       document.getElementById('loading').style.display = 'block';
       form.style.display = 'none';
       
       try {
-        // Prepare data for AI prompt
-        const promptData = {
-          location: locationInfo,
-          responses: formResponses
-        };
-        
         // Call chatbot API
         const response = await fetch('/.netlify/functions/chatgpt', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(promptData)
+          body: JSON.stringify({
+            location: locationInfo,
+            responses: {
+              utilityResponses: formResponses
+            }
+          })
         });
         
         if (!response.ok) throw new Error('API request failed');

@@ -362,16 +362,28 @@
       // Check if we have a valid ZIP
       if (validateZip(this.value)) {
         const locationInfo = await getLocationInfo(this.value);
-        if (locationInfo) {
-          assessmentType.classList.add('visible');
-          // Store complete location info
-          localStorage.setItem('locationInfo', JSON.stringify(locationInfo));
-          updateStartButton();
-        } else {
+        console.log('Location lookup result:', locationInfo);
+
+        if (locationInfo.error) {
+          zipError.textContent = locationInfo.error;
+          zipError.style.display = 'block';
           assessmentType.classList.remove('visible');
           startBtn.disabled = true;
-          alert('Sorry, we currently only serve the Northeast region (CT, ME, MA, NH, NJ, NY, PA, RI, and VT). Please enter a ZIP code from one of these states.');
+          return;
         }
+
+        if (!locationInfo.city || !locationInfo.state) {
+          zipError.textContent = 'Could not find complete location information for this ZIP code. Please try a different one.';
+          zipError.style.display = 'block';
+          assessmentType.classList.remove('visible');
+          startBtn.disabled = true;
+          return;
+        }
+
+        // Store complete location info
+        localStorage.setItem('locationInfo', JSON.stringify(locationInfo));
+        assessmentType.classList.add('visible');
+        updateStartButton();
       } else {
         assessmentType.classList.remove('visible');
         startBtn.disabled = true;

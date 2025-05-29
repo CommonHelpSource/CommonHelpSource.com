@@ -1,7 +1,8 @@
 // Cache for loaded data
 const cache = {
   zip: {},
-  insurance: {}
+  insurance: {},
+  city: {}
 };
 
 // Region definitions
@@ -115,29 +116,103 @@ async function loadZipData(region) {
   }
 }
 
-// Load insurance data for a region
-async function loadInsuranceData(region) {
-  if (cache.insurance[region]) {
-    return cache.insurance[region];
+// Get city data for a ZIP code
+async function getCityData(zip) {
+  if (cache.city[zip]) {
+    console.log("Using cached city data for ZIP:", zip);
+    return cache.city[zip];
   }
 
   try {
-    const response = await fetch(`/assets/data/insurance_${region}.json`);
+    const response = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?zipCode=${zip}&countryCode=US&localityLanguage=en`
+    );
+
     if (!response.ok) {
-      throw new Error(`Failed to load ${region} insurance data`);
+      throw new Error('Failed to fetch city data');
     }
+
     const data = await response.json();
-    cache.insurance[region] = data;
-    return data;
+    if (!data.city) {
+      throw new Error('City not found for ZIP code');
+    }
+
+    const cityData = {
+      city: data.city,
+      county: data.locality,
+      latitude: data.latitude,
+      longitude: data.longitude
+    };
+
+    cache.city[zip] = cityData;
+    console.log("Successfully loaded city data for ZIP:", zip, cityData);
+    return cityData;
   } catch (error) {
-    console.error(`Error loading ${region} insurance data:`, error);
-    throw error;
+    console.error('Error getting city data:', error);
+    return null;
+  }
+}
+
+// Get complete location info including insurance options
+async function getLocationInfo(zip) {
+  console.log("Getting location info for ZIP:", zip);
+  
+  try {
+    // Get state info
+    const stateInfo = await getStateFromZip(zip);
+    if (stateInfo.error) {
+      console.error("State lookup error:", stateInfo.error);
+      return {
+        zip,
+        error: stateInfo.error
+      };
+    }
+
+    // Get city info
+    const cityData = await getCityData(zip);
+    if (!cityData || !cityData.city) {
+      console.error("City lookup failed for ZIP:", zip);
+      return {
+        zip,
+        state: stateInfo.state,
+        error: "Could not find city information for this ZIP code."
+      };
+    }
+
+    // Combine the data
+    const locationInfo = {
+      zip,
+      city: cityData.city,
+      state: stateInfo.state,
+      county: cityData.county,
+      latitude: cityData.latitude,
+      longitude: cityData.longitude
+    };
+
+    console.log("Complete location info:", locationInfo);
+
+    // If we're on the healthcare page, add insurance options
+    if (window.location.pathname.includes('health')) {
+      const insuranceOptions = await getInsuranceOptions(stateInfo.state, stateInfo.region);
+      locationInfo.insuranceOptions = insuranceOptions;
+      if (!insuranceOptions) {
+        locationInfo.error = "Unable to load insurance options for your state.";
+      }
+    }
+
+    return locationInfo;
+  } catch (error) {
+    console.error('Error getting location info:', error);
+    return {
+      zip,
+      error: "An error occurred while processing your request. Please try again."
+    };
   }
 }
 
 // Get state from ZIP code
 async function getStateFromZip(zip) {
-  console.log("ZIP Entered:", zip);
+  console.log("Getting state for ZIP:", zip);
   const region = getRegion(zip);
   if (!region) {
     console.log("No region found for ZIP:", zip);
@@ -175,48 +250,31 @@ async function getInsuranceOptions(state, region) {
   }
 }
 
-// Get complete location info including insurance options
-async function getLocationInfo(zip) {
-  // Only proceed if we're on the healthcare assessment page
-  if (!window.location.pathname.includes('assessment_healthcare_tier1.html')) {
-    const stateInfo = await getStateFromZip(zip);
-    return {
-      zip,
-      state: stateInfo.state,
-      error: stateInfo.error
-    };
+// Load insurance data for a region
+async function loadInsuranceData(region) {
+  if (cache.insurance[region]) {
+    return cache.insurance[region];
   }
 
   try {
-    const stateInfo = await getStateFromZip(zip);
-    if (stateInfo.error) {
-      return {
-        zip,
-        error: stateInfo.error
-      };
+    const response = await fetch(`/assets/data/insurance_${region}.json`);
+    if (!response.ok) {
+      throw new Error(`Failed to load ${region} insurance data`);
     }
-
-    const insuranceOptions = await getInsuranceOptions(stateInfo.state, stateInfo.region);
-    
-    return {
-      zip,
-      state: stateInfo.state,
-      insuranceOptions,
-      error: insuranceOptions ? null : "Unable to load insurance options for your state."
-    };
+    const data = await response.json();
+    cache.insurance[region] = data;
+    return data;
   } catch (error) {
-    console.error('Error getting location info:', error);
-    return {
-      zip,
-      error: "An error occurred while processing your request. Please try again."
-    };
+    console.error(`Error loading ${region} insurance data:`, error);
+    throw error;
   }
 }
 
-// Clear cache (useful for testing or forcing a refresh)
+// Clear cache (useful for testing)
 function clearCache() {
   cache.zip = {};
   cache.insurance = {};
+  cache.city = {};
 }
 
 // Export functions
