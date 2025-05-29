@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Housing Assessment - Part 2</title>
+  <title>Housing Assessment</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <style>
     :root {
       --primary-color: #ff6b35;
@@ -50,22 +51,6 @@
     .location-info {
       color: #636e72;
       font-size: 1.1rem;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background: #dfe6e9;
-      border-radius: 4px;
-      margin: 30px 0;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      width: 100%;
-      height: 100%;
-      background: var(--primary-color);
-      transition: width 0.3s ease;
     }
 
     .question-group {
@@ -168,20 +153,107 @@
       font-size: 0.9rem;
       margin-top: 10px;
     }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--text-color);
+      margin: 40px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary-color);
+    }
+
+    .site-logo {
+      display: block;
+      max-width: 300px;
+      width: 80%;
+      height: auto;
+      margin: 20px auto;
+      transition: transform 0.2s;
+    }
+
+    .site-logo:hover {
+      transform: scale(1.02);
+    }
   </style>
 </head>
 <body>
+  <a href="index.html">
+    <img src="assets/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
+  </a>
+
   <div class="container">
     <div class="assessment-card">
       <div class="header">
         <h1>Housing Assessment</h1>
         <div class="location-info">ZIP Code: <span id="zipDisplay"></span></div>
-        <div class="progress-bar">
-          <div class="progress-fill"></div>
-        </div>
       </div>
 
       <form id="assessmentForm">
+        <div class="section-title">Current Situation</div>
+        
+        <div class="question-group">
+          <label for="currentStatus">What is your current housing situation?</label>
+          <select id="currentStatus" required>
+            <option value="">Select an option...</option>
+            <option value="homeless">Currently homeless</option>
+            <option value="shelter">Living in a shelter</option>
+            <option value="temp">Temporarily staying with others</option>
+            <option value="risk">At risk of losing housing</option>
+            <option value="stable">Stable housing but need assistance</option>
+          </select>
+          <div class="help-text">This helps us understand your immediate needs</div>
+        </div>
+
+        <div class="question-group">
+          <label for="duration">How long have you been in this situation?</label>
+          <select id="duration" required>
+            <option value="">Select an option...</option>
+            <option value="less_than_week">Less than a week</option>
+            <option value="less_than_month">Less than a month</option>
+            <option value="1_3_months">1-3 months</option>
+            <option value="3_6_months">3-6 months</option>
+            <option value="6_12_months">6-12 months</option>
+            <option value="over_year">Over a year</option>
+          </select>
+        </div>
+
+        <div class="question-group">
+          <label for="household">How many people are in your household?</label>
+          <select id="household" required>
+            <option value="">Select an option...</option>
+            <option value="1">Just me</option>
+            <option value="2">2 people</option>
+            <option value="3">3 people</option>
+            <option value="4">4 people</option>
+            <option value="5">5 people</option>
+            <option value="6_plus">6 or more people</option>
+          </select>
+        </div>
+
+        <div class="question-group">
+          <label for="urgency">How urgent is your housing need?</label>
+          <select id="urgency" required>
+            <option value="">Select an option...</option>
+            <option value="immediate">Need immediate assistance (24-48 hours)</option>
+            <option value="very_urgent">Very urgent (this week)</option>
+            <option value="urgent">Urgent (this month)</option>
+            <option value="planning">Planning ahead (not immediate)</option>
+          </select>
+        </div>
+
+        <div class="question-group">
+          <label for="safety">Do you feel safe in your current location?</label>
+          <select id="safety" required>
+            <option value="">Select an option...</option>
+            <option value="yes">Yes, I feel safe</option>
+            <option value="no">No, I don't feel safe</option>
+            <option value="unsure">Not sure</option>
+          </select>
+          <div class="help-text">Your safety is our top priority</div>
+        </div>
+
+        <div class="section-title">Additional Details</div>
+
         <div class="question-group">
           <label for="income">What is your approximate monthly household income?</label>
           <select id="income" required>
@@ -253,32 +325,22 @@
         </div>
 
         <div class="button-group">
-          <button type="button" class="primary-btn back-btn" onclick="window.location.href='assessment_housing_tier1.html'">
-            Back to Part 1
+          <button type="button" class="primary-btn back-btn" onclick="window.location.href='index.html'">
+            Back to Home
           </button>
           <button type="button" class="primary-btn submit-btn" onclick="submitAssessment()" id="submitBtn">
             Get Results
           </button>
         </div>
       </form>
-
-      <div id="results-container" style="display: none; margin-top: 30px;">
-        <h2>Your Personalized Housing Plan</h2>
-        <div id="loading-indicator" style="text-align: center; display: none;">
-          <p>Generating your personalized housing plan...</p>
-        </div>
-        <div id="chat-response"></div>
-      </div>
     </div>
   </div>
 
   <script>
-    // Check for ZIP code and previous assessment data on page load
-    window.addEventListener('DOMContentLoaded', function() {
+    // Check for ZIP code on page load
+    window.addEventListener('DOMContentLoaded', async function() {
       const zip = localStorage.getItem('zip');
-      const tier1Data = localStorage.getItem('housing_assessment_1');
-
-      if (!zip || !tier1Data) {
+      if (!zip) {
         window.location.href = 'index.html';
         return;
       }
@@ -286,7 +348,7 @@
       document.getElementById('zipDisplay').textContent = zip;
 
       // Load saved data if it exists
-      const savedData = localStorage.getItem('housing_assessment_2');
+      const savedData = localStorage.getItem('housing_assessment');
       if (savedData) {
         const data = JSON.parse(savedData);
         Object.keys(data).forEach(key => {
@@ -317,16 +379,19 @@
     }
 
     async function submitAssessment() {
-      const tier1Data = JSON.parse(localStorage.getItem('housing_assessment_1'));
       const zip = localStorage.getItem('zip');
-
-      if (!zip || !tier1Data) {
+      if (!zip) {
         window.location.href = 'index.html';
         return;
       }
 
-      // Collect current form data
-      const tier2Data = {
+      // Collect form data
+      const data = {
+        currentStatus: document.getElementById('currentStatus').value,
+        duration: document.getElementById('duration').value,
+        household: document.getElementById('household').value,
+        urgency: document.getElementById('urgency').value,
+        safety: document.getElementById('safety').value,
         income: document.getElementById('income').value,
         barriers: document.getElementById('barriers').value,
         preferences: document.getElementById('preferences').value,
@@ -334,30 +399,62 @@
         transport: document.getElementById('transport').value
       };
 
-      // Save tier 2 data
-      localStorage.setItem('housing_assessment_2', JSON.stringify(tier2Data));
+      // Save assessment data
+      localStorage.setItem('housing_assessment', JSON.stringify(data));
 
       // Show loading state
       document.getElementById('loading').style.display = 'block';
       document.getElementById('submitBtn').disabled = true;
 
       try {
-        // Show loading state
-        const loadingIndicator = document.getElementById('loading-indicator');
-        const resultsContainer = document.getElementById('results-container');
-        if (loadingIndicator && resultsContainer) {
-          resultsContainer.style.display = 'block';
-          loadingIndicator.style.display = 'block';
-        }
+        // Generate the prompt based on answers
+        const prompt = `Create a comprehensive Housing Assistance Plan for someone with these assessment responses:
 
-        // Combine all data
-        const assessmentData = {
-          zip: zip,
-          tier1: tier1Data,
-          tier2: tier2Data
-        };
+Current Situation:
+- Housing status: ${data.currentStatus}
+- Duration: ${data.duration}
+- Household size: ${data.household}
+- Urgency level: ${data.urgency}
+- Safety concerns: ${data.safety}
 
-        console.log("Generating chatbot prompt...");
+Additional Details:
+- Monthly income: ${data.income}
+- Main barrier: ${data.barriers}
+- Assistance type needed: ${data.preferences}
+- Special needs: ${data.special}
+- Transportation access: ${data.transport}
+
+They live in ZIP code ${zip}. Format the response as a JSON object with this structure:
+{
+  "totalRecommendations": 12,
+  "recommendations": [
+    {
+      "priority": 1,
+      "programName": "Name of the program or service",
+      "organizationName": "Name of the organization",
+      "description": "2-3 sentences about the program",
+      "eligibility": ["List of eligibility criteria"],
+      "applicationSteps": ["Step 1", "Step 2", "Step 3"],
+      "address": "Full address",
+      "phone": "Contact number",
+      "website": "https://program-website.org",
+      "hours": "Operating hours",
+      "urgencyLevel": "immediate/high/medium/low",
+      "waitTime": "Estimated wait time for assistance",
+      "documents": ["Required document 1", "Required document 2"]
+    }
+  ],
+  "additionalResources": {
+    "title": "Additional Support Services",
+    "description": "Brief text about other available resources",
+    "links": ["Resource 1", "Resource 2"]
+  }
+}
+
+Sort recommendations by urgency and relevance to the user's situation. Include at least 8 recommendations if available.`;
+
+        console.log("Generating housing assistance plan...");
+        console.log("Prompt:", prompt);
 
         // Send to chatbot endpoint
         const response = await fetch('/.netlify/functions/chatgpt', {
@@ -374,44 +471,7 @@
               },
               {
                 role: "user",
-                content: `Create a step-by-step Housing Assistance Plan for someone with these assessment responses:
-
-Current Situation:
-- Status: ${tier1Data.currentStatus}
-- Duration: ${tier1Data.duration}
-- Household size: ${tier1Data.household}
-- Urgency: ${tier1Data.urgency}
-- Safety concerns: ${tier1Data.safety}
-
-Additional Details:
-- Monthly income: ${tier2Data.income}
-- Main barrier: ${tier2Data.barriers}
-- Assistance type needed: ${tier2Data.preferences}
-- Special needs: ${tier2Data.special}
-- Transportation: ${tier2Data.transport}
-
-They live in ZIP code ${zip}. Format the response as a JSON object with this structure:
-{
-  "title": "Housing Assistance Plan for ZIP ${zip}",
-  "introduction": "A brief, encouraging paragraph about the next steps they should take",
-  "steps": [
-    {
-      "stepNumber": 1,
-      "organization": "Organization name",
-      "action": "A clear call-to-action",
-      "description": "2-3 sentences about what to expect and what to prepare",
-      "address": "Full address",
-      "phone": "Contact number",
-      "hours": "Operating hours",
-      "requirements": "What to bring or prepare",
-      "priority": "high/medium/low"
-    }
-  ],
-  "finalStep": {
-    "title": "Keep Your Plan Handy",
-    "action": "Download or email this plan to have it available when you need it."
-  }
-}`
+                content: prompt
               }
             ]
           })
@@ -428,55 +488,22 @@ They live in ZIP code ${zip}. Format the response as a JSON object with this str
           throw new Error(result.error);
         }
 
-        // Hide loading indicator
-        if (loadingIndicator) {
-          loadingIndicator.style.display = 'none';
+        // Store the complete assessment data and results
+        try {
+          const plan = JSON.parse(result.content);
+          localStorage.setItem('housing_results', result.content);
+          window.location.href = 'results1.html';
+        } catch (e) {
+          console.error('Error parsing plan JSON:', e);
+          throw new Error('Invalid response format from AI service');
         }
-
-        // Display the response
-        const chatResponse = document.getElementById('chat-response');
-        if (chatResponse && result.content) {
-          try {
-            const plan = JSON.parse(result.content);
-            console.log("Parsed housing plan:", plan);
-            chatResponse.innerHTML = `
-              <h3>${plan.title}</h3>
-              <p>${plan.introduction}</p>
-              <div class="steps">
-                ${plan.steps.map(step => `
-                  <div class="step" style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
-                    <h4>Step ${step.stepNumber}: ${step.action}</h4>
-                    <p><strong>${step.organization}</strong></p>
-                    <p>${step.description}</p>
-                    <p><strong>Address:</strong> ${step.address}</p>
-                    <p><strong>Phone:</strong> ${step.phone}</p>
-                    <p><strong>Hours:</strong> ${step.hours}</p>
-                    <p><strong>Requirements:</strong> ${step.requirements}</p>
-                    <p><strong>Priority:</strong> ${step.priority}</p>
-                  </div>
-                `).join('')}
-              </div>
-              <div class="final-step" style="margin-top: 20px;">
-                <h4>${plan.finalStep.title}</h4>
-                <p>${plan.finalStep.action}</p>
-              </div>
-            `;
-          } catch (e) {
-            console.error('Error parsing plan JSON:', e);
-            chatResponse.innerHTML = result.content;
-          }
-        }
-
-        // Store the complete assessment data
-        localStorage.setItem('complete_assessment', JSON.stringify(assessmentData));
       } catch (error) {
         console.error('Error:', error);
         document.getElementById('validationMessage').textContent = `Error: ${error.message}. Please try again.`;
         document.getElementById('validationMessage').style.display = 'block';
         document.getElementById('submitBtn').disabled = false;
-        if (loadingIndicator) {
-          loadingIndicator.style.display = 'none';
-        }
+      } finally {
+        document.getElementById('loading').style.display = 'none';
       }
     }
   </script>

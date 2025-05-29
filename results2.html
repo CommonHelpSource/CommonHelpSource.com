@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Additional Housing Resources</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary-color: #ff6b35;
+      --primary-hover: #ff8659;
+      --text-color: #2d3436;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: #f5f6f7;
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 30px;
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ad-space {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 20px;
+      height: fit-content;
+    }
+
+    .results-section {
+      flex: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 0 0 10px;
+      color: var(--text-color);
+    }
+
+    .location-info {
+      color: #636e72;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    .recommendation-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+
+    .recommendation-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .program-name {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin: 0;
+    }
+
+    .urgency-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .urgency-immediate {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .urgency-high {
+      background: #fff3e0;
+      color: #ef6c00;
+    }
+
+    .urgency-medium {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .urgency-low {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
+    .organization-name {
+      color: #636e72;
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+
+    .description {
+      margin: 15px 0;
+    }
+
+    .details-section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .details-section h3 {
+      font-size: 1.1rem;
+      margin: 0 0 10px;
+    }
+
+    .details-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .details-list li {
+      margin-bottom: 8px;
+    }
+
+    .contact-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .contact-item {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    .contact-item strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 40px;
+    }
+
+    .primary-btn {
+      flex: 1;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .next-btn {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .next-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .back-btn {
+      background: #dfe6e9;
+      color: var(--text-color);
+    }
+
+    .back-btn:hover {
+      background: #c8d6e5;
+    }
+
+    .site-logo {
+      display: block;
+      max-width: 300px;
+      width: 80%;
+      height: auto;
+      margin: 20px auto;
+      transition: transform 0.2s;
+    }
+
+    .site-logo:hover {
+      transform: scale(1.02);
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html">
+    <img src="assets/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
+  </a>
+
+  <div class="container">
+    <aside class="ad-space">
+      <h3>Support Services</h3>
+      <p>Find additional resources and support in your area:</p>
+      <!-- Ad content will go here -->
+    </aside>
+
+    <main class="results-section">
+      <div class="header">
+        <h1>Additional Housing Resources</h1>
+        <div class="location-info">ZIP Code: <span id="zipDisplay"></span></div>
+      </div>
+
+      <div id="recommendationsContainer">
+        <!-- Recommendations will be inserted here -->
+      </div>
+
+      <div class="button-group">
+        <a href="results1.html" class="primary-btn back-btn">
+          Back to Priority Resources
+        </a>
+        <a href="#" id="showMoreBtn" class="primary-btn next-btn" style="display: none;">
+          Explore Additional Resources
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      const zip = localStorage.getItem('zip');
+      const resultsJson = localStorage.getItem('housing_results');
+
+      if (!zip || !resultsJson) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      document.getElementById('zipDisplay').textContent = zip;
+
+      try {
+        const results = JSON.parse(resultsJson);
+        const recommendations = results.recommendations;
+        
+        // Display recommendations 5-8
+        const container = document.getElementById('recommendationsContainer');
+        recommendations.slice(4, 8).forEach(rec => {
+          container.appendChild(createRecommendationCard(rec));
+        });
+
+        // Show "Explore Additional Resources" button if there are more recommendations
+        const showMoreBtn = document.getElementById('showMoreBtn');
+        if (recommendations.length > 8) {
+          showMoreBtn.style.display = 'block';
+          showMoreBtn.href = 'results3.html';
+        }
+      } catch (error) {
+        console.error('Error parsing results:', error);
+        window.location.href = 'results1.html';
+      }
+    });
+
+    function createRecommendationCard(recommendation) {
+      const card = document.createElement('div');
+      card.className = 'recommendation-card';
+
+      card.innerHTML = `
+        <div class="recommendation-header">
+          <h2 class="program-name">${recommendation.programName}</h2>
+          <span class="urgency-badge urgency-${recommendation.urgencyLevel.toLowerCase()}">
+            ${recommendation.urgencyLevel}
+          </span>
+        </div>
+        <div class="organization-name">${recommendation.organizationName}</div>
+        <p class="description">${recommendation.description}</p>
+
+        <div class="details-section">
+          <h3>Eligibility Requirements</h3>
+          <ul class="details-list">
+            ${recommendation.eligibility.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div class="details-section">
+          <h3>Application Steps</h3>
+          <ul class="details-list">
+            ${recommendation.applicationSteps.map(step => `<li>${step}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div class="details-section">
+          <h3>Required Documents</h3>
+          <ul class="details-list">
+            ${recommendation.documents.map(doc => `<li>${doc}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div class="contact-info">
+          <div class="contact-item">
+            <strong>Address</strong>
+            ${recommendation.address}
+          </div>
+          <div class="contact-item">
+            <strong>Phone</strong>
+            ${recommendation.phone}
+          </div>
+          <div class="contact-item">
+            <strong>Hours</strong>
+            ${recommendation.hours}
+          </div>
+          <div class="contact-item">
+            <strong>Website</strong>
+            <a href="${recommendation.website}" target="_blank" rel="noopener noreferrer">
+              Visit Website
+            </a>
+          </div>
+        </div>
+      `;
+
+      return card;
+    }
+  </script>
+</body>
+</html> 

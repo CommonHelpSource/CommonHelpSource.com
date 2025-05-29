@@ -78,20 +78,25 @@ const REGIONS = {
 
 // Get region based on ZIP code
 function getRegion(zip) {
+  console.log("Checking region for ZIP:", zip);
   const numericZip = parseInt(zip);
   for (const region of Object.values(REGIONS)) {
     for (const [start, end] of region.zipRanges) {
       if (numericZip >= start && numericZip <= end) {
+        console.log("Found region:", region.name);
         return region.name;
       }
     }
   }
+  console.log("No region found for ZIP:", zip);
   return null;
 }
 
 // Load ZIP data for a region
 async function loadZipData(region) {
+  console.log("Loading ZIP data for region:", region);
   if (cache.zip[region]) {
+    console.log("Using cached ZIP data for region:", region);
     return cache.zip[region];
   }
 
@@ -101,6 +106,7 @@ async function loadZipData(region) {
       throw new Error(`Failed to load ${region} ZIP data`);
     }
     const data = await response.json();
+    console.log("Successfully loaded ZIP data for region:", region);
     cache.zip[region] = data;
     return data;
   } catch (error) {
@@ -131,8 +137,10 @@ async function loadInsuranceData(region) {
 
 // Get state from ZIP code
 async function getStateFromZip(zip) {
+  console.log("ZIP Entered:", zip);
   const region = getRegion(zip);
   if (!region) {
+    console.log("No region found for ZIP:", zip);
     return {
       error: "ZIP not recognized. Please double-check or try a nearby ZIP code."
     };
@@ -140,8 +148,10 @@ async function getStateFromZip(zip) {
 
   try {
     const zipData = await loadZipData(region);
+    const state = zipData[zip];
+    console.log("State Found:", state);
     return {
-      state: zipData[zip] || null,
+      state: state || null,
       region
     };
   } catch (error) {

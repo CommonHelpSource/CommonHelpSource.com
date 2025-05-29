@@ -263,11 +263,16 @@
               <i class="fas fa-utensils"></i>
               Food Assistance
             </button>
+            <button type="button" class="assessment-btn" id="health-btn" onclick="selectAssessment('health')">
+              <i class="fas fa-heart"></i>
+              Health Insurance Assistance
+            </button>
           </div>
           <select id="type" required style="display: none;">
             <option value="">Choose an assessment...</option>
             <option value="housing">Housing Assistance</option>
             <option value="food">Food Support</option>
+            <option value="health">Health Insurance Assistance</option>
             <option value="id">ID & Documentation</option>
             <option value="utility">Utility Assistance</option>
           </select>
@@ -399,21 +404,17 @@
     }
 
     async function startAssessment() {
-      const zip = zipInput.value;
       const type = typeSelect.value;
-
-      if (!validateZip(zip)) {
-        zipError.style.display = 'block';
-        zipInput.focus();
-        return;
+      const zip = zipInput.value;
+      
+      if (type && validateZip(zip)) {
+        localStorage.setItem("selectedAssessment", type);
+        if (type === 'health') {
+          window.location.href = "health.html";
+        } else {
+          window.location.href = `assessment_${type}_tier1.html`;
+        }
       }
-
-      if (!type) {
-        return;
-      }
-
-      // Location info is already stored in localStorage from validation
-      window.location.href = `assessment_${type}_tier1.html`;
     }
   </script>
 </body>

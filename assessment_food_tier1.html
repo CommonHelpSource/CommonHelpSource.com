@@ -270,6 +270,14 @@
           </button>
         </div>
       </form>
+
+      <div id="results-container" style="display: none; margin-top: 30px;">
+        <h2>Your Personalized Food Assistance Plan</h2>
+        <div id="loading-indicator" style="text-align: center; display: none;">
+          <p>Generating your personalized food assistance plan...</p>
+        </div>
+        <div id="chat-response"></div>
+      </div>
     </div>
   </div>
 
@@ -346,6 +354,14 @@
       document.getElementById('submitBtn').disabled = true;
 
       try {
+        // Show loading state
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const resultsContainer = document.getElementById('results-container');
+        if (loadingIndicator && resultsContainer) {
+          resultsContainer.style.display = 'block';
+          loadingIndicator.style.display = 'block';
+        }
+
         // Generate the prompt based on answers
         const prompt = `Create a step-by-step Food Assistance Plan for someone who answered the following:
 - Has enough food: ${data.has_enough_food}
@@ -353,7 +369,31 @@
 - Can cook/store food: ${data.can_cook_store}
 - Has dietary needs: ${data.has_dietary_needs}
 - Needs food within 24 hours: ${data.needs_urgent_food}
-They live in ZIP code ${zip}. Recommend 3–5 food resources within 20 miles including pantries, SNAP enrollment support, and meal delivery options. Format the response as an action plan.`;
+They live in ZIP code ${zip}. Recommend 3–5 food resources within 20 miles including pantries, SNAP enrollment support, and meal delivery options. Format the response as a JSON object with this structure:
+{
+  "title": "Food Assistance Plan for ZIP ${zip}",
+  "introduction": "A brief, encouraging paragraph about the next steps they should take",
+  "steps": [
+    {
+      "stepNumber": 1,
+      "organization": "Organization name",
+      "action": "A clear call-to-action (e.g., 'Visit the food pantry')",
+      "description": "2-3 sentences about what to expect and what to prepare",
+      "address": "Full address",
+      "phone": "Contact number",
+      "hours": "Operating hours",
+      "requirements": "What to bring or prepare",
+      "priority": "high/medium/low"
+    }
+  ],
+  "finalStep": {
+    "title": "Keep Your Plan Handy",
+    "action": "Download or email this plan to have it available when you need it."
+  }
+}`;
+
+        console.log("Generating chatbot prompt...");
+        console.log("Prompt:", prompt);
 
         // Send to chatbot endpoint
         const response = await fetch('/.netlify/functions/chatgpt', {
@@ -377,23 +417,62 @@ They live in ZIP code ${zip}. Recommend 3–5 food resources within 20 miles inc
         });
 
         if (!response.ok) {
-          throw new Error('Failed to process assessment');
+          throw new Error(`Failed to process assessment: ${response.status} ${response.statusText}`);
         }
 
         const result = await response.json();
+        console.log("Received chatbot response:", result);
+
         if (result.error) {
           throw new Error(result.error);
         }
 
-        // Redirect to results page
-        window.location.href = 'results.html';
+        // Hide loading indicator
+        if (loadingIndicator) {
+          loadingIndicator.style.display = 'none';
+        }
+
+        // Display the response
+        const chatResponse = document.getElementById('chat-response');
+        if (chatResponse && result.content) {
+          try {
+            const plan = JSON.parse(result.content);
+            console.log("Parsed food assistance plan:", plan);
+            chatResponse.innerHTML = `
+              <h3>${plan.title}</h3>
+              <p>${plan.introduction}</p>
+              <div class="steps">
+                ${plan.steps.map(step => `
+                  <div class="step" style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
+                    <h4>Step ${step.stepNumber}: ${step.action}</h4>
+                    <p><strong>${step.organization}</strong></p>
+                    <p>${step.description}</p>
+                    <p><strong>Address:</strong> ${step.address}</p>
+                    <p><strong>Phone:</strong> ${step.phone}</p>
+                    <p><strong>Hours:</strong> ${step.hours}</p>
+                    <p><strong>Requirements:</strong> ${step.requirements}</p>
+                    <p><strong>Priority:</strong> ${step.priority}</p>
+                  </div>
+                `).join('')}
+              </div>
+              <div class="final-step" style="margin-top: 20px;">
+                <h4>${plan.finalStep.title}</h4>
+                <p>${plan.finalStep.action}</p>
+              </div>
+            `;
+          } catch (e) {
+            console.error('Error parsing plan JSON:', e);
+            chatResponse.innerHTML = result.content;
+          }
+        }
       } catch (error) {
         console.error('Error:', error);
         document.getElementById('validationMessage').textContent = `Error: ${error.message}. Please try again.`;
         document.getElementById('validationMessage').style.display = 'block';
         document.getElementById('submitBtn').disabled = false;
-      } finally {
-        document.getElementById('loading').style.display = 'none';
+        if (loadingIndicator) {
+          loadingIndicator.style.display = 'none';
+        }
       }
     }
   </script>
