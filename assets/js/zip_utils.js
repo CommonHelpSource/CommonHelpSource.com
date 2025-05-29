@@ -367,7 +367,9 @@ function getRegion(zip) {
   
   // Special handling for Puerto Rico ZIPs
   if (numericZip >= 600 && numericZip <= 999) {
-    console.log("Found region: puerto_rico");
+    // Add leading zeros for Puerto Rico ZIP lookup
+    const prZip = numericZip.toString().padStart(5, '0');
+    console.log("Formatted Puerto Rico ZIP:", prZip);
     return 'puerto_rico';
   }
   
@@ -400,7 +402,27 @@ async function loadZipData(region) {
     }
     
     const data = await response.json();
-    console.log("Successfully loaded ZIP data for region:", region);
+    
+    // Validate data structure
+    if (typeof data !== 'object' || data === null) {
+      throw new Error(`Invalid ZIP data format for ${region}`);
+    }
+
+    // For Puerto Rico, ensure ZIP codes are properly formatted
+    if (region === 'puerto_rico') {
+      const formattedData = {};
+      for (const [zip, info] of Object.entries(data)) {
+        // Ensure 5-digit format
+        const formattedZip = zip.padStart(5, '0');
+        formattedData[formattedZip] = {
+          ...info,
+          state: 'PR' // Ensure state is always PR
+        };
+      }
+      data = formattedData;
+    }
+    
+    console.log(`Successfully loaded ZIP data for ${region} with ${Object.keys(data).length} entries`);
     
     // Update both memory and persistent cache
     cache.zip[region] = data;
@@ -409,7 +431,12 @@ async function loadZipData(region) {
     return data;
   } catch (error) {
     console.error(`Error loading ${region} ZIP data:`, error);
-    throw error;
+    throw new ZipError(
+      ERROR_TYPES.DATA,
+      `Failed to load ZIP data for ${region}: ${error.message}`,
+      error,
+      { region }
+    );
   }
 }
 
