@@ -1,4 +1,5 @@
-const { OpenAI } = require('openai');
+const { Configuration, OpenAIApi } = require('openai');
+const { generatePrompt } = require('./chatgpt-prompt-template');
 const fetch = require('node-fetch');
 
 // Function to calculate distance between two points using Haversine formula
@@ -91,13 +92,13 @@ const languageInstructions = {
   'ht': 'Reponn an kreyòl ayisyen.'
 };
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
 });
+const openai = new OpenAIApi(configuration);
 
-exports.handler = async function(event) {
-  // Set CORS headers
+exports.handler = async function(event, context) {
+  // Enable CORS
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -113,175 +114,64 @@ exports.handler = async function(event) {
   }
 
   try {
-    // Validate request body
-    if (!event.body) {
-      throw new Error('Request body is required');
+    const body = JSON.parse(event.body);
+    const { location, responses } = body;
+
+    if (!location || !responses) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Missing required parameters' })
+      };
     }
 
-    // Parse and validate request data
-    const { messages, zip, language = 'en' } = JSON.parse(event.body);
+    // Generate the prompt using our template
+    const prompt = generatePrompt(location, responses);
 
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      throw new Error('Invalid messages format: must be a non-empty array');
-    }
-
-    if (!zip) {
-      throw new Error('ZIP code is required');
-    }
-
-    // Validate ZIP code format
-    if (!/^\d{5}(-\d{4})?$/.test(zip)) {
-      throw new Error('Invalid ZIP code format');
-    }
-
-    // Get coordinates for user's ZIP code
-    const geocodeResponse = await fetch('/.netlify/functions/geocode', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ zip })
+    // Call OpenAI API
+    const completion = await openai.createChatCompletion({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: "You are a knowledgeable case management assistant with expertise in social services and community resources. Your goal is to provide clear, actionable guidance to help people access local support services."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000
     });
 
-    if (!geocodeResponse.ok) {
-      throw new Error('Failed to geocode ZIP code');
-    }
-
-    const location = await geocodeResponse.json();
-    const userLat = location.latitude;
-    const userLon = location.longitude;
-
-    // Get language-specific instruction
-    const languageInstruction = languageInstructions[language] || languageInstructions.en;
-
-    // Modify system message to include location context, resource requirements, and language instruction
-    if (messages[0].role !== 'system') {
-      messages.unshift({
-        role: 'system',
-        content: `${languageInstruction} You are creating personalized action plans for people seeking assistance in ZIP code ${zip} (${location.city}, ${location.state}). 
-        Format your response in JSON with this structure:
-        {
-          "title": "Housing Action Plan for ZIP ${zip}",
-          "introduction": "A brief, encouraging paragraph about the next steps they should take",
-          "steps": [
-            {
-              "stepNumber": 1,
-              "organization": "Organization name",
-              "action": "A clear call-to-action (e.g., 'Schedule an intake appointment')",
-              "description": "2-3 sentences about what to expect and what to prepare",
-              "address": "Full address",
-              "coordinates": {"latitude": number, "longitude": number},
-              "phone": "Contact number",
-              "hours": "Operating hours",
-              "requirements": "What to bring or prepare",
-              "priority": "high/medium/low"
-            }
-          ],
-          "finalStep": {
-            "title": "Keep Your Plan Handy",
-            "action": "Download or email this plan to have it available when you need it."
-          }
-        }
-        
-        Guidelines:
-        - Aim for 3-5 actionable steps
-        - Order steps by priority (emergency services first)
-        - Include specific call-to-actions for each step
-        - Make the introduction empathetic but action-focused
-        - Include coordinates for each location for distance calculation`
-      });
-    } else {
-      messages[0].content = `You are creating personalized action plans for people seeking assistance in ZIP code ${zip} (${location.city}, ${location.state}). 
-      Format your response in JSON with this structure:
-      {
-        "title": "Housing Action Plan for ZIP ${zip}",
-        "introduction": "A brief, encouraging paragraph about the next steps they should take",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "organization": "Organization name",
-            "action": "A clear call-to-action (e.g., 'Schedule an intake appointment')",
-            "description": "2-3 sentences about what to expect and what to prepare",
-            "address": "Full address",
-            "coordinates": {"latitude": number, "longitude": number},
-            "phone": "Contact number",
-            "hours": "Operating hours",
-            "requirements": "What to bring or prepare",
-            "priority": "high/medium/low"
-          }
-        ],
-        "finalStep": {
-          "title": "Keep Your Plan Handy",
-          "action": "Download or email this plan to have it available when you need it."
-        }
-      }
-      
-      Guidelines:
-      - Aim for 3-5 actionable steps
-      - Order steps by priority (emergency services first)
-      - Include specific call-to-actions for each step
-      - Make the introduction empathetic but action-focused
-      - Include coordinates for each location for distance calculation
-      ${messages[0].content}`;
-    }
-
-    // Make OpenAI API request with retry logic
-    let attempts = 0;
-    const maxAttempts = 3;
-    let completion;
-
-    while (attempts < maxAttempts) {
-      try {
-        completion = await openai.chat.completions.create({
-          model: "gpt-3.5-turbo",
-          messages: messages,
-          temperature: 0.7,
-          max_tokens: 1000,
-          presence_penalty: 0.1,
-          frequency_penalty: 0.1,
-        });
-        break;
-      } catch (error) {
-        attempts++;
-        if (attempts === maxAttempts) throw error;
-        await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
-      }
-    }
-
-    // Process the response
-    let responseContent = completion.choices[0].message;
-
-    // If response is in JSON format, process and filter resources
-    if (typeof responseContent.content === 'string' && responseContent.content.trim().startsWith('{')) {
-      try {
-        const jsonResponse = JSON.parse(responseContent.content);
-        if (jsonResponse.steps) {
-          // Process resources using the new function
-          const { resources, summary } = processResources(jsonResponse.steps, userLat, userLon);
-          
-          // Update the response with processed resources and new summary
-          jsonResponse.steps = resources;
-          jsonResponse.summary = `${summary} ${jsonResponse.summary}`;
-          
-          responseContent.content = JSON.stringify(jsonResponse);
-        }
-      } catch (e) {
-        console.error('Error parsing JSON response:', e);
-      }
-    }
+    // Format the response
+    const content = completion.data.choices[0].message.content;
+    const formattedContent = content
+      .replace(/\n/g, '<br>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\[(.*?)\]/g, '<span class="section-header">$1</span>')
+      .replace(/^(Step \d+:)/gm, '<strong>$1</strong>')
+      .replace(/- ([^:]+):/g, '<strong>- $1:</strong>');
 
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        response: responseContent
+        content: formattedContent
       })
     };
 
   } catch (error) {
     console.error('Error:', error);
+    
     return {
-      statusCode: error.statusCode || 500,
+      statusCode: 500,
       headers,
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({
+        error: 'Failed to process request',
+        details: error.message
+      })
     };
   }
 };
