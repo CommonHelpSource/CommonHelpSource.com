@@ -169,7 +169,8 @@ const ERROR_TYPES = {
   RATE_LIMIT: 'RateLimitError',
   NOT_FOUND: 'NotFoundError',
   API: 'APIError',
-  SERVER: 'ServerError'
+  SERVER: 'ServerError',
+  CONFIG: 'ConfigError'
 };
 
 // Format error response
@@ -203,13 +204,11 @@ setInterval(() => {
 }, RATE_LIMIT.windowMs);
 
 exports.handler = async function(event, context) {
-  // Set strict CORS headers
   const headers = {
-    'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || 'https://commonhelpsource.com',
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Max-Age': '86400',
-    'Content-Type': 'application/json'
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
   };
 
   // Handle preflight requests
@@ -220,51 +219,33 @@ exports.handler = async function(event, context) {
     };
   }
 
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      headers,
+      body: JSON.stringify(formatError(
+        ERROR_TYPES.VALIDATION,
+        'Method not allowed',
+        405
+      ))
+    };
+  }
+
   try {
     // Get client IP for rate limiting
     const clientIP = event.headers['client-ip'] || 
                     event.headers['x-forwarded-for'] || 
                     'unknown';
 
-    // Check for blacklisted IPs
-    if (rateLimitStore.isBlacklisted(clientIP)) {
-      return {
-        statusCode: 403,
-        headers,
-        body: JSON.stringify(formatError(
-          ERROR_TYPES.RATE_LIMIT,
-          'Access denied due to repeated violations',
-          403
-        ))
-      };
-    }
-
     // Check rate limit
     if (!rateLimitStore.checkLimit(clientIP)) {
       return {
         statusCode: 429,
-        headers: {
-          ...headers,
-          'Retry-After': '60'
-        },
+        headers,
         body: JSON.stringify(formatError(
           ERROR_TYPES.RATE_LIMIT,
           'Rate limit exceeded. Please try again later.',
           429
-        ))
-      };
-    }
-
-    // Validate request size
-    const contentLength = parseInt(event.headers['content-length'] || '0');
-    if (contentLength > VALIDATION.maxBodySize) {
-      return {
-        statusCode: 413,
-        headers,
-        body: JSON.stringify(formatError(
-          ERROR_TYPES.VALIDATION,
-          'Request body too large',
-          413
         ))
       };
     }
@@ -325,7 +306,16 @@ exports.handler = async function(event, context) {
     // Make API request if not cached
     const apiKey = process.env.BIGDATACLOUD_API_KEY;
     if (!apiKey) {
-      throw new Error('API key not configured');
+      console.error('API key not configured');
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify(formatError(
+          ERROR_TYPES.CONFIG,
+          'Geocoding service configuration error',
+          500
+        ))
+      };
     }
 
     const response = await fetch(
@@ -337,7 +327,16 @@ exports.handler = async function(event, context) {
     );
 
     if (!response.ok) {
-      throw new Error(`Geocoding API error: ${response.status}`);
+      console.error(`Geocoding API error: ${response.status}`);
+      return {
+        statusCode: response.status,
+        headers,
+        body: JSON.stringify(formatError(
+          ERROR_TYPES.API,
+          `Geocoding service error: ${response.status}`,
+          response.status
+        ))
+      };
     }
 
     const data = await response.json();
@@ -348,7 +347,7 @@ exports.handler = async function(event, context) {
         headers,
         body: JSON.stringify(formatError(
           ERROR_TYPES.NOT_FOUND,
-          'ZIP code not found',
+          'ZIP code not found in geocoding service',
           404
         ))
       };
@@ -372,19 +371,16 @@ exports.handler = async function(event, context) {
       headers,
       body: JSON.stringify(result)
     };
-
   } catch (error) {
-    console.error('Geocoding error:', error);
-
-    // Don't expose internal errors to client
-    const clientError = error.message.includes('API key') ?
-      formatError(ERROR_TYPES.SERVER, 'Service configuration error', 500) :
-      formatError(ERROR_TYPES.SERVER, 'Failed to process request', 500);
-
+    console.error('Geocoding service error:', error);
     return {
-      statusCode: error.statusCode || 500,
+      statusCode: 500,
       headers,
-      body: JSON.stringify(clientError)
+      body: JSON.stringify(formatError(
+        ERROR_TYPES.SERVER,
+        'An unexpected error occurred',
+        500
+      ))
     };
   }
 }; 

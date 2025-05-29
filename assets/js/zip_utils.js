@@ -391,6 +391,7 @@ async function getCityData(zip, region) {
     // Try local data first
     const response = await fetch(`/assets/data/cities_${region}.json`);
     if (!response.ok) {
+      console.warn(`Cities data file not found for ${region}, trying geocoding service...`);
       throw new Error(`Failed to load cities data for ${region}`);
     }
 
@@ -400,33 +401,44 @@ async function getCityData(zip, region) {
     if (!cityData) {
       // If local data fails, try geocoding service
       console.log("No local city data, trying geocoding service...");
-      const geocodeResponse = await fetch('/.netlify/functions/geocode', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ zip })
-      });
+      try {
+        const geocodeResponse = await fetch('/.netlify/functions/geocode', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ zip })
+        });
 
-      if (!geocodeResponse.ok) {
-        throw new Error('Geocoding service failed');
+        if (!geocodeResponse.ok) {
+          if (geocodeResponse.status === 429) {
+            throw new Error('Rate limit exceeded. Please try again later.');
+          } else if (geocodeResponse.status === 404) {
+            throw new Error('ZIP code not found in geocoding service.');
+          } else {
+            throw new Error(`Geocoding service error: ${geocodeResponse.status}`);
+          }
+        }
+
+        const geocodeData = await geocodeResponse.json();
+        if (geocodeData.error) {
+          throw new Error(geocodeData.error);
+        }
+
+        const fallbackData = {
+          city: geocodeData.city,
+          county: null,
+          latitude: geocodeData.latitude,
+          longitude: geocodeData.longitude
+        };
+
+        // Cache the fallback data
+        cache.city[zip] = fallbackData;
+        saveCache('city_cache', cache.city);
+
+        return fallbackData;
+      } catch (geocodeError) {
+        console.error('Geocoding service error:', geocodeError);
+        throw new Error(`Unable to get city data: ${geocodeError.message}`);
       }
-
-      const geocodeData = await geocodeResponse.json();
-      if (geocodeData.error) {
-        throw new Error(geocodeData.error);
-      }
-
-      const fallbackData = {
-        city: geocodeData.city,
-        county: null,
-        latitude: geocodeData.latitude,
-        longitude: geocodeData.longitude
-      };
-
-      // Cache the fallback data
-      cache.city[zip] = fallbackData;
-      saveCache('city_cache', cache.city);
-
-      return fallbackData;
     }
 
     // Cache and return the local data
