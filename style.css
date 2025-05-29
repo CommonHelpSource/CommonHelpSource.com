@@ -1,0 +1,19 @@
+.site-logo {
+    display: block;
+    max-width: 300px;
+    width: 80%;
+    height: auto;
+    margin: 20px auto;
+    transition: transform 0.25s;
+  }
+  
+  .site-logo:hover {
+    transform: scale(1.02);
+  }
+  
+  @media (max-width: 480px) {
+    .site-logo {
+      width: 90%;
+    }
+  }
+  

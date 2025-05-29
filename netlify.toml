@@ -5,12 +5,12 @@
 [dev]
   publish = "/"
   port = 8888
-  targetPort = 3999
+  targetPort = 4000
   framework = "#static"
   autoLaunch = true
 
 [[redirects]]
-  from = "/.netlify/functions/*"
+  from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
 

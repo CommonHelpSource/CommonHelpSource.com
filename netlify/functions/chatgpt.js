@@ -2,6 +2,87 @@ const { Configuration, OpenAIApi } = require('openai');
 const { generatePrompt } = require('./chatgpt-prompt-template');
 const fetch = require('node-fetch');
 
+// Rate limiting configuration
+const RATE_LIMIT = {
+  windowMs: 60 * 1000, // 1 minute
+  maxRequests: 20 // requests per window
+};
+
+// Rate limiting store
+const rateLimitStore = new Map();
+
+// Clean up rate limit entries
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, value] of rateLimitStore.entries()) {
+    if (now > value.resetTime) {
+      rateLimitStore.delete(key);
+    }
+  }
+}, RATE_LIMIT.windowMs);
+
+// Check rate limit
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const record = rateLimitStore.get(ip) || {
+    count: 0,
+    resetTime: now + RATE_LIMIT.windowMs
+  };
+
+  if (now > record.resetTime) {
+    record.count = 1;
+    record.resetTime = now + RATE_LIMIT.windowMs;
+  } else if (record.count >= RATE_LIMIT.maxRequests) {
+    return false;
+  } else {
+    record.count++;
+  }
+
+  rateLimitStore.set(ip, record);
+  return true;
+}
+
+// Validate OpenAI response
+function validateResponse(response) {
+  if (!response?.data?.choices?.[0]?.message?.content) {
+    throw new Error('Invalid response format from OpenAI');
+  }
+  return response.data.choices[0].message.content;
+}
+
+// Format error response
+function formatErrorResponse(error, headers) {
+  console.error('ChatGPT Error:', {
+    message: error.message,
+    code: error.code,
+    type: error.type,
+    stack: error.stack
+  });
+
+  let statusCode = 500;
+  let errorMessage = 'An unexpected error occurred';
+
+  if (error.message.includes('rate limit')) {
+    statusCode = 429;
+    errorMessage = 'Rate limit exceeded. Please try again later.';
+  } else if (error.message.includes('invalid_api_key')) {
+    statusCode = 401;
+    errorMessage = 'Service configuration error';
+  } else if (error.message.includes('Invalid response format')) {
+    statusCode = 502;
+    errorMessage = 'Invalid response from AI service';
+  }
+
+  return {
+    statusCode,
+    headers,
+    body: JSON.stringify({
+      error: errorMessage,
+      code: error.code || 'UNKNOWN_ERROR'
+    })
+  };
+}
+
 // Function to calculate distance between two points using Haversine formula
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 3959; // Earth's radius in miles
@@ -92,17 +173,13 @@ const languageInstructions = {
   'ht': 'Reponn an kreyòl ayisyen.'
 };
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
-
 exports.handler = async function(event, context) {
-  // Enable CORS
+  // Set strict CORS headers
   const headers = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || 'https://commonhelpsource.com',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Max-Age': '86400'
   };
 
   // Handle preflight requests
@@ -114,39 +191,115 @@ exports.handler = async function(event, context) {
   }
 
   try {
-    const body = JSON.parse(event.body);
-    const { location, responses } = body;
+    // Get client IP for rate limiting
+    const clientIP = event.headers['client-ip'] || 
+                    event.headers['x-forwarded-for'] || 
+                    'unknown';
 
-    if (!location || !responses) {
+    // Check rate limit
+    if (!checkRateLimit(clientIP)) {
       return {
-        statusCode: 400,
+        statusCode: 429,
         headers,
-        body: JSON.stringify({ error: 'Missing required parameters' })
+        body: JSON.stringify({
+          error: 'Rate limit exceeded. Please try again later.',
+          code: 'RATE_LIMIT_EXCEEDED'
+        })
       };
     }
 
-    // Generate the prompt using our template
-    const prompt = generatePrompt(location, responses);
+    // Validate request body
+    if (!event.body) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'Request body is required',
+          code: 'MISSING_BODY'
+        })
+      };
+    }
 
-    // Call OpenAI API
-    const completion = await openai.createChatCompletion({
-      model: "gpt-4",
-      messages: [
-        {
-          role: "system",
-          content: "You are a knowledgeable case management assistant with expertise in social services and community resources. Your goal is to provide clear, actionable guidance to help people access local support services."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 2000
+    let body;
+    try {
+      body = JSON.parse(event.body);
+    } catch (e) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'Invalid JSON in request body',
+          code: 'INVALID_JSON'
+        })
+      };
+    }
+
+    // Validate required fields
+    const { messages, zip } = body;
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'Messages array is required',
+          code: 'MISSING_MESSAGES'
+        })
+      };
+    }
+
+    if (!zip || !/^\d{5}(-\d{4})?$/.test(zip)) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({
+          error: 'Valid ZIP code is required',
+          code: 'INVALID_ZIP'
+        })
+      };
+    }
+
+    // Initialize OpenAI
+    const configuration = new Configuration({
+      apiKey: process.env.OPENAI_API_KEY
     });
 
-    // Format the response
-    const content = completion.data.choices[0].message.content;
+    if (!configuration.apiKey) {
+      throw new Error('OpenAI API key not configured');
+    }
+
+    const openai = new OpenAIApi(configuration);
+
+    // Call OpenAI API with retry logic
+    let response;
+    let retryCount = 0;
+    const maxRetries = 2;
+
+    while (retryCount <= maxRetries) {
+      try {
+        response = await openai.createChatCompletion({
+          model: process.env.OPENAI_MODEL || "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "system",
+              content: "You are a knowledgeable case management assistant with expertise in social services and community resources. Your goal is to provide clear, actionable guidance to help people access local support services."
+            },
+            ...messages
+          ],
+          temperature: 0.7,
+          max_tokens: 2000
+        });
+        break;
+      } catch (error) {
+        if (retryCount === maxRetries || !error.message.includes('rate limit')) {
+          throw error;
+        }
+        retryCount++;
+        await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+      }
+    }
+
+    // Validate and format response
+    const content = validateResponse(response);
     const formattedContent = content
       .replace(/\n/g, '<br>')
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -158,20 +311,13 @@ exports.handler = async function(event, context) {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        content: formattedContent
+        response: {
+          content: formattedContent
+        }
       })
     };
 
   } catch (error) {
-    console.error('Error:', error);
-    
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({
-        error: 'Failed to process request',
-        details: error.message
-      })
-    };
+    return formatErrorResponse(error, headers);
   }
 };

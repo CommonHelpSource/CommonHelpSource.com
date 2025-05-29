@@ -1,9 +1,113 @@
-// Cache for loaded data
-const cache = {
-  zip: {},
-  insurance: {},
-  city: {}
+// Cache configuration
+const CACHE_CONFIG = {
+  ttl: 24 * 60 * 60 * 1000, // 24 hours
+  version: '1.0.0', // Increment when data structure changes
+  maxRetries: 3,
+  retryDelay: 1000,
+  maxStale: 7 * 24 * 60 * 60 * 1000 // 7 days
 };
+
+// Initialize cache from localStorage with versioning and TTL
+const cache = {
+  zip: loadCache('zip_cache'),
+  insurance: loadCache('insurance_cache'),
+  city: loadCache('city_cache')
+};
+
+// Cache management functions with improved error handling
+function loadCache(key) {
+  try {
+    const cached = localStorage.getItem(key);
+    if (!cached) return {};
+
+    const { data, expires, version, staleUntil } = JSON.parse(cached);
+    const now = Date.now();
+
+    // Clear if version mismatch
+    if (version !== CACHE_CONFIG.version) {
+      localStorage.removeItem(key);
+      return {};
+    }
+
+    // If data is expired but not stale, keep it but trigger background refresh
+    if (now > expires && now < staleUntil) {
+      console.log(`Cache for ${key} is expired but not stale, using stale data`);
+      // Schedule background refresh
+      setTimeout(() => refreshCache(key), 0);
+      return data;
+    }
+
+    // If data is stale, clear it
+    if (now > staleUntil) {
+      localStorage.removeItem(key);
+      return {};
+    }
+
+    return data;
+  } catch (e) {
+    console.warn(`Failed to load cache for ${key}:`, e);
+    try {
+      localStorage.removeItem(key);
+    } catch (clearError) {
+      console.error(`Failed to clear corrupted cache for ${key}:`, clearError);
+    }
+    return {};
+  }
+}
+
+async function refreshCache(key) {
+  console.log(`Refreshing cache for ${key}`);
+  try {
+    switch (key) {
+      case 'zip_cache':
+        // Refresh all regions
+        await Promise.all(
+          Object.values(REGIONS).map(region => loadZipData(region.name))
+        );
+        break;
+      case 'insurance_cache':
+        // Refresh all regions' insurance data
+        await Promise.all(
+          Object.values(REGIONS).map(region => loadInsuranceData(region.name))
+        );
+        break;
+      case 'city_cache':
+        // City cache is refreshed on-demand
+        break;
+    }
+  } catch (error) {
+    console.error(`Failed to refresh cache for ${key}:`, error);
+  }
+}
+
+function saveCache(key, data) {
+  try {
+    const now = Date.now();
+    localStorage.setItem(key, JSON.stringify({
+      data,
+      expires: now + CACHE_CONFIG.ttl,
+      staleUntil: now + CACHE_CONFIG.maxStale,
+      version: CACHE_CONFIG.version
+    }));
+  } catch (e) {
+    console.warn(`Failed to save cache for ${key}:`, e);
+    // If storage is full, clear old caches
+    try {
+      localStorage.removeItem('zip_cache');
+      localStorage.removeItem('insurance_cache');
+      localStorage.removeItem('city_cache');
+      // Try saving again
+      localStorage.setItem(key, JSON.stringify({
+        data,
+        expires: Date.now() + CACHE_CONFIG.ttl,
+        staleUntil: Date.now() + CACHE_CONFIG.maxStale,
+        version: CACHE_CONFIG.version
+      }));
+    } catch (retryError) {
+      console.error(`Failed to save cache after clearing:`, retryError);
+    }
+  }
+}
 
 // Region definitions
 const REGIONS = {
@@ -77,6 +181,152 @@ const REGIONS = {
   }
 };
 
+// Enhanced validation rules
+const VALIDATION = {
+  zip: {
+    pattern: /^\d{5}(-\d{4})?$/,
+    message: 'ZIP code must be 5 digits or 9 digits with hyphen'
+  },
+  state: {
+    pattern: /^[A-Z]{2}$/,
+    message: 'State must be a 2-letter code'
+  },
+  coordinates: {
+    latitude: {
+      min: 24.396308, // Southernmost point of continental US
+      max: 49.384358, // Northernmost point of continental US
+      message: 'Latitude must be within continental US bounds'
+    },
+    longitude: {
+      min: -125.000000, // Westernmost point of continental US
+      max: -66.934570, // Easternmost point of continental US
+      message: 'Longitude must be within continental US bounds'
+    }
+  }
+};
+
+// Enhanced error types
+const ERROR_TYPES = {
+  VALIDATION: 'ValidationError',
+  NETWORK: 'NetworkError',
+  CACHE: 'CacheError',
+  DATA: 'DataError',
+  CONFIG: 'ConfigurationError'
+};
+
+class ZipError extends Error {
+  constructor(type, message, originalError = null, metadata = {}) {
+    super(message);
+    this.name = type;
+    this.originalError = originalError;
+    this.metadata = metadata;
+    this.timestamp = new Date();
+  }
+
+  toJSON() {
+    return {
+      type: this.name,
+      message: this.message,
+      metadata: this.metadata,
+      timestamp: this.timestamp,
+      originalError: this.originalError ? {
+        message: this.originalError.message,
+        name: this.originalError.name
+      } : null
+    };
+  }
+}
+
+// Validate coordinates
+function validateCoordinates(latitude, longitude) {
+  if (typeof latitude !== 'number' || isNaN(latitude)) {
+    throw new ZipError(
+      ERROR_TYPES.VALIDATION,
+      'Invalid latitude value',
+      null,
+      { latitude }
+    );
+  }
+
+  if (typeof longitude !== 'number' || isNaN(longitude)) {
+    throw new ZipError(
+      ERROR_TYPES.VALIDATION,
+      'Invalid longitude value',
+      null,
+      { longitude }
+    );
+  }
+
+  if (latitude < VALIDATION.coordinates.latitude.min ||
+      latitude > VALIDATION.coordinates.latitude.max) {
+    throw new ZipError(
+      ERROR_TYPES.VALIDATION,
+      VALIDATION.coordinates.latitude.message,
+      null,
+      { latitude }
+    );
+  }
+
+  if (longitude < VALIDATION.coordinates.longitude.min ||
+      longitude > VALIDATION.coordinates.longitude.max) {
+    throw new ZipError(
+      ERROR_TYPES.VALIDATION,
+      VALIDATION.coordinates.longitude.message,
+      null,
+      { longitude }
+    );
+  }
+}
+
+// Enhanced ZIP validation
+function validateZip(zip) {
+  if (typeof zip !== 'string' && typeof zip !== 'number') {
+    return {
+      valid: false,
+      error: new ZipError(
+        ERROR_TYPES.VALIDATION,
+        'ZIP code must be a string or number',
+        null,
+        { zip }
+      )
+    };
+  }
+
+  const zipString = zip.toString().trim();
+  if (!VALIDATION.zip.pattern.test(zipString)) {
+    return {
+      valid: false,
+      error: new ZipError(
+        ERROR_TYPES.VALIDATION,
+        VALIDATION.zip.message,
+        null,
+        { zip: zipString }
+      )
+    };
+  }
+
+  const numericZip = parseInt(zipString.substring(0, 5));
+  const region = getRegion(numericZip);
+  if (!region) {
+    return {
+      valid: false,
+      error: new ZipError(
+        ERROR_TYPES.VALIDATION,
+        'ZIP code not in supported regions',
+        null,
+        { zip: zipString, numericZip }
+      )
+    };
+  }
+
+  return {
+    valid: true,
+    zip: zipString,
+    numericZip,
+    region
+  };
+}
+
 // Get region based on ZIP code
 function getRegion(zip) {
   console.log("Checking region for ZIP:", zip);
@@ -93,22 +343,29 @@ function getRegion(zip) {
   return null;
 }
 
-// Load ZIP data for a region
+// Load ZIP data for a region with error handling and caching
 async function loadZipData(region) {
   console.log("Loading ZIP data for region:", region);
+  
+  // Check memory cache
   if (cache.zip[region]) {
-    console.log("Using cached ZIP data for region:", region);
+    console.log("Using memory-cached ZIP data for region:", region);
     return cache.zip[region];
   }
 
   try {
     const response = await fetch(`/assets/data/zip_${region}.json`);
     if (!response.ok) {
-      throw new Error(`Failed to load ${region} ZIP data`);
+      throw new Error(`Failed to load ${region} ZIP data: ${response.status}`);
     }
+    
     const data = await response.json();
     console.log("Successfully loaded ZIP data for region:", region);
+    
+    // Update both memory and persistent cache
     cache.zip[region] = data;
+    saveCache('zip_cache', cache.zip);
+    
     return data;
   } catch (error) {
     console.error(`Error loading ${region} ZIP data:`, error);
@@ -116,15 +373,22 @@ async function loadZipData(region) {
   }
 }
 
-// Get city data for a ZIP code
+// Get city data for a ZIP code with improved error handling
 async function getCityData(zip, region) {
+  // Input validation
+  const validation = validateZip(zip);
+  if (!validation.valid) {
+    throw new Error(validation.error.message);
+  }
+
+  // Check memory cache
   if (cache.city[zip]) {
     console.log("Using cached city data for ZIP:", zip);
     return cache.city[zip];
   }
 
   try {
-    // Load the cities data file for the region
+    // Try local data first
     const response = await fetch(`/assets/data/cities_${region}.json`);
     if (!response.ok) {
       throw new Error(`Failed to load cities data for ${region}`);
@@ -134,28 +398,46 @@ async function getCityData(zip, region) {
     const cityData = citiesData[zip];
 
     if (!cityData) {
-      console.warn(`No city data found for ZIP ${zip} in region ${region}`);
-      // Fallback to basic city data
-      return {
-        city: "Unknown City", // We'll update this with state data
+      // If local data fails, try geocoding service
+      console.log("No local city data, trying geocoding service...");
+      const geocodeResponse = await fetch('/.netlify/functions/geocode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ zip })
+      });
+
+      if (!geocodeResponse.ok) {
+        throw new Error('Geocoding service failed');
+      }
+
+      const geocodeData = await geocodeResponse.json();
+      if (geocodeData.error) {
+        throw new Error(geocodeData.error);
+      }
+
+      const fallbackData = {
+        city: geocodeData.city,
         county: null,
-        latitude: null,
-        longitude: null
+        latitude: geocodeData.latitude,
+        longitude: geocodeData.longitude
       };
+
+      // Cache the fallback data
+      cache.city[zip] = fallbackData;
+      saveCache('city_cache', cache.city);
+
+      return fallbackData;
     }
 
+    // Cache and return the local data
     cache.city[zip] = cityData;
-    console.log("Successfully loaded city data for ZIP:", zip, cityData);
+    saveCache('city_cache', cache.city);
+    
+    console.log("Successfully loaded city data for ZIP:", zip);
     return cityData;
   } catch (error) {
     console.error('Error getting city data:', error);
-    // Fallback to basic city data
-    return {
-      city: "Unknown City", // We'll update this with state data
-      county: null,
-      latitude: null,
-      longitude: null
-    };
+    throw error;
   }
 }
 
@@ -163,43 +445,81 @@ async function getCityData(zip, region) {
 async function getLocationInfo(zip) {
   console.log("Getting location info for ZIP:", zip);
   
+  // Validate input
+  const validation = validateZip(zip);
+  if (!validation.valid) {
+    return {
+      zip,
+      error: validation.error.message,
+      errorDetails: validation.error.toJSON()
+    };
+  }
+
   try {
     // Get state info first
-    const stateInfo = await getStateFromZip(zip);
+    const stateInfo = await getStateFromZip(validation.zip);
     if (stateInfo.error) {
-      console.error("State lookup error:", stateInfo.error);
       return {
         zip,
-        error: stateInfo.error
+        error: stateInfo.error,
+        errorDetails: stateInfo.errorDetails
       };
     }
 
-    // Get city info
-    const cityData = await getCityData(zip, stateInfo.region);
-    
-    // If we have state data but no city, create a default city name
-    if (!cityData.city || cityData.city === "Unknown City") {
-      cityData.city = `${stateInfo.state} Area`;
+    // Get city info with retries
+    let cityData;
+    let lastError;
+    for (let i = 0; i < CACHE_CONFIG.maxRetries; i++) {
+      try {
+        cityData = await getCityData(validation.zip, stateInfo.region);
+        break;
+      } catch (error) {
+        lastError = error;
+        if (i < CACHE_CONFIG.maxRetries - 1) {
+          await new Promise(resolve => 
+            setTimeout(resolve, CACHE_CONFIG.retryDelay * Math.pow(2, i))
+          );
+        }
+      }
     }
 
-    // Combine the data
+    if (!cityData && lastError) {
+      throw lastError;
+    }
+
+    // Validate coordinates if present
+    if (cityData.latitude !== undefined && cityData.longitude !== undefined) {
+      try {
+        validateCoordinates(cityData.latitude, cityData.longitude);
+      } catch (error) {
+        console.warn('Invalid coordinates:', error);
+        // Don't fail the request, just remove invalid coordinates
+        delete cityData.latitude;
+        delete cityData.longitude;
+      }
+    }
+    
     const locationInfo = {
-      zip,
-      city: cityData.city,
+      zip: validation.zip,
+      city: cityData.city || `${stateInfo.state} Area`,
       state: stateInfo.state,
       county: cityData.county,
       latitude: cityData.latitude,
-      longitude: cityData.longitude
+      longitude: cityData.longitude,
+      timezone: cityData.timezone
     };
 
-    console.log("Complete location info:", locationInfo);
-
-    // If we're on the healthcare page, add insurance options
+    // Add insurance options for healthcare pages
     if (window.location.pathname.includes('health')) {
-      const insuranceOptions = await getInsuranceOptions(stateInfo.state, stateInfo.region);
-      locationInfo.insuranceOptions = insuranceOptions;
-      if (!insuranceOptions) {
-        locationInfo.error = "Unable to load insurance options for your state.";
+      try {
+        const insuranceOptions = await getInsuranceOptions(stateInfo.state, stateInfo.region);
+        locationInfo.insuranceOptions = insuranceOptions;
+        if (!insuranceOptions) {
+          locationInfo.warning = "Unable to load insurance options for your state.";
+        }
+      } catch (error) {
+        console.error('Error loading insurance options:', error);
+        locationInfo.warning = "Failed to load insurance options.";
       }
     }
 
@@ -208,7 +528,12 @@ async function getLocationInfo(zip) {
     console.error('Error getting location info:', error);
     return {
       zip,
-      error: "An error occurred while processing your request. Please try again."
+      error: "An error occurred while processing your request. Please try again.",
+      errorDetails: error instanceof ZipError ? error.toJSON() : {
+        type: ERROR_TYPES.DATA,
+        message: error.message,
+        timestamp: new Date()
+      }
     };
   }
 }
@@ -280,5 +605,36 @@ function clearCache() {
   cache.city = {};
 }
 
-// Export functions
-export { getRegion, getStateFromZip, getInsuranceOptions, getLocationInfo, clearCache }; 
+// Helper function to get region from state
+function getRegionFromState(state) {
+  const stateToRegion = {
+    'ME': 'northeast', 'NH': 'northeast', 'VT': 'northeast', 'MA': 'northeast',
+    'RI': 'northeast', 'CT': 'northeast', 'NY': 'northeast', 'NJ': 'northeast',
+    'PA': 'northeast', 'OH': 'midwest', 'IN': 'midwest', 'IL': 'midwest',
+    'MI': 'midwest', 'WI': 'midwest', 'MN': 'midwest', 'IA': 'midwest',
+    'MO': 'midwest', 'ND': 'midwest', 'SD': 'midwest', 'NE': 'midwest',
+    'KS': 'midwest', 'DE': 'south', 'MD': 'south', 'DC': 'south',
+    'VA': 'south', 'WV': 'south', 'NC': 'south', 'SC': 'south',
+    'GA': 'south', 'FL': 'south', 'KY': 'south', 'TN': 'south',
+    'AL': 'south', 'MS': 'south', 'AR': 'south', 'LA': 'south',
+    'OK': 'south', 'TX': 'south', 'MT': 'west', 'ID': 'west',
+    'WY': 'west', 'CO': 'west', 'NM': 'west', 'AZ': 'west',
+    'UT': 'west', 'NV': 'west', 'WA': 'west', 'OR': 'west',
+    'CA': 'west', 'AK': 'west', 'HI': 'west'
+  };
+  return stateToRegion[state];
+}
+
+// Export functions and constants
+export {
+  getRegion,
+  getStateFromZip,
+  getInsuranceOptions,
+  getLocationInfo,
+  validateZip,
+  validateCoordinates,
+  clearCache,
+  ERROR_TYPES,
+  VALIDATION,
+  CACHE_CONFIG
+}; 
