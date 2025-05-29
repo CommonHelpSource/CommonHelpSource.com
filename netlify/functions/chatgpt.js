@@ -1,4 +1,4 @@
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 const { generatePrompt } = require('./chatgpt-prompt-template');
 const fetch = require('node-fetch');
 
@@ -176,10 +176,11 @@ const languageInstructions = {
 exports.handler = async function(event, context) {
   // Set strict CORS headers
   const headers = {
-    'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || 'https://commonhelpsource.com',
+    'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || 'https://commonhelp.netlify.app',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Max-Age': '86400'
+    'Access-Control-Max-Age': '86400',
+    'Content-Type': 'application/json'
   };
 
   // Handle preflight requests
@@ -259,15 +260,13 @@ exports.handler = async function(event, context) {
     }
 
     // Initialize OpenAI
-    const configuration = new Configuration({
+    const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY
     });
 
-    if (!configuration.apiKey) {
+    if (!process.env.OPENAI_API_KEY) {
       throw new Error('OpenAI API key not configured');
     }
-
-    const openai = new OpenAIApi(configuration);
 
     // Call OpenAI API with retry logic
     let response;
@@ -276,7 +275,7 @@ exports.handler = async function(event, context) {
 
     while (retryCount <= maxRetries) {
       try {
-        response = await openai.createChatCompletion({
+        response = await openai.chat.completions.create({
           model: process.env.OPENAI_MODEL || "gpt-3.5-turbo",
           messages: [
             {
@@ -290,6 +289,7 @@ exports.handler = async function(event, context) {
         });
         break;
       } catch (error) {
+        console.error('OpenAI API Error:', error);
         if (retryCount === maxRetries || !error.message.includes('rate limit')) {
           throw error;
         }
@@ -298,8 +298,8 @@ exports.handler = async function(event, context) {
       }
     }
 
-    // Validate and format response
-    const content = validateResponse(response);
+    // Format response
+    const content = response.choices[0].message.content;
     const formattedContent = content
       .replace(/\n/g, '<br>')
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
