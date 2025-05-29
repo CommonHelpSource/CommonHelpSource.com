@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://ka-f.fontawesome.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://ka-f.fontawesome.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://ka-f.fontawesome.com; connect-src 'self' https://ka-f.fontawesome.com">
   <title>Utilities & Fuel Assistance - CommonHelpSource</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
@@ -477,17 +477,22 @@
       try {
         // Prepare the data for the chatbot
         const chatData = {
-          locationInfo: {
-            city: locationInfo.city,
-            state: locationInfo.state,
-            zip: locationInfo.zip
-          },
-          responses: {
-            utilityResponses: {
-              needsHelp: 'yes',
-              ...formResponses
+          messages: [
+            {
+              role: "user",
+              content: `I need help with utilities in ${locationInfo.city}, ${locationInfo.state}. Here are my responses to the assessment:
+              
+Behind on bills: ${formResponses.billsBehind}
+Received shut-off notices: ${formResponses.shutoffNotice}
+Utility types needed: ${formResponses.utilityTypes.join(', ')}
+Enrolled in discount program: ${formResponses.discountProgram}
+Low income or benefits: ${formResponses.lowIncome}
+Pay own utilities: ${formResponses.payUtilities}
+
+Please provide specific local resources and programs that can help me with utility assistance.`
             }
-          }
+          ],
+          zip: locationInfo.zip
         };
 
         // Call the chatbot API
@@ -500,13 +505,16 @@
         });
 
         if (!response.ok) {
-          throw new Error(`API request failed with status ${response.status}`);
+          const errorData = await response.json();
+          throw new Error(errorData.error || `API request failed with status ${response.status}`);
         }
 
         const result = await response.json();
         
         // Store the result
-        localStorage.setItem('assessmentResult', JSON.stringify(result));
+        localStorage.setItem('assessmentResult', JSON.stringify({
+          content: result.response.content
+        }));
         
         // Redirect to results page
         window.location.href = 'results.html';
