@@ -433,15 +433,16 @@
 
       // Construct enhanced prompt
       const prompt = `
-You are a licensed clinician developing a treatment plan focused on: "${focusArea}".
+You are a licensed clinician developing a treatment plan focused on: "${focusArea}" for a client in ZIP code ${localStorage.getItem('userZipCode') || 'unknown ZIP'}.
 ${formatInfo[format].prompt}
 
 Guidelines:
 1. Use professional clinical language
-2. Ensure all content is HIPAA-compliant (use "client" or "member" for names)
+2. Ensure all HIPAA-compliant (use "client" or "member" for names)
 3. Include specific dates, times, and measurements where appropriate
 4. Be clear and concise while maintaining clinical accuracy
 5. Focus on actionable items and measurable outcomes
+6. Consider local resources and community context when relevant
 
 Client Description:
 """${clientNeeds}"""

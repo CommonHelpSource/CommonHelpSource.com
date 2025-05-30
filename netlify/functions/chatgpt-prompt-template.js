@@ -5,8 +5,12 @@
  * @returns {string} Formatted prompt for ChatGPT
  */
 function generatePrompt(locationInfo, responses) {
+  const zip = locationInfo.zip || 'unknown ZIP';
+  const city = locationInfo.city || 'your area';
+  const state = locationInfo.state || 'your state';
+
   // Start with the case manager role definition
-  let prompt = `You are a case management assistant helping someone connect with support services in ${locationInfo.city}, ${locationInfo.state} (ZIP code: ${locationInfo.zip}).
+  let prompt = `You are a case management assistant helping someone connect with support services in ${city}, ${state} (ZIP code: ${zip}).
 
 This person completed a full Social Determinants of Health (SDOH) assessment. Here are the areas they identified needing support in, along with their answers:
 
@@ -68,7 +72,7 @@ This person completed a full Social Determinants of Health (SDOH) assessment. He
   }
 
   // Add the action steps request
-  prompt += `Based on this information and the person's location in ${locationInfo.city}, ${locationInfo.state}:
+  prompt += `Based on this information and the person's location in ${city}, ${state} (ZIP code: ${zip}):
 
 1. Identify the **top 4 most urgent or impactful action steps** they can take right now.
 2. For each recommendation, include:
@@ -84,7 +88,7 @@ Format each recommendation in an easy-to-read way with bullet points and clear s
 At the end, include this note:
 > "You can choose to view more suggestions if you'd like to take additional steps."
 
-Make all recommendations as specific as possible to ${locationInfo.city}, ${locationInfo.state} ${locationInfo.zip}. Include real, verified local resources and accurate contact information.`;
+Make all recommendations as specific as possible to ${city}, ${state} ${zip}. Include real, verified local resources and accurate contact information.`;
 
   return prompt;
 }

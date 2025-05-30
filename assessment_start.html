@@ -243,25 +243,25 @@
   </div>
 
   <script>
+    // Global ZIP code constant for AI prompts
+    const zip = localStorage.getItem("userZipCode");
+
     // Check for ZIP code on page load
     document.addEventListener('DOMContentLoaded', function() {
-      const userZip = localStorage.getItem('userZipCode');
       const zipDisplay = document.getElementById('zip-display');
       
-      if (!userZip || !/^\d{5}$/.test(userZip)) {
-        zipDisplay.textContent = 'ZIP code not set';
-        zipDisplay.classList.add('not-set');
-        alert('Please enter your ZIP code to continue.');
+      if (!zip || !/^\d{5}$/.test(zip)) {
+        alert('ZIP code not set. Please start at the homepage.');
         window.location.href = 'index.html';
         return;
       }
 
       // Display ZIP code
-      zipDisplay.textContent = `ZIP ${userZip}`;
+      zipDisplay.textContent = `ZIP ${zip}`;
       zipDisplay.classList.remove('not-set');
 
       // Make ZIP globally accessible for AI prompts
-      window.userZipCode = userZip;
+      window.userZipCode = zip;
       
       // Initialize the prompt builder utility
       window.promptBuilder = {
@@ -272,8 +272,7 @@
         
         // Generate a base prompt with ZIP context
         createBasePrompt: function(focus, format) {
-          return `
-You are an AI assistant helping with resource planning for ZIP code ${this.getZip()}.
+          return `You are an AI assistant helping with resource planning for ZIP code ${this.getZip()}.
 The user selected the "${focus}" category and "${format}" format.
 Based on the client input below, generate a plan that is geographically relevant when possible.
 `;
@@ -303,12 +302,10 @@ ${clientInput}
 
     // Function to start specific assessment
     function startAssessment(type) {
-      const userZip = localStorage.getItem('userZipCode');
-      
       // Store assessment type
       localStorage.setItem('selectedAssessment', type);
       
-      // Example of using the prompt builder (for demonstration)
+      // Example of using the prompt builder
       const samplePrompt = window.promptBuilder.createFullPrompt({
         focus: type,
         format: 'standard',
@@ -318,7 +315,6 @@ ${clientInput}
           preferences: 'none specified'
         }
       });
-      console.log('Sample prompt:', samplePrompt);
       
       // Redirect to appropriate assessment page
       if (type === 'health') {

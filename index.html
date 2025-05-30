@@ -243,6 +243,7 @@
             maxlength="5" 
             pattern="[0-9]*"
             autocomplete="postal-code"
+            onkeypress="return handleZipKeyPress(event)"
           >
           <button class="locate-btn" onclick="getLocationZip()" title="Use my location">
             📍
@@ -307,8 +308,8 @@
         </div>
       </div>
 
-      <button id="startBtn" class="primary-btn" onclick="startAssessment()" disabled>
-        Start Assessment
+      <button id="startBtn" class="primary-btn" onclick="startAssessment()">
+        Begin Assessment
       </button>
 
       <div style="margin-top: 20px; border-top: 2px solid #f0f2f5; padding-top: 20px;">
@@ -351,72 +352,46 @@
     const assessmentType = document.getElementById("assessmentType");
     const startBtn = document.getElementById("startBtn");
 
-    // Add input validation
-    zipInput.addEventListener('input', async function(e) {
+    // Handle ZIP code input
+    zipInput.addEventListener('input', function(e) {
       // Remove any non-numeric characters
       this.value = this.value.replace(/[^0-9]/g, '');
       
       // Hide error message when user starts typing
       zipError.style.display = 'none';
-
-      // Check if we have a 5-digit ZIP
-      if (this.value.length === 5) {
-        const validation = await validateZip(this.value);
-        if (!validation.valid) {
-          zipError.textContent = validation.error.message;
-          zipError.style.display = 'block';
-          assessmentType.classList.remove('visible');
-          startBtn.disabled = true;
-          return;
-        }
-
-        const locationInfo = await getLocationInfo(this.value);
-        console.log('Location lookup result:', locationInfo);
-
-        if (locationInfo.error) {
-          zipError.textContent = locationInfo.error;
-          zipError.style.display = 'block';
-          assessmentType.classList.remove('visible');
-          startBtn.disabled = true;
-          return;
-        }
-
-        if (!locationInfo.city || !locationInfo.state) {
-          zipError.textContent = 'Could not find complete location information for this ZIP code. Please try a different one.';
-          zipError.style.display = 'block';
-          assessmentType.classList.remove('visible');
-          startBtn.disabled = true;
-          return;
-        }
-
-        // Store complete location info
-        localStorage.setItem('locationInfo', JSON.stringify(locationInfo));
-        assessmentType.classList.add('visible');
-        updateStartButton();
-      } else {
-        assessmentType.classList.remove('visible');
-        startBtn.disabled = true;
-      }
+      
+      // Enable/disable start button based on ZIP validity
+      startBtn.disabled = this.value.length !== 5;
     });
 
-    // Enable/disable start button based on selections
-    typeSelect.addEventListener('change', updateStartButton);
-
-    async function updateStartButton() {
-      const validation = await validateZip(zipInput.value);
-      startBtn.disabled = !validation.valid || !typeSelect.value;
+    // Handle Enter key press
+    function handleZipKeyPress(e) {
+      if (e.key === 'Enter' && !startBtn.disabled) {
+        startAssessment();
+        return false;
+      }
+      // Only allow numeric input
+      return /[0-9]/.test(e.key);
     }
 
-    // Allow form submission with Enter key
-    zipInput.addEventListener('keypress', async function(e) {
-      if (e.key === 'Enter') {
-        const validation = await validateZip(this.value);
-        if (validation.valid && !startBtn.disabled) {
-          startAssessment();
-        }
+    // Start assessment function
+    function startAssessment() {
+      const zip = zipInput.value.trim();
+      
+      // Validate ZIP format
+      if (!/^\d{5}$/.test(zip)) {
+        zipError.style.display = 'block';
+        zipError.textContent = 'Please enter a valid 5-digit ZIP code';
+        startBtn.disabled = true;
+        return;
       }
-    });
 
+      // Store ZIP and redirect
+      localStorage.setItem('userZipCode', zip);
+      window.location.href = 'assessment_start.html';
+    }
+
+    // Location detection function
     async function getLocationZip() {
       try {
         const position = await new Promise((resolve, reject) => {
@@ -440,33 +415,24 @@
       }
     }
 
-    function selectAssessment(type) {
-      const buttons = document.querySelectorAll('.assessment-btn');
-      buttons.forEach(btn => btn.classList.remove('selected'));
-      const selectedBtn = Array.from(buttons).find(btn => btn.textContent.trim().toLowerCase().includes(type));
-      if (selectedBtn) {
-        selectedBtn.classList.add('selected');
-      }
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      // Disable start button initially
+      startBtn.disabled = true;
       
-      typeSelect.value = type;
-      updateStartButton();
-    }
+      // Clear any previous ZIP
+      localStorage.removeItem('userZipCode');
+      
+      // Focus ZIP input
+      zipInput.focus();
+    });
 
-    async function startAssessment() {
-      const zip = zipInput.value.trim();
-      
-      // Validate as 5-digit number
-      if (/^\d{5}$/.test(zip)) {
-        // Store ZIP code in localStorage
-        localStorage.setItem("userZipCode", zip);
-        
-        // Redirect to assessment start page
-        window.location.href = "assessment_start.html";
-      } else {
-        zipError.textContent = "Please enter a valid 5-digit ZIP code.";
-        zipError.style.display = 'block';
-        startBtn.disabled = true;
-      }
+    // Enable/disable start button based on selections
+    typeSelect.addEventListener('change', updateStartButton);
+
+    async function updateStartButton() {
+      const validation = await validateZip(zipInput.value);
+      startBtn.disabled = !validation.valid || !typeSelect.value;
     }
   </script>
 </body>

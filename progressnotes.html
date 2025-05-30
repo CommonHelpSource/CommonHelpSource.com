@@ -1074,8 +1074,9 @@
       const formatGuide = formatInfo[format].promptGuide;
       const roleGuide = roleInfo[role].promptGuide;
       const terminology = roleInfo[role].terminology;
+      const zip = localStorage.getItem('userZipCode') || 'unknown ZIP';
       
-      return `You are a ${role} writing a professional clinical progress note.
+      return `You are a ${role} writing a professional clinical progress note for a client in ZIP code ${zip}.
 Format: "${format}"
 Note Type: ${noteType}
 
@@ -1096,6 +1097,7 @@ Writing Guidelines:
 5. Include relevant timestamps and durations
 6. Focus on objective observations and clinical relevance
 7. Document any interventions, outcomes, and next steps
+8. Consider local context and resources when relevant
 
 Here is the de-identified user input:
 """
