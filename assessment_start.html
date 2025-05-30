@@ -161,6 +161,17 @@
     .site-logo:hover {
       transform: scale(1.02);
     }
+
+    .city-state-display {
+      font-size: 0.9rem;
+      color: #636e72;
+      margin-top: 4px;
+    }
+
+    .city-state-display.error {
+      color: #e74c3c;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -176,6 +187,7 @@
           <div class="location-details">
             <div class="location-label">Your Location</div>
             <div id="zip-display" class="zip-display">Checking location...</div>
+            <div id="city-state-display" class="city-state-display"></div>
           </div>
         </div>
         <button class="change-location" onclick="changeLocation()">
@@ -327,6 +339,7 @@ ${clientInput}
 
   <script type="module">
     import { runZipCodeTests } from './tests/zip-validation.test.js';
+    import { zipData } from './assets/data/zip-data.js';
 
     // Run tests in debug mode
     document.addEventListener('DOMContentLoaded', () => {
@@ -370,6 +383,94 @@ ${clientInput}
         runZipCodeTests();
       }
     });
+
+    // Function to get location info from ZIP
+    function getLocationFromZip(zip) {
+      return zipData[zip] || null;
+    }
+
+    // Function to update location display
+    function updateLocationDisplay() {
+      const zip = localStorage.getItem('userZipCode');
+      const zipDisplay = document.getElementById('zip-display');
+      const cityStateDisplay = document.getElementById('city-state-display');
+      
+      if (!zip || !/^\d{5}$/.test(zip)) {
+        zipDisplay.textContent = 'ZIP not set';
+        zipDisplay.classList.add('not-set');
+        cityStateDisplay.textContent = '';
+        return;
+      }
+
+      const location = getLocationFromZip(zip);
+      zipDisplay.textContent = `ZIP ${zip}`;
+      zipDisplay.classList.remove('not-set');
+
+      if (location) {
+        const { city, state } = location;
+        cityStateDisplay.textContent = `${city}, ${state}`;
+        cityStateDisplay.classList.remove('error');
+        
+        // Store city and state in localStorage
+        localStorage.setItem('userCity', city);
+        localStorage.setItem('userState', state);
+      } else {
+        cityStateDisplay.textContent = 'ZIP not recognized';
+        cityStateDisplay.classList.add('error');
+        
+        // Clear city and state from localStorage
+        localStorage.removeItem('userCity');
+        localStorage.removeItem('userState');
+      }
+    }
+
+    // Initialize location display on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      updateLocationDisplay();
+      
+      // Initialize the prompt builder utility with location info
+      window.promptBuilder = {
+        // Get the current location info
+        getLocationInfo: function() {
+          return {
+            zip: localStorage.getItem('userZipCode') || 'unknown ZIP',
+            city: localStorage.getItem('userCity') || 'unknown city',
+            state: localStorage.getItem('userState') || 'unknown state'
+          };
+        },
+        
+        // Generate a base prompt with location context
+        createBasePrompt: function(focus, format) {
+          const location = this.getLocationInfo();
+          return `You are an AI assistant helping with resource planning for ${location.city}, ${location.state} (ZIP ${location.zip}).
+The user selected the "${focus}" category and "${format}" format.
+Based on the client input below, generate a plan that is geographically relevant when possible.
+`;
+        },
+        
+        // Generate a complete prompt with all context
+        createFullPrompt: function({ focus, format, clientInput, additionalContext = {} }) {
+          const basePrompt = this.createBasePrompt(focus, format);
+          const contextStr = Object.entries(additionalContext)
+            .map(([key, value]) => `${key}: ${value}`)
+            .join('\n');
+          
+          return `${basePrompt}
+${contextStr ? `Additional Context:\n${contextStr}\n` : ''}
+Client Input:
+${clientInput}
+`;
+        }
+      };
+    });
+
+    // Update location info when changing location
+    window.changeLocation = function() {
+      localStorage.removeItem('userZipCode');
+      localStorage.removeItem('userCity');
+      localStorage.removeItem('userState');
+      window.location.href = 'index.html';
+    };
   </script>
 
   <!-- Load the assessment starter script -->
