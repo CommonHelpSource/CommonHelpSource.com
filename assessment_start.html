@@ -335,6 +335,82 @@ ${clientInput}
         window.location.href = `assessment_${type}_tier1.html`;
       }
     }
+
+    // Function to load JSON file
+    async function loadJsonFile(filename) {
+      try {
+        const response = await fetch(filename);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error(`Error loading ${filename}:`, error);
+        return null;
+      }
+    }
+
+    // Function to find ZIP code in data
+    function findZipCodeData(zipCode, zipData) {
+      if (!zipData) return null;
+      return zipData[zipCode] || null;
+    }
+
+    // Function to update the display
+    function updateLocationDisplay(zipCode, locationData) {
+      const zipDisplay = document.getElementById('zip-display');
+      const cityStateDisplay = document.getElementById('city-state-display');
+      
+      if (!zipCode) {
+        zipDisplay.textContent = 'ZIP code not set';
+        zipDisplay.classList.add('not-set');
+        cityStateDisplay.textContent = 'Please set your location';
+        cityStateDisplay.classList.add('error');
+        return;
+      }
+
+      zipDisplay.textContent = `ZIP ${zipCode}`;
+      zipDisplay.classList.remove('not-set');
+
+      if (locationData) {
+        cityStateDisplay.textContent = `${locationData.city}, ${locationData.state}`;
+        cityStateDisplay.classList.remove('error');
+        // Save to localStorage
+        localStorage.setItem('userCity', locationData.city);
+        localStorage.setItem('userState', locationData.state);
+      } else {
+        cityStateDisplay.textContent = 'ZIP code not recognized';
+        cityStateDisplay.classList.add('error');
+        // Clear localStorage city/state
+        localStorage.removeItem('userCity');
+        localStorage.removeItem('userState');
+      }
+    }
+
+    // Main initialization function
+    async function initializeLocation() {
+      const zipCode = localStorage.getItem('userZipCode');
+      
+      // Load all ZIP data files
+      const regions = ['northeast', 'midwest', 'west', 'south', 'puerto_rico'];
+      let locationData = null;
+
+      for (const region of regions) {
+        const zipData = await loadJsonFile(`assets/data/zip_${region}.json`);
+        if (zipData) {
+          const data = findZipCodeData(zipCode, zipData);
+          if (data) {
+            locationData = data;
+            break;
+          }
+        }
+      }
+
+      updateLocationDisplay(zipCode, locationData);
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initializeLocation);
   </script>
 
   <script type="module">
