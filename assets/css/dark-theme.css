@@ -1,0 +1,109 @@
+/* Dark Theme Styles */
+:root {
+  --dark-bg: #1a1a1a;
+  --dark-card-bg: #2d2d2d;
+  --dark-text: #e0e0e0;
+  --dark-text-secondary: #b0b0b0;
+  --dark-border: #404040;
+  --dark-primary: #ff6b35;
+  --dark-primary-hover: #ff8659;
+  --dark-error: #ff6b6b;
+  --dark-success: #51cf66;
+  --dark-box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme {
+  background: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+.dark-theme .card,
+.dark-theme .feature-card,
+.dark-theme .location-banner {
+  background: var(--dark-card-bg);
+  box-shadow: var(--dark-box-shadow);
+}
+
+.dark-theme input[type="text"],
+.dark-theme select {
+  background: var(--dark-bg);
+  border-color: var(--dark-border);
+  color: var(--dark-text);
+}
+
+.dark-theme input[type="text"]:focus,
+.dark-theme select:focus {
+  border-color: var(--dark-primary);
+}
+
+.dark-theme .assessment-btn {
+  background: var(--dark-card-bg);
+  border-color: var(--dark-border);
+  color: var(--dark-text);
+}
+
+.dark-theme .assessment-btn:hover,
+.dark-theme .assessment-btn.selected {
+  background: var(--dark-primary);
+  border-color: var(--dark-primary);
+  color: var(--dark-text);
+}
+
+.dark-theme .assessment-btn i {
+  color: var(--dark-primary);
+}
+
+.dark-theme .assessment-btn:hover i,
+.dark-theme .assessment-btn.selected i {
+  color: var(--dark-text);
+}
+
+.dark-theme .tagline,
+.dark-theme .feature-card p,
+.dark-theme .location-label {
+  color: var(--dark-text-secondary);
+}
+
+.dark-theme .error-message {
+  color: var(--dark-error);
+}
+
+.dark-theme .locate-btn {
+  color: var(--dark-text-secondary);
+}
+
+.dark-theme .locate-btn:hover {
+  color: var(--dark-primary);
+}
+
+/* Dark theme test results container */
+.dark-theme .test-results {
+  background: rgba(45, 45, 45, 0.95);
+  color: var(--dark-text);
+}
+
+.dark-theme .test-results .error {
+  color: var(--dark-error);
+}
+
+.dark-theme .test-results .success {
+  color: var(--dark-success);
+}
+
+/* Dark theme scrollbar */
+.dark-theme ::-webkit-scrollbar {
+  width: 10px;
+}
+
+.dark-theme ::-webkit-scrollbar-track {
+  background: var(--dark-bg);
+}
+
+.dark-theme ::-webkit-scrollbar-thumb {
+  background: var(--dark-border);
+  border-radius: 5px;
+}
+
+.dark-theme ::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-primary);
+} 
