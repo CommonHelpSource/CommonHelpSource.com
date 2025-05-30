@@ -20,6 +20,11 @@
             font-family: monospace;
             margin: 1rem 0;
         }
+        .test-buttons {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
         button {
             background: #0066cc;
             color: white;
@@ -32,18 +37,30 @@
         button:hover {
             background: #0052a3;
         }
+        button.secondary {
+            background: #666;
+        }
+        button.secondary:hover {
+            background: #555;
+        }
     </style>
+    <!-- Load test suites -->
+    <script src="zip-validation.test.js" type="module"></script>
 </head>
 <body>
     <h1>ZIP Integration Tests</h1>
-    <p>Click the button below to run all ZIP code integration tests:</p>
+    <p>Select which tests to run:</p>
     
-    <button onclick="startTests()">Run All Tests</button>
+    <div class="test-buttons">
+        <button onclick="startTests()">Run All Tests</button>
+        <button onclick="runZipValidation()" class="secondary">Run ZIP Validation Only</button>
+    </div>
     
     <div id="console"></div>
     
     <script type="module">
         import { runAllTests } from './zip-integration.test.js';
+        import { runZipCodeTests } from './zip-validation.test.js';
         
         // Override console.log to write to our console div
         const consoleDiv = document.getElementById('console');
@@ -60,10 +77,18 @@
             consoleDiv.textContent += '❌ ' + args.join(' ') + '\n';
         };
         
-        // Expose test runner to window
+        // Expose test runners to window
         window.startTests = async function() {
             consoleDiv.textContent = ''; // Clear previous results
+            console.log('Running full test suite...\n');
             await runAllTests();
+        };
+        
+        window.runZipValidation = function() {
+            consoleDiv.textContent = ''; // Clear previous results
+            console.log('Running ZIP validation tests...\n');
+            const results = runZipCodeTests();
+            console.log(`\nTotal: ${results.passed + results.failed} tests`);
         };
     </script>
 </body>
