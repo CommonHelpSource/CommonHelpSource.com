@@ -255,91 +255,36 @@
   </div>
 
   <script>
-    // Global ZIP code constant for AI prompts
-    const zip = localStorage.getItem("userZipCode");
-
-    // Check for ZIP code on page load
-    document.addEventListener('DOMContentLoaded', function() {
-      const zipDisplay = document.getElementById('zip-display');
+    // Function to determine which region file to load based on ZIP prefix
+    function getRegionFileForZip(zipCode) {
+      if (!zipCode) return null;
       
-      if (!zip || !/^\d{5}$/.test(zip)) {
-        alert('ZIP code not set. Please start at the homepage.');
-        window.location.href = 'index.html';
-        return;
+      // Check for Puerto Rico first (specific prefixes)
+      if (zipCode.startsWith('00') || zipCode.startsWith('006')) {
+        return 'zip_puerto_rico.json';
       }
-
-      // Display ZIP code
-      zipDisplay.textContent = `ZIP ${zip}`;
-      zipDisplay.classList.remove('not-set');
-
-      // Make ZIP globally accessible for AI prompts
-      window.userZipCode = zip;
       
-      // Initialize the prompt builder utility
-      window.promptBuilder = {
-        // Get the current ZIP code
-        getZip: function() {
-          return localStorage.getItem('userZipCode') || 'unknown ZIP';
-        },
-        
-        // Generate a base prompt with ZIP context
-        createBasePrompt: function(focus, format) {
-          return `You are an AI assistant helping with resource planning for ZIP code ${this.getZip()}.
-The user selected the "${focus}" category and "${format}" format.
-Based on the client input below, generate a plan that is geographically relevant when possible.
-`;
-        },
-        
-        // Generate a complete prompt with all context
-        createFullPrompt: function({ focus, format, clientInput, additionalContext = {} }) {
-          const basePrompt = this.createBasePrompt(focus, format);
-          const contextStr = Object.entries(additionalContext)
-            .map(([key, value]) => `${key}: ${value}`)
-            .join('\n');
-          
-          return `${basePrompt}
-${contextStr ? `Additional Context:\n${contextStr}\n` : ''}
-Client Input:
-${clientInput}
-`;
-        }
-      };
-    });
-
-    // Function to change location
-    function changeLocation() {
-      localStorage.removeItem('userZipCode');
-      window.location.href = 'index.html';
-    }
-
-    // Function to start specific assessment
-    function startAssessment(type) {
-      // Store assessment type
-      localStorage.setItem('selectedAssessment', type);
+      // Get first digit for other regions
+      const firstDigit = zipCode.charAt(0);
       
-      // Example of using the prompt builder
-      const samplePrompt = window.promptBuilder.createFullPrompt({
-        focus: type,
-        format: 'standard',
-        clientInput: 'Sample client input',
-        additionalContext: {
-          urgency: 'normal',
-          preferences: 'none specified'
-        }
-      });
-      
-      // Redirect to appropriate assessment page
-      if (type === 'health') {
-        window.location.href = 'health.html';
-      } else {
-        window.location.href = `assessment_${type}_tier1.html`;
+      // Map first digit to region
+      if (['0', '1', '2'].includes(firstDigit)) {
+        return 'zip_northeast.json';
+      } else if (firstDigit === '3') {
+        return 'zip_south.json';
+      } else if (['4', '5', '6'].includes(firstDigit)) {
+        return 'zip_midwest.json';
+      } else if (['7', '8', '9'].includes(firstDigit)) {
+        return 'zip_west.json';
       }
+      
+      return null;
     }
 
     // Function to load JSON file
     async function loadJsonFile(filename) {
       try {
-        const response = await fetch(filename);
+        const response = await fetch(`assets/data/${filename}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -348,12 +293,6 @@ ${clientInput}
         console.error(`Error loading ${filename}:`, error);
         return null;
       }
-    }
-
-    // Function to find ZIP code in data
-    function findZipCodeData(zipCode, zipData) {
-      if (!zipData) return null;
-      return zipData[zipCode] || null;
     }
 
     // Function to update the display
@@ -391,26 +330,62 @@ ${clientInput}
     async function initializeLocation() {
       const zipCode = localStorage.getItem('userZipCode');
       
-      // Load all ZIP data files
-      const regions = ['northeast', 'midwest', 'west', 'south', 'puerto_rico'];
-      let locationData = null;
-
-      for (const region of regions) {
-        const zipData = await loadJsonFile(`assets/data/zip_${region}.json`);
-        if (zipData) {
-          const data = findZipCodeData(zipCode, zipData);
-          if (data) {
-            locationData = data;
-            break;
-          }
-        }
+      if (!zipCode || !/^\d{5}$/.test(zipCode)) {
+        updateLocationDisplay(null, null);
+        return;
       }
 
+      // Get the appropriate region file based on ZIP prefix
+      const regionFile = getRegionFileForZip(zipCode);
+      if (!regionFile) {
+        console.error('Could not determine region for ZIP:', zipCode);
+        updateLocationDisplay(zipCode, null);
+        return;
+      }
+
+      // Load the region-specific ZIP data
+      const zipData = await loadJsonFile(regionFile);
+      if (!zipData) {
+        console.error('Failed to load ZIP data for region:', regionFile);
+        updateLocationDisplay(zipCode, null);
+        return;
+      }
+
+      // Look up the location data
+      const locationData = zipData[zipCode];
       updateLocationDisplay(zipCode, locationData);
     }
 
     // Initialize on page load
-    document.addEventListener('DOMContentLoaded', initializeLocation);
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeLocation();
+      
+      // Check for ZIP code and redirect if not set
+      const zip = localStorage.getItem('userZipCode');
+      if (!zip || !/^\d{5}$/.test(zip)) {
+        alert('Please start from the homepage to set your ZIP code.');
+        window.location.href = 'index.html';
+        return;
+      }
+    });
+
+    // Function to change location
+    function changeLocation() {
+      localStorage.removeItem('userZipCode');
+      localStorage.removeItem('userCity');
+      localStorage.removeItem('userState');
+      window.location.href = 'index.html';
+    }
+
+    // Function to start specific assessment
+    function startAssessment(type) {
+      localStorage.setItem('selectedAssessment', type);
+      if (type === 'health') {
+        window.location.href = 'health.html';
+      } else {
+        window.location.href = `assessment_${type}_tier1.html`;
+      }
+    }
   </script>
 
   <script type="module">
