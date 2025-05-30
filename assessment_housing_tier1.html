@@ -11,6 +11,8 @@
       --primary-hover: #ff8659;
       --text-color: #2d3436;
       --bg-color: #f5f6f7;
+      --error-color: #e74c3c;
+      --success-color: #2ecc71;
     }
 
     body {
@@ -19,48 +21,143 @@
       background: var(--bg-color);
       color: var(--text-color);
       line-height: 1.6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       padding: 20px;
     }
 
     .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .assessment-card {
       background: white;
-      padding: 40px;
+      padding: 30px;
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .header {
       text-align: center;
-      max-width: 600px;
-      width: 100%;
+      margin-bottom: 40px;
     }
 
     h1 {
       color: var(--primary-color);
-      margin: 0 0 20px;
       font-size: 2rem;
+      margin: 0 0 10px;
     }
 
-    p {
-      margin: 0 0 30px;
+    .location-info {
       color: #636e72;
       font-size: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
     }
 
-    .back-button {
-      display: inline-block;
+    .question-group {
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .radio-option {
+      flex: 1;
+      position: relative;
+    }
+
+    .radio-option input[type="radio"] {
+      display: none;
+    }
+
+    .radio-option label {
+      display: block;
+      padding: 12px 20px;
+      background: var(--bg-color);
+      border: 2px solid #dfe6e9;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .radio-option input[type="radio"]:checked + label {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: white;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #dfe6e9;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+
+    select:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 40px;
+    }
+
+    .button {
+      flex: 1;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .primary-button {
       background: var(--primary-color);
       color: white;
-      text-decoration: none;
-      padding: 12px 24px;
-      border-radius: 6px;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
     }
 
-    .back-button:hover {
+    .primary-button:hover {
       background: var(--primary-hover);
+    }
+
+    .secondary-button {
+      background: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    .secondary-button:hover {
+      background: #dfe6e9;
+    }
+
+    .validation-message {
+      color: var(--error-color);
+      margin-top: 20px;
+      display: none;
+      text-align: center;
     }
 
     /* Dark theme support */
@@ -69,30 +166,199 @@
       --text-color: #e0e0e0;
     }
 
-    .dark-theme .container {
+    .dark-theme .assessment-card {
       background: #2d2d2d;
     }
 
-    .dark-theme p {
-      color: #b0b0b0;
+    .dark-theme .radio-option label {
+      background: #2d2d2d;
+      border-color: #404040;
+    }
+
+    .dark-theme select {
+      background: #2d2d2d;
+      border-color: #404040;
+      color: var(--text-color);
+    }
+
+    .dark-theme .secondary-button {
+      background: #404040;
+      color: var(--text-color);
+    }
+
+    .dark-theme .secondary-button:hover {
+      background: #505050;
+    }
+
+    @media (max-width: 600px) {
+      .radio-group {
+        flex-direction: column;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Housing Tier 1 Assessment Coming Soon</h1>
-    <p>This page is being built. Please check back soon.</p>
-    <a href="index.html" class="back-button">Back to Home</a>
+    <div class="assessment-card">
+      <div class="header">
+        <h1>Housing Assessment - Tier 1</h1>
+        <div class="location-info">
+          <div id="zip-display">Loading location...</div>
+          <div id="city-state-display"></div>
+        </div>
+      </div>
+
+      <form id="housingAssessmentForm">
+        <div class="question-group">
+          <label>What is your current housing situation?</label>
+          <select name="housing_situation" required>
+            <option value="">Please select...</option>
+            <option value="homeless">Currently homeless</option>
+            <option value="shelter">Staying in a shelter</option>
+            <option value="temporary">Temporary housing (with friends/family)</option>
+            <option value="risk">At risk of losing housing</option>
+            <option value="stable">Stable housing but need assistance</option>
+          </select>
+        </div>
+
+        <div class="question-group">
+          <label>Do you need immediate emergency shelter?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="emergency_yes" name="emergency_shelter" value="yes" required>
+              <label for="emergency_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="emergency_no" name="emergency_shelter" value="no">
+              <label for="emergency_no">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>Are you fleeing domestic violence?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="dv_yes" name="domestic_violence" value="yes" required>
+              <label for="dv_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="dv_no" name="domestic_violence" value="no">
+              <label for="dv_no">No</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="dv_prefer" name="domestic_violence" value="prefer_not">
+              <label for="dv_prefer">Prefer not to say</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>How many people are in your household?</label>
+          <select name="household_size" required>
+            <option value="">Please select...</option>
+            <option value="1">1 (just me)</option>
+            <option value="2">2 people</option>
+            <option value="3">3 people</option>
+            <option value="4">4 people</option>
+            <option value="5">5 people</option>
+            <option value="6+">6 or more</option>
+          </select>
+        </div>
+
+        <div id="validationMessage" class="validation-message">
+          Please answer all questions before continuing
+        </div>
+
+        <div class="button-group">
+          <a href="index.html" class="button secondary-button">Back to Home</a>
+          <button type="button" onclick="submitAssessment()" class="button primary-button">Continue to Tier 2</button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <script>
-    // Check for dark theme
+  <script type="module">
+    import { zipData } from './assets/data/zip-data.js';
+
+    // Function to get location info from ZIP
+    function getLocationFromZip(zip) {
+      return zipData[zip] || null;
+    }
+
+    // Function to update location display
+    function updateLocationDisplay() {
+      const zip = localStorage.getItem('userZipCode');
+      const zipDisplay = document.getElementById('zip-display');
+      const cityStateDisplay = document.getElementById('city-state-display');
+      
+      if (!zip || !/^\d{5}$/.test(zip)) {
+        alert('Please start from the homepage to set your ZIP code.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const location = getLocationFromZip(zip);
+      zipDisplay.textContent = `ZIP ${zip}`;
+
+      if (location) {
+        cityStateDisplay.textContent = `${location.city}, ${location.state}`;
+      } else {
+        cityStateDisplay.textContent = 'Location not found';
+      }
+    }
+
+    // Initialize location display on page load
     document.addEventListener('DOMContentLoaded', () => {
+      updateLocationDisplay();
+      
+      // Check for dark theme
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
       }
     });
+
+    // Function to validate form
+    window.validateForm = function() {
+      const form = document.getElementById('housingAssessmentForm');
+      const validationMessage = document.getElementById('validationMessage');
+      
+      const isValid = form.checkValidity();
+      validationMessage.style.display = isValid ? 'none' : 'block';
+      
+      return isValid;
+    };
+
+    // Function to submit assessment
+    window.submitAssessment = function() {
+      if (!validateForm()) {
+        return;
+      }
+
+      const form = document.getElementById('housingAssessmentForm');
+      const formData = {
+        housing_situation: form.housing_situation.value,
+        emergency_shelter: form.emergency_shelter.value,
+        domestic_violence: form.domestic_violence.value,
+        household_size: form.household_size.value,
+        timestamp: new Date().toISOString()
+      };
+
+      // Save to localStorage
+      localStorage.setItem('housingAssessmentTier1', JSON.stringify(formData));
+
+      // Redirect to Tier 2
+      window.location.href = 'assessment_housing_tier2.html';
+    };
   </script>
 </body>
 </html> 
