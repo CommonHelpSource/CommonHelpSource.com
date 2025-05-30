@@ -184,70 +184,16 @@
 
     /* Voice Input Styles */
     .voice-input-button {
-      background: #6c5ce7;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin: 10px 0;
+      display: none;
     }
 
-    .voice-input-button:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-
-    .voice-input-button.listening {
-      background: #e74c3c;
-      animation: pulse 2s infinite;
-    }
-
-    .voice-input-button:disabled {
-      background: #b2bec3;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .voice-status {
-      font-size: 0.9rem;
-      color: #666;
-      margin-left: 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .voice-status.active {
-      color: #e74c3c;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.7; }
-      100% { opacity: 1; }
-    }
-
+    .voice-input-button:hover,
+    .voice-input-button.listening,
+    .voice-input-button:disabled,
+    .voice-status,
+    .voice-status.active,
     .voice-controls {
-      display: flex;
-      align-items: center;
-      margin: 10px 0;
-      gap: 10px;
-    }
-
-    .note-section h3 {
-      margin: 0 0 8px;
-      color: var(--text-color);
-      font-size: 1.1rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display: none;
     }
 
     .format-selector {
@@ -558,6 +504,27 @@
         padding: 0;
       }
     }
+
+    /* Remove dictation-related styles */
+    .dictate-button,
+    .dictate-status,
+    .note-input-container {
+      display: none;
+    }
+
+    /* Clean up note input styling */
+    .note-input {
+      width: 100%;
+      min-height: 200px;
+      padding: 15px;
+      border: 1px solid #e0e7e4;
+      border-radius: 8px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      resize: vertical;
+    }
   </style>
 </head>
 <body>
@@ -641,18 +608,12 @@
       <div class="form-group">
         <label for="client-needs">Briefly describe the client's needs or situation:</label>
         <textarea id="input-initial" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
-        <div class="voice-controls">
-          <button class="voice-input-button" data-target="input-initial">
-            🎙️ Start Voice Input
+        <div class="note-controls">
+          <button class="generate-button">Generate My Note</button>
+          <button class="download-pdf-button" onclick="downloadAsPDF()">
+            <i class="fas fa-file-pdf"></i> Download as PDF
           </button>
-          <span class="voice-status"></span>
         </div>
-      </div>
-      <div class="note-controls">
-        <button class="generate-button">Generate My Note</button>
-        <button class="download-pdf-button" onclick="downloadAsPDF()">
-          <i class="fas fa-file-pdf"></i> Download as PDF
-        </button>
       </div>
       <div class="loading-spinner">
         <i class="fas fa-spinner fa-spin"></i> Processing...
@@ -680,7 +641,7 @@
       <div class="form-group">
         <label for="client-needs">Briefly describe the client's needs or situation:</label>
         <textarea id="input-progress" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
-        <div class="voice-controls">
+        <div class="voice-controls" style="display: none;">
           <button class="voice-input-button" data-target="input-progress">
             🎙️ Start Voice Input
           </button>
@@ -693,7 +654,7 @@
         <div class="form-group">
           <label for="encounter-type">1. Type of Encounter and Date/Time:</label>
           <textarea id="encounter-type" class="note-input" placeholder="Specify the type of encounter (e.g., home visit, phone call) and when it occurred..."></textarea>
-          <div class="voice-controls">
+          <div class="voice-controls" style="display: none;">
             <button class="voice-input-button" data-target="encounter-type">
               🎙️ Start Voice Input
             </button>
@@ -704,7 +665,7 @@
         <div class="form-group">
           <label for="visit-reason">2. Reason for Visit/Discussion:</label>
           <textarea id="visit-reason" class="note-input" placeholder="Detail the primary purpose and topics discussed during this encounter..."></textarea>
-          <div class="voice-controls">
+          <div class="voice-controls" style="display: none;">
             <button class="voice-input-button" data-target="visit-reason">
               🎙️ Start Voice Input
             </button>
@@ -715,7 +676,7 @@
         <div class="form-group">
           <label for="observations">3. Key Observations and Attendees:</label>
           <textarea id="observations" class="note-input" placeholder="Document important observations and list all individuals present..."></textarea>
-          <div class="voice-controls">
+          <div class="voice-controls" style="display: none;">
             <button class="voice-input-button" data-target="observations">
               🎙️ Start Voice Input
             </button>
@@ -726,7 +687,7 @@
         <div class="form-group">
           <label for="education">4. Education/Discussion Provided:</label>
           <textarea id="education" class="note-input" placeholder="Describe any education, resources, or information shared during the encounter..."></textarea>
-          <div class="voice-controls">
+          <div class="voice-controls" style="display: none;">
             <button class="voice-input-button" data-target="education">
               🎙️ Start Voice Input
             </button>
@@ -737,7 +698,7 @@
         <div class="form-group">
           <label for="goals-changes">5. Changes to Goals or New Concerns:</label>
           <textarea id="goals-changes" class="note-input" placeholder="Document any updates to existing goals or new concerns identified..."></textarea>
-          <div class="voice-controls">
+          <div class="voice-controls" style="display: none;">
             <button class="voice-input-button" data-target="goals-changes">
               🎙️ Start Voice Input
             </button>
@@ -748,7 +709,7 @@
         <div class="form-group">
           <label for="barriers">6. Barriers to Outcomes:</label>
           <textarea id="barriers" class="note-input" placeholder="Identify any challenges or barriers affecting progress..."></textarea>
-          <div class="voice-controls">
+          <div class="voice-controls" style="display: none;">
             <button class="voice-input-button" data-target="barriers">
               🎙️ Start Voice Input
             </button>
@@ -759,7 +720,7 @@
         <div class="form-group">
           <label for="care-plan">7. Care Plan Completion:</label>
           <textarea id="care-plan" class="note-input" placeholder="Update on care plan progress and completion status..."></textarea>
-          <div class="voice-controls">
+          <div class="voice-controls" style="display: none;">
             <button class="voice-input-button" data-target="care-plan">
               🎙️ Start Voice Input
             </button>
@@ -770,7 +731,7 @@
         <div class="form-group">
           <label for="referrals">8. Referrals/Actions/Authorizations Updates:</label>
           <textarea id="referrals" class="note-input" placeholder="Document any referrals made, actions taken, or authorization updates..."></textarea>
-          <div class="voice-controls">
+          <div class="voice-controls" style="display: none;">
             <button class="voice-input-button" data-target="referrals">
               🎙️ Start Voice Input
             </button>
@@ -781,7 +742,7 @@
         <div class="form-group">
           <label for="next-visit">9. Next Visit or Follow-Up:</label>
           <textarea id="next-visit" class="note-input" placeholder="Specify plans for next contact or follow-up actions..."></textarea>
-          <div class="voice-controls">
+          <div class="voice-controls" style="display: none;">
             <button class="voice-input-button" data-target="next-visit">
               🎙️ Start Voice Input
             </button>
@@ -820,7 +781,7 @@
       <div class="form-group">
         <label for="client-needs">Briefly describe the client's needs or situation:</label>
         <textarea id="input-discharge" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
-        <div class="voice-controls">
+        <div class="voice-controls" style="display: none;">
           <button class="voice-input-button" data-target="input-discharge">
             🎙️ Start Voice Input
           </button>
@@ -858,7 +819,7 @@
       <div class="form-group">
         <label for="client-needs">Briefly describe the client's needs or situation:</label>
         <textarea id="input-newogi" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
-        <div class="voice-controls">
+        <div class="voice-controls" style="display: none;">
           <button class="voice-input-button" data-target="input-newogi">
             🎙️ Start Voice Input
           </button>
@@ -1244,110 +1205,6 @@ ${noteText}
           button.disabled = false;
           spinner.style.display = 'none';
         }
-      });
-    }
-
-    // Speech Recognition Setup
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognition = null;
-    let isListening = false;
-    let currentTarget = null;
-
-    if (SpeechRecognition) {
-      recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-
-      // Initialize voice input functionality
-      function initVoiceInput() {
-        const voiceButtons = document.querySelectorAll('.voice-input-button');
-        
-        voiceButtons.forEach(button => {
-          button.addEventListener('click', () => {
-            const targetId = button.dataset.target;
-            const status = button.nextElementSibling;
-            
-            if (!isListening || currentTarget !== targetId) {
-              startRecording(targetId, button, status);
-            } else {
-              stopRecording(button, status);
-            }
-          });
-        });
-
-        function startRecording(targetId, button, status) {
-          // Stop any existing recording
-          if (isListening) {
-            const oldButton = document.querySelector('.voice-input-button.listening');
-            const oldStatus = oldButton.nextElementSibling;
-            stopRecording(oldButton, oldStatus);
-          }
-
-          recognition.start();
-          isListening = true;
-          currentTarget = targetId;
-          button.classList.add('listening');
-          button.innerHTML = '🛑 Stop Voice Input';
-          status.classList.add('active');
-          status.innerHTML = '🎤 Listening...';
-
-          recognition.onresult = (event) => {
-            const textarea = document.getElementById(targetId);
-            const transcript = Array.from(event.results)
-              .map(result => result[0].transcript)
-              .join(' ');
-            
-            // Insert at cursor position or append
-            const cursorPos = textarea.selectionStart;
-            const textBefore = textarea.value.substring(0, cursorPos);
-            const textAfter = textarea.value.substring(cursorPos);
-            textarea.value = textBefore + transcript + textAfter;
-
-            // Move cursor to end of inserted text
-            const newPos = cursorPos + transcript.length;
-            textarea.setSelectionRange(newPos, newPos);
-            textarea.focus();
-          };
-
-          recognition.onerror = (event) => {
-            console.error('Speech recognition error:', event.error);
-            status.innerHTML = `❌ Error: ${event.error}`;
-            stopRecording(button, status);
-          };
-        }
-
-        function stopRecording(button, status) {
-          recognition.stop();
-          isListening = false;
-          currentTarget = null;
-          button.classList.remove('listening');
-          button.innerHTML = '🎙️ Start Voice Input';
-          status.classList.remove('active');
-          status.innerHTML = '';
-        }
-
-        // Handle page visibility changes
-        document.addEventListener('visibilitychange', () => {
-          if (document.hidden && isListening) {
-            const button = document.querySelector('.voice-input-button.listening');
-            const status = button.nextElementSibling;
-            stopRecording(button, status);
-          }
-        });
-      }
-
-      // Initialize voice input when DOM is loaded
-      document.addEventListener('DOMContentLoaded', initVoiceInput);
-    } else {
-      // Fallback for browsers that don't support speech recognition
-      document.addEventListener('DOMContentLoaded', () => {
-        const voiceButtons = document.querySelectorAll('.voice-input-button');
-        voiceButtons.forEach(button => {
-          button.disabled = true;
-          button.innerHTML = '🚫 Voice Input Not Supported';
-          button.style.backgroundColor = '#b2bec3';
-          button.style.cursor = 'not-allowed';
-        });
       });
     }
 
