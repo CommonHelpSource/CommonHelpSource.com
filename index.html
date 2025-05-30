@@ -343,6 +343,60 @@
     </div>
   </div>
 
+  <script>
+    // Global functions for HTML attributes
+    function handleZipKeyPress(e) {
+      if (e.key === 'Enter' && !document.getElementById('startBtn').disabled) {
+        startAssessment();
+        return false;
+      }
+      // Only allow numeric input
+      return /[0-9]/.test(e.key);
+    }
+
+    function startAssessment() {
+      const zip = document.getElementById('zip').value.trim();
+      const zipError = document.getElementById('zipError');
+      const startBtn = document.getElementById('startBtn');
+      
+      // Validate ZIP format
+      if (!/^\d{5}$/.test(zip)) {
+        zipError.style.display = 'block';
+        zipError.textContent = 'Please enter a valid 5-digit ZIP code';
+        startBtn.disabled = true;
+        return;
+      }
+
+      // Store ZIP and redirect
+      localStorage.setItem('userZipCode', zip);
+      window.location.href = 'assessment_start.html';
+    }
+
+    async function getLocationZip() {
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+
+        const response = await fetch(
+          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`
+        );
+        
+        const data = await response.json();
+        if (data.postcode) {
+          const zipInput = document.getElementById('zip');
+          zipInput.value = data.postcode;
+          zipInput.dispatchEvent(new Event('input')); // Trigger validation
+        } else {
+          throw new Error('ZIP code not found');
+        }
+      } catch (error) {
+        console.error('Location lookup failed:', error);
+        alert('Could not determine your location. Please enter your ZIP code manually.');
+      }
+    }
+  </script>
+
   <script type="module">
     import { getLocationInfo, validateZip } from './assets/js/zip_utils.js';
     import { runZipCodeTests } from './tests/zip-validation.test.js';
@@ -364,57 +418,6 @@
       // Enable/disable start button based on ZIP validity
       startBtn.disabled = this.value.length !== 5;
     });
-
-    // Handle Enter key press
-    function handleZipKeyPress(e) {
-      if (e.key === 'Enter' && !startBtn.disabled) {
-        startAssessment();
-        return false;
-      }
-      // Only allow numeric input
-      return /[0-9]/.test(e.key);
-    }
-
-    // Start assessment function
-    function startAssessment() {
-      const zip = zipInput.value.trim();
-      
-      // Validate ZIP format
-      if (!/^\d{5}$/.test(zip)) {
-        zipError.style.display = 'block';
-        zipError.textContent = 'Please enter a valid 5-digit ZIP code';
-        startBtn.disabled = true;
-        return;
-      }
-
-      // Store ZIP and redirect
-      localStorage.setItem('userZipCode', zip);
-      window.location.href = 'assessment_start.html';
-    }
-
-    // Location detection function
-    async function getLocationZip() {
-      try {
-        const position = await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-
-        const response = await fetch(
-          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`
-        );
-        
-        const data = await response.json();
-        if (data.postcode) {
-          zipInput.value = data.postcode;
-          zipInput.dispatchEvent(new Event('input')); // Trigger validation
-        } else {
-          throw new Error('ZIP code not found');
-        }
-      } catch (error) {
-        console.error('Location lookup failed:', error);
-        alert('Could not determine your location. Please enter your ZIP code manually.');
-      }
-    }
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
