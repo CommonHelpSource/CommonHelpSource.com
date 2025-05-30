@@ -345,6 +345,7 @@
 
   <script type="module">
     import { getLocationInfo, validateZip } from './assets/js/zip_utils.js';
+    import { runZipCodeTests } from './tests/zip-validation.test.js';
 
     const zipInput = document.getElementById("zip");
     const zipError = document.getElementById("zipError");
@@ -425,6 +426,47 @@
       
       // Focus ZIP input
       zipInput.focus();
+
+      // Run tests in debug mode
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("debug") === "true") {
+        console.log("🔧 Debug Mode Active - Running ZIP Tests");
+        
+        // Create test results container
+        const testResults = document.createElement('div');
+        testResults.style.cssText = `
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 15px;
+          border-radius: 8px;
+          font-family: monospace;
+          max-width: 400px;
+          max-height: 300px;
+          overflow-y: auto;
+          z-index: 9999;
+        `;
+        document.body.appendChild(testResults);
+
+        // Override console.log for test output
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+          originalLog.apply(console, args);
+          testResults.innerHTML += args.join(' ') + '<br>';
+        };
+        
+        console.error = function(...args) {
+          originalError.apply(console, args);
+          testResults.innerHTML += '<span style="color: #ff6b6b;">❌ ' + args.join(' ') + '</span><br>';
+        };
+
+        // Run the tests
+        runZipCodeTests();
+      }
     });
 
     // Enable/disable start button based on selections

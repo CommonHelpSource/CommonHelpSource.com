@@ -182,64 +182,6 @@
       font-size: 1.5rem;
     }
 
-    /* Voice Input Styles */
-    .voice-input-button {
-      display: none;
-    }
-
-    .voice-input-button:hover,
-    .voice-input-button.listening,
-    .voice-input-button:disabled,
-    .voice-status,
-    .voice-status.active,
-    .voice-controls {
-      display: none;
-    }
-
-    .format-selector {
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .format-selector label {
-      color: var(--text-color);
-      font-weight: 600;
-    }
-
-    .format-selector select {
-      padding: 8px 12px;
-      border: 1px solid #e0e7e4;
-      border-radius: 6px;
-      font-family: 'Open Sans', sans-serif;
-      font-size: 0.95rem;
-      background-color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .format-selector select:hover {
-      border-color: var(--primary-color);
-    }
-
-    .format-selector select:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.1);
-    }
-
-    .format-info {
-      font-size: 0.9rem;
-      color: #666;
-      margin-top: 5px;
-      display: none;
-    }
-
-    .format-info.visible {
-      display: block;
-    }
-
     /* Preview Dialog Styles */
     .preview-dialog {
       display: none;
@@ -505,11 +447,39 @@
       }
     }
 
-    /* Remove dictation-related styles */
-    .dictate-button,
-    .dictate-status,
-    .note-input-container {
-      display: none;
+    /* Update dictation button styles */
+    .dictate-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: #6c5ce7;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .dictate-button:hover {
+      background: rgba(108, 92, 231, 0.1);
+    }
+
+    .dictate-button.listening {
+      color: #e74c3c;
+      animation: pulse 2s infinite;
+    }
+
+    .dictate-button .icon {
+      font-size: 1.2em;
+    }
+
+    .dictate-button .label {
+      white-space: nowrap;
     }
 
     /* Clean up note input styling */
@@ -571,7 +541,7 @@
       <button class="note-type-button" data-section="initial">Initial Assessment</button>
       <button class="note-type-button" data-section="progress">Progress Note</button>
       <button class="note-type-button" data-section="discharge">Discharge Summary</button>
-      <button class="note-type-button" data-section="newogi">NewOGI Note</button>
+      <button class="note-type-button" data-section="goalnote">New Goal Note</button>
     </div>
 
     <div class="privacy-box">
@@ -606,8 +576,14 @@
       </div>
       <div id="format-info-initial" class="format-info"></div>
       <div class="form-group">
-        <label for="client-needs">Briefly describe the client's needs or situation:</label>
-        <textarea id="input-initial" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
+        <label for="input-initial">Briefly describe the client's needs or situation:</label>
+        <div class="note-input-container">
+          <textarea id="input-initial" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
+          <button class="dictate-button" data-section="initial">
+            <span class="icon">🎙️</span>
+            <span class="label">Dictate Initial Assessment</span>
+          </button>
+        </div>
         <div class="note-controls">
           <button class="generate-button">Generate My Note</button>
           <button class="download-pdf-button" onclick="downloadAsPDF()">
@@ -639,13 +615,13 @@
       </div>
       <div id="format-info-progress" class="format-info"></div>
       <div class="form-group">
-        <label for="client-needs">Briefly describe the client's needs or situation:</label>
-        <textarea id="input-progress" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
-        <div class="voice-controls" style="display: none;">
-          <button class="voice-input-button" data-target="input-progress">
-            🎙️ Start Voice Input
+        <label for="input-progress">Briefly describe the client's needs or situation:</label>
+        <div class="note-input-container">
+          <textarea id="input-progress" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
+          <button class="dictate-button" data-section="progress">
+            <span class="icon">🎙️</span>
+            <span class="label">Dictate Progress Note</span>
           </button>
-          <span class="voice-status"></span>
         </div>
       </div>
 
@@ -653,101 +629,59 @@
       <div id="chw-extended-fields" style="display: none;">
         <div class="form-group">
           <label for="encounter-type">1. Type of Encounter and Date/Time:</label>
-          <textarea id="encounter-type" class="note-input" placeholder="Specify the type of encounter (e.g., home visit, phone call) and when it occurred..."></textarea>
-          <div class="voice-controls" style="display: none;">
-            <button class="voice-input-button" data-target="encounter-type">
-              🎙️ Start Voice Input
+          <div class="note-input-container">
+            <textarea id="encounter-type" class="note-input" placeholder="Specify the type of encounter (e.g., home visit, phone call) and when it occurred..."></textarea>
+            <button class="dictate-button" data-section="chw" data-field="encounter">
+              <span class="icon">🎙️</span>
+              <span class="label">Dictate Encounter Details</span>
             </button>
-            <span class="voice-status"></span>
           </div>
         </div>
 
         <div class="form-group">
           <label for="visit-reason">2. Reason for Visit/Discussion:</label>
-          <textarea id="visit-reason" class="note-input" placeholder="Detail the primary purpose and topics discussed during this encounter..."></textarea>
-          <div class="voice-controls" style="display: none;">
-            <button class="voice-input-button" data-target="visit-reason">
-              🎙️ Start Voice Input
+          <div class="note-input-container">
+            <textarea id="visit-reason" class="note-input" placeholder="Detail the primary purpose and topics discussed during this encounter..."></textarea>
+            <button class="dictate-button" data-section="chw" data-field="reason">
+              <span class="icon">🎙️</span>
+              <span class="label">Dictate Visit Reason</span>
             </button>
-            <span class="voice-status"></span>
           </div>
         </div>
 
         <div class="form-group">
           <label for="observations">3. Key Observations and Attendees:</label>
           <textarea id="observations" class="note-input" placeholder="Document important observations and list all individuals present..."></textarea>
-          <div class="voice-controls" style="display: none;">
-            <button class="voice-input-button" data-target="observations">
-              🎙️ Start Voice Input
-            </button>
-            <span class="voice-status"></span>
-          </div>
         </div>
 
         <div class="form-group">
           <label for="education">4. Education/Discussion Provided:</label>
           <textarea id="education" class="note-input" placeholder="Describe any education, resources, or information shared during the encounter..."></textarea>
-          <div class="voice-controls" style="display: none;">
-            <button class="voice-input-button" data-target="education">
-              🎙️ Start Voice Input
-            </button>
-            <span class="voice-status"></span>
-          </div>
         </div>
 
         <div class="form-group">
           <label for="goals-changes">5. Changes to Goals or New Concerns:</label>
           <textarea id="goals-changes" class="note-input" placeholder="Document any updates to existing goals or new concerns identified..."></textarea>
-          <div class="voice-controls" style="display: none;">
-            <button class="voice-input-button" data-target="goals-changes">
-              🎙️ Start Voice Input
-            </button>
-            <span class="voice-status"></span>
-          </div>
         </div>
 
         <div class="form-group">
           <label for="barriers">6. Barriers to Outcomes:</label>
           <textarea id="barriers" class="note-input" placeholder="Identify any challenges or barriers affecting progress..."></textarea>
-          <div class="voice-controls" style="display: none;">
-            <button class="voice-input-button" data-target="barriers">
-              🎙️ Start Voice Input
-            </button>
-            <span class="voice-status"></span>
-          </div>
         </div>
 
         <div class="form-group">
           <label for="care-plan">7. Care Plan Completion:</label>
           <textarea id="care-plan" class="note-input" placeholder="Update on care plan progress and completion status..."></textarea>
-          <div class="voice-controls" style="display: none;">
-            <button class="voice-input-button" data-target="care-plan">
-              🎙️ Start Voice Input
-            </button>
-            <span class="voice-status"></span>
-          </div>
         </div>
 
         <div class="form-group">
           <label for="referrals">8. Referrals/Actions/Authorizations Updates:</label>
           <textarea id="referrals" class="note-input" placeholder="Document any referrals made, actions taken, or authorization updates..."></textarea>
-          <div class="voice-controls" style="display: none;">
-            <button class="voice-input-button" data-target="referrals">
-              🎙️ Start Voice Input
-            </button>
-            <span class="voice-status"></span>
-          </div>
         </div>
 
         <div class="form-group">
           <label for="next-visit">9. Next Visit or Follow-Up:</label>
           <textarea id="next-visit" class="note-input" placeholder="Specify plans for next contact or follow-up actions..."></textarea>
-          <div class="voice-controls" style="display: none;">
-            <button class="voice-input-button" data-target="next-visit">
-              🎙️ Start Voice Input
-            </button>
-            <span class="voice-status"></span>
-          </div>
         </div>
       </div>
       <div class="note-controls">
@@ -779,13 +713,13 @@
       </div>
       <div id="format-info-discharge" class="format-info"></div>
       <div class="form-group">
-        <label for="client-needs">Briefly describe the client's needs or situation:</label>
-        <textarea id="input-discharge" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
-        <div class="voice-controls" style="display: none;">
-          <button class="voice-input-button" data-target="input-discharge">
-            🎙️ Start Voice Input
+        <label for="input-discharge">Briefly describe the client's needs or situation:</label>
+        <div class="note-input-container">
+          <textarea id="input-discharge" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
+          <button class="dictate-button" data-section="discharge">
+            <span class="icon">🎙️</span>
+            <span class="label">Dictate Discharge Summary</span>
           </button>
-          <span class="voice-status"></span>
         </div>
       </div>
       <div class="note-controls">
@@ -804,26 +738,26 @@
       </div>
     </div>
 
-    <!-- NewOGI Section -->
-    <div id="newogi-section" class="note-section">
-      <h3 class="section-title">NewOGI Note</h3>
+    <!-- Goal Note Section -->
+    <div id="goalnote-section" class="note-section">
+      <h3 class="section-title">New Goal Note</h3>
       <div class="format-selector">
-        <label for="format-select-newogi"><strong>Note Format:</strong></label>
-        <select id="format-select-newogi" class="note-format">
+        <label for="format-select-goalnote"><strong>Note Format:</strong></label>
+        <select id="format-select-goalnote" class="note-format">
           <option value="Narrative">Narrative</option>
           <option value="SOAP">SOAP (Subjective, Objective, Assessment, Plan)</option>
           <option value="Checklist">Checklist</option>
         </select>
       </div>
-      <div id="format-info-newogi" class="format-info"></div>
+      <div id="format-info-goalnote" class="format-info"></div>
       <div class="form-group">
-        <label for="client-needs">Briefly describe the client's needs or situation:</label>
-        <textarea id="input-newogi" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
-        <div class="voice-controls" style="display: none;">
-          <button class="voice-input-button" data-target="input-newogi">
-            🎙️ Start Voice Input
+        <label for="input-goalnote">Briefly describe the client's needs or situation:</label>
+        <div class="note-input-container">
+          <textarea id="input-goalnote" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
+          <button class="dictate-button" data-section="goalnote">
+            <span class="icon">🎙️</span>
+            <span class="label">Dictate Goal Note</span>
           </button>
-          <span class="voice-status"></span>
         </div>
       </div>
       <div class="note-controls">
@@ -1432,6 +1366,68 @@ ${noteText}
         button.disabled = false;
       }
     }
+
+    // Add function to update dictation button labels based on format
+    function updateDictationLabels() {
+      const formatSelectors = document.querySelectorAll('.note-format');
+      
+      formatSelectors.forEach(selector => {
+        selector.addEventListener('change', (e) => {
+          const section = e.target.closest('.note-section');
+          const format = e.target.value;
+          const dictateButtons = section.querySelectorAll('.dictate-button');
+          
+          dictateButtons.forEach(button => {
+            const label = button.querySelector('.label');
+            if (format === 'CHW-Extended') {
+              const field = button.dataset.field;
+              switch (field) {
+                case 'encounter':
+                  label.textContent = 'Dictate CHW Encounter Details';
+                  break;
+                case 'reason':
+                  label.textContent = 'Dictate CHW Visit Reason';
+                  break;
+                // Add cases for other CHW fields
+                default:
+                  label.textContent = 'Dictate CHW Extended Note';
+              }
+            } else {
+              const sectionType = button.dataset.section;
+              switch (sectionType) {
+                case 'initial':
+                  label.textContent = 'Dictate Initial Assessment';
+                  break;
+                case 'progress':
+                  label.textContent = 'Dictate Progress Note';
+                  break;
+                case 'discharge':
+                  label.textContent = 'Dictate Discharge Summary';
+                  break;
+                case 'goalnote':
+                  label.textContent = 'Dictate Goal Note';
+                  break;
+                default:
+                  label.textContent = 'Dictate Note';
+              }
+            }
+          });
+        });
+      });
+    }
+
+    // Initialize dictation labels when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDictationLabels();
+      
+      // Update labels when switching sections
+      const noteTypeButtons = document.querySelectorAll('.note-type-button');
+      noteTypeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          setTimeout(updateDictationLabels, 0);
+        });
+      });
+    });
   </script>
 </body>
 </html> 

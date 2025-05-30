@@ -323,6 +323,54 @@ ${clientInput}
         window.location.href = `assessment_${type}_tier1.html`;
       }
     }
+
+    // Add test suite for debug mode
+    <script type="module">
+      import { runZipCodeTests } from './tests/zip-validation.test.js';
+
+      // Run tests in debug mode
+      document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get("debug") === "true") {
+          console.log("🔧 Debug Mode Active - Running ZIP Tests");
+          
+          // Create test results container
+          const testResults = document.createElement('div');
+          testResults.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            max-width: 400px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 9999;
+          `;
+          document.body.appendChild(testResults);
+
+          // Override console.log for test output
+          const originalLog = console.log;
+          const originalError = console.error;
+          
+          console.log = function(...args) {
+            originalLog.apply(console, args);
+            testResults.innerHTML += args.join(' ') + '<br>';
+          };
+          
+          console.error = function(...args) {
+            originalError.apply(console, args);
+            testResults.innerHTML += '<span style="color: #ff6b6b;">❌ ' + args.join(' ') + '</span><br>';
+          };
+
+          // Run the tests
+          runZipCodeTests();
+        }
+      });
+    </script>
   </script>
 </body>
 </html> 
