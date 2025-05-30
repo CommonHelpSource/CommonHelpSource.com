@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Assessment - Initial Questions</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Housing Assessment</h1>
+            <div class="location-info">
+                <span id="zip-display"></span>
+                <span id="location-display"></span>
+            </div>
+        </header>
+
+        <main>
+            <form id="housingTier1Form">
+                <div class="form-section">
+                    <h2>Basic Information</h2>
+                    
+                    <div class="form-group">
+                        <label for="housing_status">What is your current housing situation?</label>
+                        <select id="housing_status" name="housing_status" required>
+                            <option value="">Please select...</option>
+                            <option value="homeless">Currently homeless</option>
+                            <option value="shelter">Staying in a shelter</option>
+                            <option value="couch_surfing">Temporarily staying with friends/family</option>
+                            <option value="at_risk">At risk of losing housing</option>
+                            <option value="eviction_notice">Received eviction notice</option>
+                            <option value="stable_housing">In stable housing but need assistance</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you have any source of income?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="has_income_yes" name="has_income" value="yes" required>
+                            <label for="has_income_yes">Yes</label>
+                            <input type="radio" id="has_income_no" name="has_income" value="no">
+                            <label for="has_income_no">No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="household_size">How many people are in your household?</label>
+                        <input type="number" id="household_size" name="household_size" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you have children under 18 in your household?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="has_children_yes" name="has_children" value="yes" required>
+                            <label for="has_children_yes">Yes</label>
+                            <input type="radio" id="has_children_no" name="has_children" value="no">
+                            <label for="has_children_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Documents & Status</h2>
+
+                    <div class="form-group">
+                        <label>Do you have a valid photo ID?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="has_id_yes" name="has_id" value="yes" required>
+                            <label for="has_id_yes">Yes</label>
+                            <input type="radio" id="has_id_no" name="has_id" value="no">
+                            <label for="has_id_no">No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you have your Social Security card?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="has_ssn_yes" name="has_ssn" value="yes" required>
+                            <label for="has_ssn_yes">Yes</label>
+                            <input type="radio" id="has_ssn_no" name="has_ssn" value="no">
+                            <label for="has_ssn_no">No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you have your birth certificate?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="has_birth_cert_yes" name="has_birth_cert" value="yes" required>
+                            <label for="has_birth_cert_yes">Yes</label>
+                            <input type="radio" id="has_birth_cert_no" name="has_birth_cert" value="no">
+                            <label for="has_birth_cert_no">No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>What is your citizenship/immigration status?</label>
+                        <select id="citizenship_status" name="citizenship_status" required>
+                            <option value="">Please select...</option>
+                            <option value="citizen">U.S. Citizen</option>
+                            <option value="legal">Legal Resident/Have Papers</option>
+                            <option value="undocumented">Undocumented</option>
+                            <option value="other">Other/Prefer not to say</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Additional Information</h2>
+
+                    <div class="form-group">
+                        <label>Are you working with a case manager or outreach worker?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="has_case_manager_yes" name="has_case_manager" value="yes" required>
+                            <label for="has_case_manager_yes">Yes</label>
+                            <input type="radio" id="has_case_manager_no" name="has_case_manager" value="no">
+                            <label for="has_case_manager_no">No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Are you a veteran?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="is_veteran_yes" name="is_veteran" value="yes" required>
+                            <label for="is_veteran_yes">Yes</label>
+                            <input type="radio" id="is_veteran_no" name="is_veteran" value="no">
+                            <label for="is_veteran_no">No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Are you fleeing domestic violence?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="is_fleeing_dv_yes" name="is_fleeing_dv" value="yes" required>
+                            <label for="is_fleeing_dv_yes">Yes</label>
+                            <input type="radio" id="is_fleeing_dv_no" name="is_fleeing_dv" value="no">
+                            <label for="is_fleeing_dv_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Continue to Detailed Questions</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeLocation } from '/assets/js/zip-utils.js';
+        import { collectTier1Data, storeTier1Data } from '/assets/js/housing-prompt-builder.js';
+
+        // Initialize location display
+        initializeLocation();
+
+        // Handle form submission
+        document.getElementById('housingTier1Form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const tier1Data = collectTier1Data();
+            if (tier1Data) {
+                storeTier1Data(tier1Data);
+                window.location.href = '/housing-tier2.html';
+            }
+        });
+    </script>
+</body>
+</html> 

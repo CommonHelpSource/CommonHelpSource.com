@@ -1,171 +1,263 @@
 // Housing Assessment Prompt Builder
 
+import { toNaturalLanguage } from './documents-prompt-builder.js';
+
 /**
- * Formats a yes/no/other answer for the prompt
+ * Formats a yes/no answer into natural language
  * @param {string} value - The answer value
+ * @param {Object} options - Custom phrases for yes/no
  * @returns {string} Formatted answer
  */
-function formatAnswer(value) {
-    if (!value) return 'Not provided';
+function formatYesNo(value, options = {}) {
+    const defaultOptions = {
+        positive: 'do',
+        negative: "don't",
+        present: 'am',
+        absent: 'am not'
+    };
+    
+    const opts = { ...defaultOptions, ...options };
+    
+    if (!value) return opts.negative || opts.absent;
+    
     switch(value.toLowerCase()) {
         case 'yes':
         case 'true':
-            return 'Yes';
+            return opts.positive || opts.present;
         case 'no':
         case 'false':
-            return 'No';
-        case 'working':
-        case 'working_on_it':
-            return 'Working on it';
+            return opts.negative || opts.absent;
         default:
             return value;
     }
 }
 
 /**
- * Gets location context from localStorage
- * @returns {Object} Location information
+ * Formats housing status into natural language
+ * @param {string} status - The housing status
+ * @returns {string} Formatted status phrase
  */
-function getLocationContext() {
-    return {
-        zipCode: localStorage.getItem('userZipCode') || 'Unknown',
-        city: localStorage.getItem('userCity') || 'Unknown',
-        state: localStorage.getItem('userState') || 'Unknown'
+function formatHousingStatus(status) {
+    if (!status) return '';
+    
+    const statusMap = {
+        homeless: 'currently homeless',
+        shelter: 'staying in a shelter',
+        couch_surfing: 'temporarily staying with friends/family',
+        at_risk: 'at risk of losing my housing',
+        eviction_notice: 'received an eviction notice',
+        stable_housing: 'in stable housing but need assistance',
+        other: 'in a different housing situation'
     };
+    
+    return statusMap[status.toLowerCase()] || status;
 }
 
 /**
- * Creates a structured prompt for ChatGPT based on housing assessment answers
- * @param {Object} assessmentData - The collected assessment data
- * @returns {string} Formatted prompt for OpenAI API
+ * Formats citizenship status into natural language
+ * @param {string} status - The citizenship status
+ * @returns {string} Formatted status phrase
  */
-export function createHousingPrompt(assessmentData) {
-    const location = getLocationContext();
+function formatCitizenshipStatus(status) {
+    if (!status) return 'not sure about my status';
     
-    // Format and filter the assessment data
-    const formattedData = {
-        housing_status: assessmentData.housing_situation,
-        has_income: formatAnswer(assessmentData.has_income),
-        has_photo_id: formatAnswer(assessmentData.has_photo_id),
-        has_social_security: formatAnswer(assessmentData.has_social_security),
-        has_birth_certificate: formatAnswer(assessmentData.has_birth_certificate),
-        citizenship_status: assessmentData.citizenship_status,
-        housing_applications: assessmentData.housing_applications,
-        has_case_manager: formatAnswer(assessmentData.has_case_manager),
-        has_eviction_history: formatAnswer(assessmentData.has_eviction_history),
-        has_cori_record: formatAnswer(assessmentData.has_cori_record),
-        has_disability: formatAnswer(assessmentData.has_disability),
-        is_in_recovery: formatAnswer(assessmentData.is_in_recovery),
-        has_children: formatAnswer(assessmentData.has_children),
-        is_veteran: formatAnswer(assessmentData.is_veteran),
-        fleeing_domestic_violence: formatAnswer(assessmentData.fleeing_domestic_violence)
+    const statusMap = {
+        citizen: 'a U.S. citizen',
+        legal: 'not a citizen but have papers',
+        undocumented: 'undocumented',
+        other: 'not sure about my status'
     };
+    
+    return statusMap[status.toLowerCase()] || status;
+}
 
-    // Filter out empty or "Not provided" values
-    const relevantData = Object.entries(formattedData)
-        .filter(([_, value]) => value && value !== 'Not provided')
-        .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+/**
+ * Creates a conversational prompt for ChatGPT based on housing assessment answers
+ * @param {Object} tier1Data - The collected Tier 1 assessment data
+ * @param {Object} tier2Data - The collected Tier 2 assessment data
+ * @returns {string} Formatted conversational prompt
+ */
+export function createHousingPrompt(tier1Data, tier2Data = {}) {
+    const zip = localStorage.getItem('userZipCode') || '[ZIP code not provided]';
+    const city = localStorage.getItem('userCity') || 'your area';
+    const state = localStorage.getItem('userState') || '';
+    
+    let prompt = `Hello, I live in ZIP code ${zip} – ${city}, ${state}.\nBased on my answers:`;
+    
+    // Tier 1 Data
+    if (tier1Data.housing_status) {
+        prompt += `\n- I am ${formatHousingStatus(tier1Data.housing_status)}.`;
+    }
 
-    // Build sections with only relevant information
-    const buildSection = (title, fields) => {
-        const lines = Object.entries(fields)
-            .filter(([key, _]) => key in relevantData)
-            .map(([key, label]) => `${label}: ${relevantData[key]}`);
-        
-        return lines.length > 0 ? `\n${title}\n${'-'.repeat(title.length)}\n${lines.join('\n')}` : '';
-    };
+    if (tier1Data.has_income) {
+        const hasIncome = formatYesNo(tier1Data.has_income, {
+            positive: 'have',
+            negative: "don't have"
+        });
+        prompt += `\n- I ${hasIncome} income.`;
+    }
 
-    const sections = {
-        'CLIENT SITUATION': {
-            housing_status: 'Current Housing',
-            has_income: 'Income Status',
-            fleeing_domestic_violence: 'Fleeing Domestic Violence'
-        },
-        'DOCUMENTATION STATUS': {
-            has_photo_id: 'Photo ID',
-            has_social_security: 'Social Security Card',
-            has_birth_certificate: 'Birth Certificate',
-            citizenship_status: 'Citizenship/Immigration'
-        },
-        'HOUSING HISTORY': {
-            housing_applications: 'Previous Applications',
-            has_case_manager: 'Working with Case Manager',
-            has_eviction_history: 'Eviction History',
-            has_cori_record: 'CORI Record'
-        },
-        'ADDITIONAL FACTORS': {
-            has_disability: 'Disability/Medical Condition',
-            is_in_recovery: 'Recovery/Sobriety Status',
-            has_children: 'Children Under 18',
-            is_veteran: 'Veteran Status'
-        }
-    };
+    // Document Status
+    const missingDocs = [];
+    if (tier1Data.has_id === 'no') missingDocs.push('ID');
+    if (tier1Data.has_ssn === 'no') missingDocs.push('Social Security card');
+    if (tier1Data.has_birth_cert === 'no') missingDocs.push('birth certificate');
+    
+    if (missingDocs.length > 0) {
+        prompt += `\n- I don't have a ${missingDocs.join(', or a ')}.`;
+    }
 
-    // Build the prompt with only populated sections
-    let prompt = `You are a housing resource specialist assisting a client in ${location.city}, ${location.state} (ZIP: ${location.zipCode}).`;
+    if (tier1Data.citizenship_status) {
+        prompt += `\n- I am ${formatCitizenshipStatus(tier1Data.citizenship_status)}.`;
+    }
 
-    // Add each populated section
-    Object.entries(sections).forEach(([title, fields]) => {
-        const section = buildSection(title, fields);
-        if (section) {
-            prompt += section;
-        }
-    });
+    if (tier1Data.has_case_manager) {
+        const hasManager = formatYesNo(tier1Data.has_case_manager, {
+            positive: 'am',
+            negative: 'am not'
+        });
+        prompt += `\n- I ${hasManager} working with a case manager or outreach worker.`;
+    }
 
-    // Add the request for recommendations
-    prompt += `\n\nBased on this assessment, please provide:
-1. Immediate next steps for housing assistance
-2. Specific local resources and programs in ${location.city}, ${location.state}
-3. Documentation preparation recommendations
-4. Additional support services to consider
-5. Estimated timeline for different housing options
+    if (tier1Data.is_veteran) {
+        const isVeteran = formatYesNo(tier1Data.is_veteran);
+        prompt += `\n- I ${isVeteran} a veteran.`;
+    }
 
-Please prioritize recommendations based on urgency and feasibility.`;
+    if (tier1Data.is_fleeing_dv) {
+        const isDV = formatYesNo(tier1Data.is_fleeing_dv);
+        prompt += `\n- I ${isDV} fleeing domestic violence.`;
+    }
+
+    // Tier 2 Data
+    if (tier2Data.has_champ) {
+        const hasChamp = formatYesNo(tier2Data.has_champ, {
+            positive: 'have',
+            negative: "haven't"
+        });
+        prompt += `\n- I ${hasChamp} applied for CHAMP or Section 8.`;
+    }
+
+    if (tier2Data.has_eviction) {
+        const hasEviction = formatYesNo(tier2Data.has_eviction, {
+            positive: 'have',
+            negative: "haven't"
+        });
+        prompt += `\n- I ${hasEviction} been evicted or turned away from housing.`;
+    }
+
+    if (tier2Data.has_cori) {
+        const hasCori = formatYesNo(tier2Data.has_cori, {
+            positive: 'do',
+            negative: "don't"
+        });
+        prompt += `\n- I ${hasCori} have a CORI record.`;
+    }
+
+    if (tier2Data.monthly_income) {
+        prompt += `\n- My monthly household income is $${tier2Data.monthly_income}.`;
+    }
+
+    if (tier2Data.current_rent) {
+        prompt += `\n- My current rent/housing cost is $${tier2Data.current_rent} per month.`;
+    }
+
+    if (tier2Data.has_disability) {
+        const hasDisability = formatYesNo(tier2Data.has_disability, {
+            positive: 'do',
+            negative: "don't"
+        });
+        prompt += `\n- I ${hasDisability} have a condition or disability that makes it hard to live alone.`;
+    }
+
+    if (tier2Data.in_recovery) {
+        const inRecovery = formatYesNo(tier2Data.in_recovery);
+        prompt += `\n- I ${inRecovery} in recovery or trying to stay sober.`;
+    }
+
+    if (tier2Data.preferred_areas) {
+        prompt += `\n- I am interested in housing in these areas: ${tier2Data.preferred_areas}.`;
+    }
+
+    // Add the request for local resources
+    prompt += `\n\nCan you help me find housing programs and resources within 10 miles of ZIP ${zip} that fit my situation?`;
+    prompt += `\nPlease keep the response short, local, and focused on real steps I can take next.`;
 
     return prompt.trim();
 }
 
 /**
- * Collects assessment data from the form
- * @param {string} formId - The ID of the housing assessment form
+ * Collects Tier 1 housing assessment data from the form
+ * @param {string} formId - The ID of the Tier 1 assessment form
  * @returns {Object} Collected assessment data
  */
-export function collectAssessmentData(formId = 'housingAssessmentForm') {
+export function collectTier1Data(formId = 'housingTier1Form') {
     const form = document.getElementById(formId);
     if (!form) {
-        console.error('Housing assessment form not found');
+        console.error('Housing Tier 1 form not found');
         return null;
     }
 
-    const getData = (name) => {
-        const element = form.elements[name];
-        if (!element) return null;
-        
-        if (element.type === 'radio' || element.type === 'checkbox') {
-            const checked = form.querySelector(`input[name="${name}"]:checked`);
-            return checked ? checked.value : null;
-        }
-        
-        return element.value || null;
+    return {
+        housing_status: form.elements['housing_status']?.value,
+        has_income: form.elements['has_income']?.value,
+        household_size: form.elements['household_size']?.value,
+        has_children: form.elements['has_children']?.value,
+        has_id: form.elements['has_id']?.value,
+        has_ssn: form.elements['has_ssn']?.value,
+        has_birth_cert: form.elements['has_birth_cert']?.value,
+        citizenship_status: form.elements['citizenship_status']?.value,
+        has_case_manager: form.elements['has_case_manager']?.value,
+        is_veteran: form.elements['is_veteran']?.value,
+        is_fleeing_dv: form.elements['is_fleeing_dv']?.value
     };
+}
+
+/**
+ * Collects Tier 2 housing assessment data from the form
+ * @param {string} formId - The ID of the Tier 2 assessment form
+ * @returns {Object} Collected assessment data
+ */
+export function collectTier2Data(formId = 'housingTier2Form') {
+    const form = document.getElementById(formId);
+    if (!form) {
+        console.error('Housing Tier 2 form not found');
+        return null;
+    }
 
     return {
-        housing_situation: getData('housing_situation'),
-        has_income: getData('has_income'),
-        has_photo_id: getData('has_photo_id'),
-        has_social_security: getData('has_social_security'),
-        has_birth_certificate: getData('has_birth_certificate'),
-        citizenship_status: getData('citizenship_status'),
-        housing_applications: getData('housing_applications'),
-        has_case_manager: getData('has_case_manager'),
-        has_eviction_history: getData('has_eviction_history'),
-        has_cori_record: getData('has_cori_record'),
-        has_disability: getData('has_disability'),
-        is_in_recovery: getData('is_in_recovery'),
-        has_children: getData('has_children'),
-        is_veteran: getData('is_veteran'),
-        fleeing_domestic_violence: getData('fleeing_domestic_violence')
+        has_champ: form.elements['has_champ']?.value,
+        has_eviction: form.elements['has_eviction']?.value,
+        has_cori: form.elements['has_cori']?.value,
+        monthly_income: form.elements['monthly_income']?.value,
+        current_rent: form.elements['current_rent']?.value,
+        has_disability: form.elements['has_disability']?.value,
+        in_recovery: form.elements['in_recovery']?.value,
+        preferred_areas: form.elements['preferred_areas']?.value
     };
+}
+
+/**
+ * Stores Tier 1 data in localStorage for persistence between tiers
+ * @param {Object} tier1Data - The Tier 1 assessment data to store
+ */
+export function storeTier1Data(tier1Data) {
+    if (!tier1Data) return;
+    localStorage.setItem('housingTier1Data', JSON.stringify(tier1Data));
+}
+
+/**
+ * Retrieves stored Tier 1 data from localStorage
+ * @returns {Object|null} The stored Tier 1 data or null if not found
+ */
+export function retrieveTier1Data() {
+    const data = localStorage.getItem('housingTier1Data');
+    try {
+        return data ? JSON.parse(data) : null;
+    } catch (error) {
+        console.error('Error parsing stored Tier 1 data:', error);
+        return null;
+    }
 }
 
 /**

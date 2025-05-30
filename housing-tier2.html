@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Assessment - Detailed Questions</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Housing Assessment</h1>
+            <div class="location-info">
+                <span id="zip-display"></span>
+                <span id="location-display"></span>
+            </div>
+        </header>
+
+        <main>
+            <form id="housingTier2Form">
+                <div class="form-section">
+                    <h2>Housing History & Programs</h2>
+                    
+                    <div class="form-group">
+                        <label>Have you applied for CHAMP or Section 8?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="has_champ_yes" name="has_champ" value="yes" required>
+                            <label for="has_champ_yes">Yes</label>
+                            <input type="radio" id="has_champ_no" name="has_champ" value="no">
+                            <label for="has_champ_no">No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Have you ever been evicted or turned away from housing?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="has_eviction_yes" name="has_eviction" value="yes" required>
+                            <label for="has_eviction_yes">Yes</label>
+                            <input type="radio" id="has_eviction_no" name="has_eviction" value="no">
+                            <label for="has_eviction_no">No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you have a CORI record?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="has_cori_yes" name="has_cori" value="yes" required>
+                            <label for="has_cori_yes">Yes</label>
+                            <input type="radio" id="has_cori_no" name="has_cori" value="no">
+                            <label for="has_cori_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Financial Information</h2>
+                    
+                    <div class="form-group">
+                        <label for="monthly_income">What is your total monthly household income?</label>
+                        <div class="input-group">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="monthly_income" name="monthly_income" min="0" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="current_rent">What is your current monthly rent/housing cost?</label>
+                        <div class="input-group">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="current_rent" name="current_rent" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Health & Support Needs</h2>
+
+                    <div class="form-group">
+                        <label>Do you have a condition or disability that makes it hard to live alone?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="has_disability_yes" name="has_disability" value="yes" required>
+                            <label for="has_disability_yes">Yes</label>
+                            <input type="radio" id="has_disability_no" name="has_disability" value="no">
+                            <label for="has_disability_no">No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Are you in recovery or trying to stay sober?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="in_recovery_yes" name="in_recovery" value="yes" required>
+                            <label for="in_recovery_yes">Yes</label>
+                            <input type="radio" id="in_recovery_no" name="in_recovery" value="no">
+                            <label for="in_recovery_no">No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="preferred_areas">What areas are you interested in living? (Optional)</label>
+                        <textarea id="preferred_areas" name="preferred_areas" rows="3" placeholder="List neighborhoods, towns, or areas you're interested in"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="window.location.href='/housing-tier1.html'">Back to Previous Questions</button>
+                    <button type="submit" class="btn-primary">Get Housing Resources</button>
+                </div>
+            </form>
+
+            <div id="results" class="results-section" style="display: none;">
+                <h2>Your Housing Resources</h2>
+                <div id="loading" style="display: none;">
+                    <p>Finding resources in your area...</p>
+                </div>
+                <div id="error" class="error-message" style="display: none;">
+                    <p>There was an error getting your resources. Please try again.</p>
+                </div>
+                <div id="chatPromptPreview" class="chat-prompt-preview"></div>
+                <div id="recommendations"></div>
+                <button type="button" class="btn-secondary" onclick="window.print()">Print Results</button>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeLocation } from '/assets/js/zip-utils.js';
+        import { 
+            collectTier2Data, 
+            retrieveTier1Data, 
+            createHousingPrompt 
+        } from '/assets/js/housing-prompt-builder.js';
+
+        // Initialize location display
+        initializeLocation();
+
+        // Check for Tier 1 data
+        const tier1Data = retrieveTier1Data();
+        if (!tier1Data) {
+            window.location.href = '/housing-tier1.html';
+        }
+
+        // Handle form submission
+        document.getElementById('housingTier2Form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const resultsSection = document.getElementById('results');
+            const loadingDiv = document.getElementById('loading');
+            const errorDiv = document.getElementById('error');
+            const recommendationsDiv = document.getElementById('recommendations');
+            const promptPreviewDiv = document.getElementById('chatPromptPreview');
+            
+            // Show loading state
+            resultsSection.style.display = 'block';
+            loadingDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+            recommendationsDiv.innerHTML = '';
+            promptPreviewDiv.innerHTML = '';
+
+            try {
+                const tier2Data = collectTier2Data();
+                if (!tier2Data) throw new Error('Could not collect form data');
+
+                const prompt = createHousingPrompt(tier1Data, tier2Data);
+                
+                // Show prompt preview
+                promptPreviewDiv.innerHTML = `
+                    <h3>Generated Prompt:</h3>
+                    <pre>${prompt}</pre>
+                `;
+                
+                // Call your ChatGPT API endpoint
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt })
+                });
+
+                if (!response.ok) throw new Error('API request failed');
+                
+                const data = await response.json();
+                
+                // Format and display the response
+                recommendationsDiv.innerHTML = `
+                    <div class="chat-response">
+                        ${data.response.split('\n').map(line => `<p>${line}</p>`).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error:', error);
+                errorDiv.style.display = 'block';
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html> 
