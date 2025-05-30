@@ -686,7 +686,4 @@ export {
   ERROR_TYPES,
   VALIDATION,
   CACHE_CONFIG
-};
-
-// Export the required functions
-export { getLocationInfo, validateZip }; 
+}; 
