@@ -453,16 +453,19 @@
     }
 
     async function startAssessment() {
-      const type = typeSelect.value;
-      const zip = zipInput.value;
+      const zip = zipInput.value.trim();
       
-      if (type && validateZip(zip)) {
-        localStorage.setItem("selectedAssessment", type);
-        if (type === 'health') {
-          window.location.href = "health.html";
-        } else {
-          window.location.href = `assessment_${type}_tier1.html`;
-        }
+      // Validate as 5-digit number
+      if (/^\d{5}$/.test(zip)) {
+        // Store ZIP code in localStorage
+        localStorage.setItem("userZipCode", zip);
+        
+        // Redirect to assessment start page
+        window.location.href = "assessment_start.html";
+      } else {
+        zipError.textContent = "Please enter a valid 5-digit ZIP code.";
+        zipError.style.display = 'block';
+        startBtn.disabled = true;
       }
     }
   </script>

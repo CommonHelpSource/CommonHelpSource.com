@@ -195,7 +195,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 15px;
+      margin: 10px 0;
     }
 
     .voice-input-button:hover {
@@ -208,17 +208,36 @@
       animation: pulse 2s infinite;
     }
 
+    .voice-input-button:disabled {
+      background: #b2bec3;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     .voice-status {
       font-size: 0.9rem;
       color: #666;
       margin-left: 10px;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .voice-status.active {
+      color: #e74c3c;
     }
 
     @keyframes pulse {
       0% { opacity: 1; }
       50% { opacity: 0.7; }
       100% { opacity: 1; }
+    }
+
+    .voice-controls {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      gap: 10px;
     }
 
     .note-section h3 {
@@ -619,11 +638,16 @@
         </select>
       </div>
       <div id="format-info-initial" class="format-info"></div>
-      <textarea class="note-input" placeholder="Enter your initial assessment notes here..."></textarea>
-      <button class="voice-input-button" data-section="initial">
-        🎙️ Start Voice Input
-      </button>
-      <span class="voice-status"></span>
+      <div class="form-group">
+        <label for="client-needs">Briefly describe the client's needs or situation:</label>
+        <textarea id="input-initial" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
+        <div class="voice-controls">
+          <button class="voice-input-button" data-target="input-initial">
+            🎙️ Start Voice Input
+          </button>
+          <span class="voice-status"></span>
+        </div>
+      </div>
       <div class="note-controls">
         <button class="generate-button">Generate My Note</button>
         <button class="download-pdf-button" onclick="downloadAsPDF()">
@@ -649,14 +673,122 @@
           <option value="Narrative">Narrative</option>
           <option value="SOAP">SOAP (Subjective, Objective, Assessment, Plan)</option>
           <option value="Checklist">Checklist</option>
+          <option value="CHW-Extended">CHW Note - Extended Format</option>
         </select>
       </div>
       <div id="format-info-progress" class="format-info"></div>
-      <textarea class="note-input" placeholder="Enter your progress notes here..."></textarea>
-      <button class="voice-input-button" data-section="progress">
-        🎙️ Start Voice Input
-      </button>
-      <span class="voice-status"></span>
+      <div class="form-group">
+        <label for="client-needs">Briefly describe the client's needs or situation:</label>
+        <textarea id="input-progress" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
+        <div class="voice-controls">
+          <button class="voice-input-button" data-target="input-progress">
+            🎙️ Start Voice Input
+          </button>
+          <span class="voice-status"></span>
+        </div>
+      </div>
+
+      <!-- CHW Extended Format Fields -->
+      <div id="chw-extended-fields" style="display: none;">
+        <div class="form-group">
+          <label for="encounter-type">1. Type of Encounter and Date/Time:</label>
+          <textarea id="encounter-type" class="note-input" placeholder="Specify the type of encounter (e.g., home visit, phone call) and when it occurred..."></textarea>
+          <div class="voice-controls">
+            <button class="voice-input-button" data-target="encounter-type">
+              🎙️ Start Voice Input
+            </button>
+            <span class="voice-status"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="visit-reason">2. Reason for Visit/Discussion:</label>
+          <textarea id="visit-reason" class="note-input" placeholder="Detail the primary purpose and topics discussed during this encounter..."></textarea>
+          <div class="voice-controls">
+            <button class="voice-input-button" data-target="visit-reason">
+              🎙️ Start Voice Input
+            </button>
+            <span class="voice-status"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="observations">3. Key Observations and Attendees:</label>
+          <textarea id="observations" class="note-input" placeholder="Document important observations and list all individuals present..."></textarea>
+          <div class="voice-controls">
+            <button class="voice-input-button" data-target="observations">
+              🎙️ Start Voice Input
+            </button>
+            <span class="voice-status"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="education">4. Education/Discussion Provided:</label>
+          <textarea id="education" class="note-input" placeholder="Describe any education, resources, or information shared during the encounter..."></textarea>
+          <div class="voice-controls">
+            <button class="voice-input-button" data-target="education">
+              🎙️ Start Voice Input
+            </button>
+            <span class="voice-status"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="goals-changes">5. Changes to Goals or New Concerns:</label>
+          <textarea id="goals-changes" class="note-input" placeholder="Document any updates to existing goals or new concerns identified..."></textarea>
+          <div class="voice-controls">
+            <button class="voice-input-button" data-target="goals-changes">
+              🎙️ Start Voice Input
+            </button>
+            <span class="voice-status"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="barriers">6. Barriers to Outcomes:</label>
+          <textarea id="barriers" class="note-input" placeholder="Identify any challenges or barriers affecting progress..."></textarea>
+          <div class="voice-controls">
+            <button class="voice-input-button" data-target="barriers">
+              🎙️ Start Voice Input
+            </button>
+            <span class="voice-status"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="care-plan">7. Care Plan Completion:</label>
+          <textarea id="care-plan" class="note-input" placeholder="Update on care plan progress and completion status..."></textarea>
+          <div class="voice-controls">
+            <button class="voice-input-button" data-target="care-plan">
+              🎙️ Start Voice Input
+            </button>
+            <span class="voice-status"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="referrals">8. Referrals/Actions/Authorizations Updates:</label>
+          <textarea id="referrals" class="note-input" placeholder="Document any referrals made, actions taken, or authorization updates..."></textarea>
+          <div class="voice-controls">
+            <button class="voice-input-button" data-target="referrals">
+              🎙️ Start Voice Input
+            </button>
+            <span class="voice-status"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="next-visit">9. Next Visit or Follow-Up:</label>
+          <textarea id="next-visit" class="note-input" placeholder="Specify plans for next contact or follow-up actions..."></textarea>
+          <div class="voice-controls">
+            <button class="voice-input-button" data-target="next-visit">
+              🎙️ Start Voice Input
+            </button>
+            <span class="voice-status"></span>
+          </div>
+        </div>
+      </div>
       <div class="note-controls">
         <button class="generate-button">Generate My Note</button>
         <button class="download-pdf-button" onclick="downloadAsPDF()">
@@ -685,11 +817,16 @@
         </select>
       </div>
       <div id="format-info-discharge" class="format-info"></div>
-      <textarea class="note-input" placeholder="Enter your discharge summary notes here..."></textarea>
-      <button class="voice-input-button" data-section="discharge">
-        🎙️ Start Voice Input
-      </button>
-      <span class="voice-status"></span>
+      <div class="form-group">
+        <label for="client-needs">Briefly describe the client's needs or situation:</label>
+        <textarea id="input-discharge" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
+        <div class="voice-controls">
+          <button class="voice-input-button" data-target="input-discharge">
+            🎙️ Start Voice Input
+          </button>
+          <span class="voice-status"></span>
+        </div>
+      </div>
       <div class="note-controls">
         <button class="generate-button">Generate My Note</button>
         <button class="download-pdf-button" onclick="downloadAsPDF()">
@@ -718,11 +855,16 @@
         </select>
       </div>
       <div id="format-info-newogi" class="format-info"></div>
-      <textarea class="note-input" placeholder="Enter your NewOGI notes here..."></textarea>
-      <button class="voice-input-button" data-section="newogi">
-        🎙️ Start Voice Input
-      </button>
-      <span class="voice-status"></span>
+      <div class="form-group">
+        <label for="client-needs">Briefly describe the client's needs or situation:</label>
+        <textarea id="input-newogi" class="note-input" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
+        <div class="voice-controls">
+          <button class="voice-input-button" data-target="input-newogi">
+            🎙️ Start Voice Input
+          </button>
+          <span class="voice-status"></span>
+        </div>
+      </div>
       <div class="note-controls">
         <button class="generate-button">Generate My Note</button>
         <button class="download-pdf-button" onclick="downloadAsPDF()">
@@ -759,6 +901,11 @@
         description: "A structured checklist format for systematic documentation.",
         placeholder: "□ Presenting Issues:\n\n□ Current Status:\n\n□ Interventions:\n\n□ Progress:\n\n□ Next Steps:",
         promptGuide: "Convert this into a structured checklist format with clear categories and checkboxes for key points and actions."
+      },
+      "CHW-Extended": {
+        description: "Comprehensive CHW note format with structured sections for detailed encounter documentation.",
+        placeholder: "Complete each section below for a comprehensive CHW encounter note.",
+        promptGuide: "Format this as a detailed CHW encounter note with clear section headers and comprehensive content for each area."
       }
     };
 
@@ -987,34 +1134,54 @@ ${noteText}
 
     // Enhanced note generation function
     async function generateNote(section) {
-      const input = section.querySelector('.note-input');
-      const output = section.querySelector('.note-output');
-      const spinner = section.querySelector('.loading-spinner');
-      const button = section.querySelector('.generate-button');
-      const noteType = section.id.replace('-section', '');
       const format = section.querySelector('.note-format').value;
-      const role = document.getElementById('role-select').value;
+      let noteText = '';
 
-      if (!input.value.trim()) {
+      if (format === 'CHW-Extended') {
+        // Gather all CHW Extended fields
+        const fields = [
+          { id: 'encounter-type', label: '1. Type of Encounter and Date/Time' },
+          { id: 'visit-reason', label: '2. Reason for Visit/Discussion' },
+          { id: 'observations', label: '3. Key Observations and Attendees' },
+          { id: 'education', label: '4. Education/Discussion Provided' },
+          { id: 'goals-changes', label: '5. Changes to Goals or New Concerns' },
+          { id: 'barriers', label: '6. Barriers to Outcomes' },
+          { id: 'care-plan', label: '7. Care Plan Completion' },
+          { id: 'referrals', label: '8. Referrals/Actions/Authorizations Updates' },
+          { id: 'next-visit', label: '9. Next Visit or Follow-Up' }
+        ];
+
+        noteText = fields.map(field => {
+          const value = section.querySelector(`#${field.id}`).value.trim();
+          return `${field.label}:\n${value}\n`;
+        }).join('\n');
+      } else {
+        // Handle regular formats
+        noteText = section.querySelector('.note-input').value;
+      }
+
+      if (!noteText.trim()) {
         alert('Please enter some text before generating the note.');
         return;
       }
 
       // First round of de-identification
-      const deidentifiedNote = deIdentifyNote(input.value);
+      const deidentifiedNote = deIdentifyNote(noteText);
 
       // Show preview dialog
-      showPreviewDialog(deidentifiedNote, format, role, async (confirmed) => {
+      showPreviewDialog(deidentifiedNote, format, document.getElementById('role-select').value, async (confirmed) => {
         if (!confirmed) return;
 
         // Show loading state
+        const button = section.querySelector('.generate-button');
+        const spinner = section.querySelector('.loading-spinner');
         button.disabled = true;
         spinner.style.display = 'block';
-        output.textContent = 'Processing and generating your note...';
+        section.querySelector('.note-output').textContent = 'Processing and generating your note...';
 
         try {
           // Generate enhanced prompt
-          const fullPrompt = generatePrompt(deidentifiedNote, format, noteType, role);
+          const fullPrompt = generatePrompt(deidentifiedNote, format, section.id.replace('-section', ''), document.getElementById('role-select').value);
 
           // Call OpenAI API via Netlify Function
           const response = await fetch('/.netlify/functions/generateNote', {
@@ -1042,8 +1209,8 @@ ${noteText}
             content: finalNote,
             timestamp: new Date().toISOString(),
             format: format,
-            role: role,
-            type: noteType
+            role: document.getElementById('role-select').value,
+            type: section.id.replace('-section', '')
           };
           prevNotes.unshift(noteData);
           localStorage.setItem('noteHistory', JSON.stringify(prevNotes.slice(0, 5)));
@@ -1051,10 +1218,10 @@ ${noteText}
           // Store the generated note and metadata
           localStorage.setItem('generatedNote', finalNote);
           localStorage.setItem('noteMeta', JSON.stringify({
-            type: noteType.charAt(0).toUpperCase() + noteType.slice(1) + ' Note',
+            type: section.id.replace('-section', '').charAt(0).toUpperCase() + section.id.replace('-section', '').slice(1) + ' Note',
             date: new Date().toLocaleString(),
             format: format,
-            role: role
+            role: document.getElementById('role-select').value
           }));
 
           // Update history display
@@ -1065,7 +1232,7 @@ ${noteText}
 
         } catch (error) {
           console.error('Error generating note:', error);
-          output.textContent = `Error: ${error.message || 'An error occurred while generating the note'}. Please try again.`;
+          section.querySelector('.note-output').textContent = `Error: ${error.message || 'An error occurred while generating the note'}. Please try again.`;
           
           // Clear storage in case of error
           localStorage.removeItem('generatedNote');
@@ -1082,47 +1249,48 @@ ${noteText}
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition = null;
     let isListening = false;
+    let currentTarget = null;
 
     if (SpeechRecognition) {
       recognition = new SpeechRecognition();
       recognition.continuous = true;
       recognition.interimResults = true;
-      
+
       // Initialize voice input functionality
       function initVoiceInput() {
         const voiceButtons = document.querySelectorAll('.voice-input-button');
-        let currentSection = null;
         
         voiceButtons.forEach(button => {
           button.addEventListener('click', () => {
-            const section = button.dataset.section;
-            const textarea = button.parentElement.querySelector('.note-input');
-            const status = button.parentElement.querySelector('.voice-status');
+            const targetId = button.dataset.target;
+            const status = button.nextElementSibling;
             
-            if (!isListening) {
-              // Start new recording
-              startRecording(section, textarea, button, status);
-            } else if (currentSection === section) {
-              // Stop current recording
-              stopRecording(button, status);
+            if (!isListening || currentTarget !== targetId) {
+              startRecording(targetId, button, status);
             } else {
-              // Switch to new section
-              stopRecording(document.querySelector('.voice-input-button.listening'), 
-                          document.querySelector('.voice-status'));
-              startRecording(section, textarea, button, status);
+              stopRecording(button, status);
             }
           });
         });
 
-        function startRecording(section, textarea, button, status) {
+        function startRecording(targetId, button, status) {
+          // Stop any existing recording
+          if (isListening) {
+            const oldButton = document.querySelector('.voice-input-button.listening');
+            const oldStatus = oldButton.nextElementSibling;
+            stopRecording(oldButton, oldStatus);
+          }
+
           recognition.start();
           isListening = true;
-          currentSection = section;
+          currentTarget = targetId;
           button.classList.add('listening');
-          button.textContent = '🎙️ Stop Voice Input';
-          status.textContent = 'Listening...';
+          button.innerHTML = '🛑 Stop Voice Input';
+          status.classList.add('active');
+          status.innerHTML = '🎤 Listening...';
 
           recognition.onresult = (event) => {
+            const textarea = document.getElementById(targetId);
             const transcript = Array.from(event.results)
               .map(result => result[0].transcript)
               .join(' ');
@@ -1132,11 +1300,16 @@ ${noteText}
             const textBefore = textarea.value.substring(0, cursorPos);
             const textAfter = textarea.value.substring(cursorPos);
             textarea.value = textBefore + transcript + textAfter;
+
+            // Move cursor to end of inserted text
+            const newPos = cursorPos + transcript.length;
+            textarea.setSelectionRange(newPos, newPos);
+            textarea.focus();
           };
 
           recognition.onerror = (event) => {
             console.error('Speech recognition error:', event.error);
-            status.textContent = `Error: ${event.error}`;
+            status.innerHTML = `❌ Error: ${event.error}`;
             stopRecording(button, status);
           };
         }
@@ -1144,26 +1317,33 @@ ${noteText}
         function stopRecording(button, status) {
           recognition.stop();
           isListening = false;
-          currentSection = null;
+          currentTarget = null;
           button.classList.remove('listening');
-          button.textContent = '🎙️ Start Voice Input';
-          status.textContent = '';
+          button.innerHTML = '🎙️ Start Voice Input';
+          status.classList.remove('active');
+          status.innerHTML = '';
         }
+
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden && isListening) {
+            const button = document.querySelector('.voice-input-button.listening');
+            const status = button.nextElementSibling;
+            stopRecording(button, status);
+          }
+        });
       }
 
       // Initialize voice input when DOM is loaded
-      document.addEventListener('DOMContentLoaded', () => {
-        initVoiceInput();
-        // ... existing DOMContentLoaded code ...
-      });
+      document.addEventListener('DOMContentLoaded', initVoiceInput);
     } else {
-      // Add fallback for browsers that don't support speech recognition
+      // Fallback for browsers that don't support speech recognition
       document.addEventListener('DOMContentLoaded', () => {
         const voiceButtons = document.querySelectorAll('.voice-input-button');
         voiceButtons.forEach(button => {
           button.disabled = true;
-          button.textContent = '🚫 Voice Input Not Supported';
-          button.style.backgroundColor = '#999';
+          button.innerHTML = '🚫 Voice Input Not Supported';
+          button.style.backgroundColor = '#b2bec3';
           button.style.cursor = 'not-allowed';
         });
       });
@@ -1280,6 +1460,19 @@ ${noteText}
         selector.addEventListener('change', (e) => {
           const section = e.target.id.split('-').pop();
           const format = e.target.value;
+          const sectionElement = e.target.closest('.note-section');
+          
+          // Show/hide CHW extended fields based on format
+          const chwFields = sectionElement.querySelector('#chw-extended-fields');
+          const regularInput = sectionElement.querySelector('.form-group:not(#chw-extended-fields)');
+          
+          if (format === 'CHW-Extended' && chwFields) {
+            chwFields.style.display = 'block';
+            regularInput.style.display = 'none';
+          } else if (chwFields) {
+            chwFields.style.display = 'none';
+            regularInput.style.display = 'block';
+          }
           
           // Update format info
           const infoElement = document.getElementById(`format-info-${section}`);
@@ -1287,8 +1480,10 @@ ${noteText}
           infoElement.classList.add('visible');
           
           // Update textarea placeholder
-          const textarea = e.target.closest('.note-section').querySelector('.note-input');
-          textarea.placeholder = formatInfo[format].placeholder;
+          const textarea = sectionElement.querySelector('.note-input');
+          if (textarea) {
+            textarea.placeholder = formatInfo[format].placeholder;
+          }
           
           // Store selected format
           localStorage.setItem(`selectedFormat-${section}`, format);

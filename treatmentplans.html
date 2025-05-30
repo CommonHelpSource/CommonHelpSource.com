@@ -207,6 +207,34 @@
       border-left: 3px solid var(--primary-color);
     }
 
+    .template-sections {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: var(--border-radius);
+      border: 1px solid #dfe6e9;
+    }
+
+    .section-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .section-item {
+      padding: 10px 15px;
+      background: white;
+      border-radius: 6px;
+      border: 1px solid #dfe6e9;
+      font-size: 0.95rem;
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    .section-item:hover {
+      border-color: var(--primary-color);
+      transform: translateX(5px);
+    }
+
     @media (max-width: 768px) {
       .action-buttons {
         flex-direction: column;
@@ -215,6 +243,15 @@
       .action-button {
         width: 100%;
         justify-content: center;
+      }
+
+      .template-sections {
+        padding: 15px;
+      }
+      
+      .section-item {
+        font-size: 0.9rem;
+        padding: 8px 12px;
       }
     }
   </style>
@@ -249,8 +286,24 @@
         <option value="smart">SMART Goals</option>
         <option value="strength">Strength-Based</option>
         <option value="narrative">Narrative</option>
+        <option value="clinical">Clinical Encounter</option>
       </select>
       <div id="format-info" class="format-info"></div>
+    </div>
+
+    <div class="form-group template-sections" style="display: none;">
+      <label>Required Sections:</label>
+      <div class="section-list">
+        <div class="section-item">1. Type of Encounter and Date/Time</div>
+        <div class="section-item">2. Reason for Visit/Discussion</div>
+        <div class="section-item">3. Key Observations and Attendees</div>
+        <div class="section-item">4. Education/Discussion Provided</div>
+        <div class="section-item">5. Changes to Goals or New Concerns</div>
+        <div class="section-item">6. Barriers to Outcomes</div>
+        <div class="section-item">7. Care Plan Completion</div>
+        <div class="section-item">8. Referrals/Actions/Authorizations Updates</div>
+        <div class="section-item">9. Next Visit or Follow-Up</div>
+      </div>
     </div>
 
     <div class="form-group">
@@ -304,21 +357,58 @@
         description: "Narrative format tells the client's story while integrating goals and interventions into a cohesive plan.",
         placeholder: "Example: Client is seeking support for ongoing depression while maintaining sobriety...",
         prompt: "Create a narrative treatment plan that tells the client's story while naturally integrating goals and interventions. Maintain a clear progression from challenges to solutions."
+      },
+      clinical: {
+        description: "A structured clinical encounter format that ensures comprehensive documentation of the visit, interventions, and follow-up plans.",
+        placeholder: "Enter client information and visit details. The system will structure it into the required clinical sections...",
+        prompt: `Structure this clinical encounter note into the following sections:
+
+1. Type of Encounter and Date/Time
+- Specify encounter type and exact timing
+
+2. Reason for Visit/Discussion
+- Primary concerns and topics addressed
+
+3. Key Observations and Attendees
+- Clinical observations and present participants
+
+4. Education/Discussion Provided
+- Information shared and client understanding
+
+5. Changes to Goals or New Concerns
+- Updates to treatment goals or new issues
+
+6. Barriers to Outcomes
+- Challenges affecting progress
+
+7. Care Plan Completion
+- Progress on existing care plan items
+
+8. Referrals/Actions/Authorizations Updates
+- New referrals and authorization status
+
+9. Next Visit or Follow-Up
+- Scheduled follow-up and pending actions`
       }
     };
 
-    // Update format info when selection changes
+    // Update format info and template sections when selection changes
     document.getElementById('format').addEventListener('change', function() {
       const format = this.value;
       const infoDiv = document.getElementById('format-info');
       const textarea = document.getElementById('client-needs');
+      const templateSections = document.querySelector('.template-sections');
       
       if (format && formatInfo[format]) {
         infoDiv.textContent = formatInfo[format].description;
         textarea.placeholder = formatInfo[format].placeholder;
+        
+        // Show template sections only for clinical format
+        templateSections.style.display = format === 'clinical' ? 'block' : 'none';
       } else {
         infoDiv.textContent = '';
         textarea.placeholder = 'Enter details about the client\'s current situation, needs, and any relevant background information...';
+        templateSections.style.display = 'none';
       }
     });
 
@@ -347,18 +437,16 @@ You are a licensed clinician developing a treatment plan focused on: "${focusAre
 ${formatInfo[format].prompt}
 
 Guidelines:
-1. Start with a brief problem summary
-2. Create one clear, overarching goal
-3. Develop 2-3 measurable objectives that support the goal
-4. Provide specific interventions for the care team
-5. Use professional clinical language
-6. Ensure all content is HIPAA-compliant (use "client" or "member" for names)
-7. Include timeframes and measurement criteria where appropriate
+1. Use professional clinical language
+2. Ensure all content is HIPAA-compliant (use "client" or "member" for names)
+3. Include specific dates, times, and measurements where appropriate
+4. Be clear and concise while maintaining clinical accuracy
+5. Focus on actionable items and measurable outcomes
 
 Client Description:
 """${clientNeeds}"""
 
-Please structure the response with clear headings and bullet points where appropriate.
+Please structure the response according to the selected format, using appropriate headings and clear organization.
 `;
 
       try {
