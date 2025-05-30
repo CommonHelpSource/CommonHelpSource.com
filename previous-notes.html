@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://ka-f.fontawesome.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://ka-f.fontawesome.com">
+  <title>Previous Notes - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    :root {
+      --primary-color: #00b894;
+      --primary-hover: #00a382;
+      --text-color: #2d3436;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: #f5f6f7;
+      padding: 2rem;
+      margin: 0;
+      color: var(--text-color);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e0e7e4;
+    }
+
+    .page-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      font-size: 1.8rem;
+      color: var(--text-color);
+    }
+
+    .note-box {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #e0e7e4;
+      transition: all 0.3s ease;
+    }
+
+    .note-box:hover {
+      border-color: var(--primary-color);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .note-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .note-meta {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .note-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .copy-button {
+      background: #6c5ce7;
+      color: white;
+    }
+
+    .delete-button {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .reuse-button {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .action-button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .note-content {
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      padding: 1rem;
+      background: white;
+      border-radius: 6px;
+      border: 1px solid #e0e7e4;
+    }
+
+    .back-button {
+      background: var(--primary-color);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      margin-top: 1.5rem;
+    }
+
+    .back-button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: #999;
+      margin-bottom: 1rem;
+    }
+
+    .feedback-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      background: #2ecc71;
+      color: white;
+      border-radius: 6px;
+      display: none;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+
+      .note-header {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .note-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html">
+      <img src="assets/images/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
+    </a>
+
+    <div class="page-header">
+      <h1 class="page-title">
+        <i class="fas fa-history"></i> Previous Notes
+      </h1>
+      <a href="progressnotes.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Note Writer
+      </a>
+    </div>
+
+    <div id="notes-container"></div>
+  </div>
+
+  <div id="feedbackToast" class="feedback-toast"></div>
+
+  <script>
+    function showFeedback(message, color = '#2ecc71') {
+      const toast = document.getElementById('feedbackToast');
+      toast.textContent = message;
+      toast.style.background = color;
+      toast.style.display = 'block';
+      
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3000);
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text)
+        .then(() => showFeedback('Note copied to clipboard!'))
+        .catch(() => showFeedback('Failed to copy note', '#e74c3c'));
+    }
+
+    function deleteNote(index) {
+      if (confirm('Are you sure you want to delete this note?')) {
+        const history = JSON.parse(localStorage.getItem('noteHistory') || '[]');
+        history.splice(index, 1);
+        localStorage.setItem('noteHistory', JSON.stringify(history));
+        renderNotes();
+        showFeedback('Note deleted');
+      }
+    }
+
+    function reuseNote(index) {
+      const history = JSON.parse(localStorage.getItem('noteHistory') || '[]');
+      const note = history[index];
+      localStorage.setItem('reuseNote', note);
+      window.location.href = 'progressnotes.html?reuse=true';
+    }
+
+    function formatDate(date) {
+      return new Date(date).toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function renderNotes() {
+      const container = document.getElementById('notes-container');
+      const history = JSON.parse(localStorage.getItem('noteHistory') || '[]');
+      
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-folder-open"></i>
+            <h3>No Previous Notes</h3>
+            <p>Notes you generate will appear here for easy access.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = history.map((note, index) => `
+        <div class="note-box">
+          <div class="note-header">
+            <div class="note-meta">
+              <strong>Note #${history.length - index}</strong>
+              <span class="note-date">${formatDate(new Date())}</span>
+            </div>
+            <div class="note-actions">
+              <button onclick="copyToClipboard(\`${note.replace(/`/g, '\\`')}\`)" class="action-button copy-button">
+                <i class="fas fa-copy"></i> Copy
+              </button>
+              <button onclick="reuseNote(${index})" class="action-button reuse-button">
+                <i class="fas fa-sync-alt"></i> Reuse
+              </button>
+              <button onclick="deleteNote(${index})" class="action-button delete-button">
+                <i class="fas fa-trash-alt"></i> Delete
+              </button>
+            </div>
+          </div>
+          <div class="note-content">${note}</div>
+        </div>
+      `).join('');
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', renderNotes);
+  </script>
+  <script src="https://kit.fontawesome.com/1234567890.js" crossorigin="anonymous"></script>
+</body>
+</html> 

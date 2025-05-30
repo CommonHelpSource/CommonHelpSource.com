@@ -181,18 +181,411 @@
       color: var(--primary-color);
       font-size: 1.5rem;
     }
+
+    /* Voice Input Styles */
+    .voice-input-button {
+      background: #6c5ce7;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .voice-input-button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .voice-input-button.listening {
+      background: #e74c3c;
+      animation: pulse 2s infinite;
+    }
+
+    .voice-status {
+      font-size: 0.9rem;
+      color: #666;
+      margin-left: 10px;
+      display: inline-block;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    .note-section h3 {
+      margin: 0 0 8px;
+      color: var(--text-color);
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .format-selector {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .format-selector label {
+      color: var(--text-color);
+      font-weight: 600;
+    }
+
+    .format-selector select {
+      padding: 8px 12px;
+      border: 1px solid #e0e7e4;
+      border-radius: 6px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.95rem;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .format-selector select:hover {
+      border-color: var(--primary-color);
+    }
+
+    .format-selector select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.1);
+    }
+
+    .format-info {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .format-info.visible {
+      display: block;
+    }
+
+    /* Preview Dialog Styles */
+    .preview-dialog {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .preview-dialog h3 {
+      margin-top: 0;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .preview-content {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      margin: 1rem 0;
+      border: 1px solid #e0e7e4;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+
+    .preview-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 1.5rem;
+      justify-content: flex-end;
+    }
+
+    .preview-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .preview-continue {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .preview-cancel {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .preview-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    /* Note History Styles */
+    .note-history {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e0e7e4;
+    }
+
+    .history-title {
+      color: var(--text-color);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-item {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #e0e7e4;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .history-item:hover {
+      background: #fff;
+      border-color: var(--primary-color);
+    }
+
+    .history-meta {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .history-preview {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.9rem;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e0e7e4;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .history-button {
+      background: #6c5ce7;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .history-button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+      .page-header {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .role-selector {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #e0e7e4;
+      margin-bottom: 2rem;
+    }
+
+    .role-selector label {
+      color: var(--text-color);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .role-selector select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e0e7e4;
+      border-radius: 6px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 1rem;
+      background-color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .role-selector select:hover {
+      border-color: var(--primary-color);
+    }
+
+    .role-selector select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.1);
+    }
+
+    .role-info {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 10px;
+      padding: 10px;
+      background: white;
+      border-radius: 6px;
+      border-left: 3px solid var(--primary-color);
+    }
+
+    /* PDF Download Button Styles */
+    .download-pdf-button {
+      background: #2ecc71;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .download-pdf-button:hover {
+      background: #27ae60;
+      transform: translateY(-1px);
+    }
+
+    .download-pdf-button:active {
+      transform: translateY(0);
+    }
+
+    .download-pdf-button i {
+      font-size: 1.2em;
+    }
+
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      
+      body {
+        padding: 20px;
+        font-size: 12pt;
+      }
+      
+      .note-output {
+        border: none;
+        padding: 0;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Add preview dialog HTML -->
+  <div class="preview-overlay"></div>
+  <div class="preview-dialog">
+    <h3>🕵️ Preview of De-identified Note</h3>
+    <div class="preview-content"></div>
+    <div class="preview-actions">
+      <button class="preview-button preview-cancel">Cancel</button>
+      <button class="preview-button preview-continue">Continue with Generation</button>
+    </div>
+  </div>
+
   <div class="container">
     <a href="index.html">
       <img src="assets/images/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
     </a>
 
+    <div class="page-header">
+      <div class="header-actions">
+        <a href="previous-notes.html" class="history-button">
+          <i class="fas fa-history"></i> View Previous Notes
+        </a>
+      </div>
+    </div>
+
+    <div class="role-selector">
+      <label for="role-select">
+        <i class="fas fa-user-md"></i>
+        <strong>Your Professional Role:</strong>
+      </label>
+      <select id="role-select">
+        <option value="Community Health Worker">Community Health Worker</option>
+        <option value="Licensed Clinical Social Worker">Licensed Clinical Social Worker</option>
+        <option value="Peer Recovery Coach">Peer Recovery Coach</option>
+        <option value="Therapist">Therapist</option>
+        <option value="Case Manager">Case Manager</option>
+      </select>
+      <div id="role-info" class="role-info"></div>
+    </div>
+
     <div class="note-type-buttons">
       <button class="note-type-button" data-section="initial">Initial Assessment</button>
       <button class="note-type-button" data-section="progress">Progress Note</button>
       <button class="note-type-button" data-section="discharge">Discharge Summary</button>
+      <button class="note-type-button" data-section="newogi">NewOGI Note</button>
     </div>
 
     <div class="privacy-box">
@@ -217,106 +610,563 @@
     <!-- Initial Assessment Section -->
     <div id="initial-section" class="note-section">
       <h3 class="section-title">Initial Assessment Note</h3>
+      <div class="format-selector">
+        <label for="format-select-initial"><strong>Note Format:</strong></label>
+        <select id="format-select-initial" class="note-format">
+          <option value="Narrative">Narrative</option>
+          <option value="SOAP">SOAP (Subjective, Objective, Assessment, Plan)</option>
+          <option value="Checklist">Checklist</option>
+        </select>
+      </div>
+      <div id="format-info-initial" class="format-info"></div>
       <textarea class="note-input" placeholder="Enter your initial assessment notes here..."></textarea>
+      <button class="voice-input-button" data-section="initial">
+        🎙️ Start Voice Input
+      </button>
+      <span class="voice-status"></span>
       <div class="note-controls">
         <button class="generate-button">Generate My Note</button>
+        <button class="download-pdf-button" onclick="downloadAsPDF()">
+          <i class="fas fa-file-pdf"></i> Download as PDF
+        </button>
       </div>
       <div class="loading-spinner">
         <i class="fas fa-spinner fa-spin"></i> Processing...
       </div>
       <div class="note-output"></div>
+      <div class="note-history">
+        <h4 class="history-title">📜 Recent Notes</h4>
+        <div class="history-list"></div>
+      </div>
     </div>
 
     <!-- Progress Note Section -->
     <div id="progress-section" class="note-section">
       <h3 class="section-title">Progress Note</h3>
+      <div class="format-selector">
+        <label for="format-select-progress"><strong>Note Format:</strong></label>
+        <select id="format-select-progress" class="note-format">
+          <option value="Narrative">Narrative</option>
+          <option value="SOAP">SOAP (Subjective, Objective, Assessment, Plan)</option>
+          <option value="Checklist">Checklist</option>
+        </select>
+      </div>
+      <div id="format-info-progress" class="format-info"></div>
       <textarea class="note-input" placeholder="Enter your progress notes here..."></textarea>
+      <button class="voice-input-button" data-section="progress">
+        🎙️ Start Voice Input
+      </button>
+      <span class="voice-status"></span>
       <div class="note-controls">
         <button class="generate-button">Generate My Note</button>
+        <button class="download-pdf-button" onclick="downloadAsPDF()">
+          <i class="fas fa-file-pdf"></i> Download as PDF
+        </button>
       </div>
       <div class="loading-spinner">
         <i class="fas fa-spinner fa-spin"></i> Processing...
       </div>
       <div class="note-output"></div>
+      <div class="note-history">
+        <h4 class="history-title">📜 Recent Notes</h4>
+        <div class="history-list"></div>
+      </div>
     </div>
 
     <!-- Discharge Summary Section -->
     <div id="discharge-section" class="note-section">
       <h3 class="section-title">Discharge Summary</h3>
+      <div class="format-selector">
+        <label for="format-select-discharge"><strong>Note Format:</strong></label>
+        <select id="format-select-discharge" class="note-format">
+          <option value="Narrative">Narrative</option>
+          <option value="SOAP">SOAP (Subjective, Objective, Assessment, Plan)</option>
+          <option value="Checklist">Checklist</option>
+        </select>
+      </div>
+      <div id="format-info-discharge" class="format-info"></div>
       <textarea class="note-input" placeholder="Enter your discharge summary notes here..."></textarea>
+      <button class="voice-input-button" data-section="discharge">
+        🎙️ Start Voice Input
+      </button>
+      <span class="voice-status"></span>
       <div class="note-controls">
         <button class="generate-button">Generate My Note</button>
+        <button class="download-pdf-button" onclick="downloadAsPDF()">
+          <i class="fas fa-file-pdf"></i> Download as PDF
+        </button>
       </div>
       <div class="loading-spinner">
         <i class="fas fa-spinner fa-spin"></i> Processing...
       </div>
       <div class="note-output"></div>
+      <div class="note-history">
+        <h4 class="history-title">📜 Recent Notes</h4>
+        <div class="history-list"></div>
+      </div>
+    </div>
+
+    <!-- NewOGI Section -->
+    <div id="newogi-section" class="note-section">
+      <h3 class="section-title">NewOGI Note</h3>
+      <div class="format-selector">
+        <label for="format-select-newogi"><strong>Note Format:</strong></label>
+        <select id="format-select-newogi" class="note-format">
+          <option value="Narrative">Narrative</option>
+          <option value="SOAP">SOAP (Subjective, Objective, Assessment, Plan)</option>
+          <option value="Checklist">Checklist</option>
+        </select>
+      </div>
+      <div id="format-info-newogi" class="format-info"></div>
+      <textarea class="note-input" placeholder="Enter your NewOGI notes here..."></textarea>
+      <button class="voice-input-button" data-section="newogi">
+        🎙️ Start Voice Input
+      </button>
+      <span class="voice-status"></span>
+      <div class="note-controls">
+        <button class="generate-button">Generate My Note</button>
+        <button class="download-pdf-button" onclick="downloadAsPDF()">
+          <i class="fas fa-file-pdf"></i> Download as PDF
+        </button>
+      </div>
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i> Processing...
+      </div>
+      <div class="note-output"></div>
+      <div class="note-history">
+        <h4 class="history-title">📜 Recent Notes</h4>
+        <div class="history-list"></div>
+      </div>
     </div>
   </div>
 
   <script src="https://kit.fontawesome.com/1234567890.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
-    // Function to call OpenAI API via Netlify Function
-    async function generateAINote(text, noteType) {
-      const response = await fetch('/.netlify/functions/openai', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: "system",
-              content: "You are a clinical documentation assistant. Rewrite progress notes in a professional tone and replace any personal names or identifiers with terms like 'member,' 'client,' or 'caregiver.' Format the output clearly."
-            },
-            {
-              role: "user",
-              content: `Please rewrite this ${noteType} note:\n\n${text}`
-            }
-          ]
-        })
-      });
+    // Format descriptions and placeholders
+    const formatInfo = {
+      Narrative: {
+        description: "A free-flowing narrative format for detailed, story-like documentation.",
+        placeholder: "Enter your notes in a narrative style...",
+        promptGuide: "Structure this as a flowing narrative that tells the client's story chronologically and clearly."
+      },
+      SOAP: {
+        description: "Structured format covering Subjective, Objective, Assessment, and Plan sections.",
+        placeholder: "S: (Subjective - Client's statements and symptoms)\n\nO: (Objective - Observable facts and measurements)\n\nA: (Assessment - Analysis and impressions)\n\nP: (Plan - Treatment plan and next steps)",
+        promptGuide: "Format this note in SOAP format, clearly separating Subjective (client's statements), Objective (observable facts), Assessment (clinical impressions), and Plan (next steps) sections."
+      },
+      Checklist: {
+        description: "A structured checklist format for systematic documentation.",
+        placeholder: "□ Presenting Issues:\n\n□ Current Status:\n\n□ Interventions:\n\n□ Progress:\n\n□ Next Steps:",
+        promptGuide: "Convert this into a structured checklist format with clear categories and checkboxes for key points and actions."
+      }
+    };
 
-      if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
+    // De-identification patterns and replacements
+    const deIdentificationRules = {
+      // Titles and honorifics
+      titles: {
+        pattern: /\b(Mr\.|Mrs\.|Ms\.|Dr\.|Prof\.|Rev\.|Sr\.|Jr\.|Mx\.)\s*([A-Z][a-z]+)/gi,
+        replacement: "client"
+      },
+      
+      // Common names (expanded list)
+      commonNames: {
+        pattern: /\b(John|Jane|Mary|James|Michael|David|Sarah|Maria|Robert|William|Elizabeth|Jennifer|Joseph|Richard|Barbara|Susan|Thomas|Jessica|Charles|Karen|Christopher|Lisa|Daniel|Nancy|Matthew|Betty|Anthony|Margaret|Donald|Sandra|Steven|Ashley|Paul|Dorothy|Andrew|Patricia|Joshua|Linda|Kenneth|Helen|Kevin|Donna)\b/gi,
+        replacement: "client"
+      },
+
+      // Email addresses
+      emails: {
+        pattern: /\b[\w\.-]+@[\w\.-]+\.\w+\b/g,
+        replacement: "[EMAIL REDACTED]"
+      },
+
+      // Phone numbers (various formats)
+      phones: {
+        pattern: /\b(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}\b/g,
+        replacement: "[PHONE REDACTED]"
+      },
+
+      // Social Security Numbers
+      ssn: {
+        pattern: /\b\d{3}[-.]?\d{2}[-.]?\d{4}\b/g,
+        replacement: "[SSN REDACTED]"
+      },
+
+      // Addresses
+      addresses: {
+        pattern: /\b\d+\s+([A-Za-z]+\s*){1,3}(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Circle|Cir|Court|Ct|Place|Pl|Square|Sq|Highway|Hwy|Parkway|Pkwy)\b/gi,
+        replacement: "[ADDRESS REDACTED]"
+      },
+
+      // Dates of birth
+      dob: {
+        pattern: /\b(0?[1-9]|1[0-2])[\/.-](0?[1-9]|[12]\d|3[01])[\/.-](19|20)\d{2}\b/g,
+        replacement: "[DOB REDACTED]"
+      },
+
+      // Medical record numbers
+      mrn: {
+        pattern: /\b(MRN|Medical Record Number|Record Number)[\s:#-]?\d+\b/gi,
+        replacement: "[MRN REDACTED]"
+      },
+
+      // Family member references
+      familyMembers: {
+        pattern: /\b(mother|father|sister|brother|daughter|son|wife|husband|spouse|grandmother|grandfather|aunt|uncle)(\'s)?\b/gi,
+        replacement: "family member"
+      },
+
+      // Healthcare provider references
+      providers: {
+        pattern: /\b(Dr\.|Doctor|Nurse|RN|LPN|PA|NP|Therapist|Counselor|Social Worker|LCSW|Psychiatrist|Psychologist|MD|DO)\s+[A-Z][a-z]+\b/g,
+        replacement: "provider"
+      }
+    };
+
+    // Enhanced de-identification function
+    function deIdentifyNote(text) {
+      let deIdentifiedText = text;
+      
+      // Apply each rule
+      for (const [category, rule] of Object.entries(deIdentificationRules)) {
+        deIdentifiedText = deIdentifiedText.replace(rule.pattern, rule.replacement);
       }
 
-      const data = await response.json();
-      return data.response.content;
+      // Additional processing for potential names (careful with false positives)
+      deIdentifiedText = deIdentifiedText.replace(/\b[A-Z][a-z]{2,}\s+[A-Z][a-z]{2,}\b/g, "client");
+
+      // Handle possessives
+      deIdentifiedText = deIdentifiedText
+        .replace(/\bclient's\b/gi, "client's")
+        .replace(/\bprovider's\b/gi, "provider's")
+        .replace(/\bmember's\b/gi, "member's");
+
+      return deIdentifiedText;
     }
 
-    // Function to handle note generation
+    // Role-specific information and prompts
+    const roleInfo = {
+      "Community Health Worker": {
+        description: "Focus on community-based care, health education, and social support documentation.",
+        promptGuide: "Include community engagement, health education activities, and social determinants of health in your notes.",
+        terminology: ["health education", "community resources", "social support", "health screening", "outreach"]
+      },
+      "Licensed Clinical Social Worker": {
+        description: "Emphasize clinical assessment, intervention strategies, and treatment planning.",
+        promptGuide: "Document clinical observations, interventions, and progress toward treatment goals.",
+        terminology: ["clinical assessment", "therapeutic intervention", "treatment goals", "psychosocial", "diagnosis"]
+      },
+      "Peer Recovery Coach": {
+        description: "Focus on recovery support, lived experience sharing, and empowerment strategies.",
+        promptGuide: "Document recovery goals, peer support activities, and empowerment strategies.",
+        terminology: ["recovery goals", "peer support", "empowerment", "lived experience", "coping strategies"]
+      },
+      "Therapist": {
+        description: "Detail therapeutic interventions, client progress, and treatment modalities.",
+        promptGuide: "Include therapeutic techniques used, client responses, and progress in treatment.",
+        terminology: ["therapeutic techniques", "client insight", "treatment modality", "clinical intervention", "behavioral observations"]
+      },
+      "Case Manager": {
+        description: "Focus on service coordination, resource linkage, and client advocacy.",
+        promptGuide: "Document service coordination, referrals, and progress toward case management goals.",
+        terminology: ["service coordination", "referral", "resource linkage", "advocacy", "care planning"]
+      }
+    };
+
+    // Function to show preview dialog
+    function showPreviewDialog(deidentifiedNote, format, role, callback) {
+      const dialog = document.querySelector('.preview-dialog');
+      const overlay = document.querySelector('.preview-overlay');
+      const content = dialog.querySelector('.preview-content');
+      const continueBtn = dialog.querySelector('.preview-continue');
+      const cancelBtn = dialog.querySelector('.preview-cancel');
+      const title = dialog.querySelector('h3');
+
+      // Update dialog content
+      title.innerHTML = `🕵️ Preview Note Generation`;
+      content.innerHTML = `
+        <div style="margin-bottom: 15px;">
+          <strong>De-identified Content:</strong>
+          <pre style="margin-top: 10px; white-space: pre-wrap;">${deidentifiedNote}</pre>
+        </div>
+        <div style="margin-bottom: 15px;">
+          <strong>Selected Format:</strong> ${format}
+        </div>
+        <div>
+          <strong>Writing as:</strong> ${role}
+        </div>
+      `;
+
+      dialog.style.display = 'block';
+      overlay.style.display = 'block';
+
+      continueBtn.onclick = () => {
+        dialog.style.display = 'none';
+        overlay.style.display = 'none';
+        callback(true);
+      };
+
+      cancelBtn.onclick = () => {
+        dialog.style.display = 'none';
+        overlay.style.display = 'none';
+        callback(false);
+      };
+
+      // Close on overlay click
+      overlay.onclick = () => {
+        dialog.style.display = 'none';
+        overlay.style.display = 'none';
+        callback(false);
+      };
+    }
+
+    // Enhanced prompt generation
+    function generatePrompt(noteText, format, noteType, role) {
+      const formatGuide = formatInfo[format].promptGuide;
+      const roleGuide = roleInfo[role].promptGuide;
+      const terminology = roleInfo[role].terminology;
+      
+      return `You are a ${role} writing a professional clinical progress note.
+Format: "${format}"
+Note Type: ${noteType}
+
+Role-Specific Guidelines:
+${roleGuide}
+
+Format Guidelines:
+${formatGuide}
+
+Key Terminology for ${role}:
+${terminology.map(term => `- ${term}`).join('\n')}
+
+Writing Guidelines:
+1. Write clearly, professionally, and concisely
+2. Use appropriate clinical terminology for a ${role}
+3. Maintain HIPAA compliance
+4. Use general terms like "client", "member", or "caregiver" for any identifiers
+5. Include relevant timestamps and durations
+6. Focus on objective observations and clinical relevance
+7. Document any interventions, outcomes, and next steps
+
+Here is the de-identified user input:
+"""
+${noteText}
+"""`;
+    }
+
+    // Function to update note history display
+    function updateNoteHistory() {
+      const historyLists = document.querySelectorAll('.history-list');
+      const prevNotes = JSON.parse(localStorage.getItem('noteHistory') || '[]');
+
+      historyLists.forEach(list => {
+        list.innerHTML = prevNotes.map((note, index) => `
+          <div class="history-item" onclick="useHistoryNote(${index})">
+            <div class="history-meta">Generated ${new Date().toLocaleDateString()}</div>
+            <div class="history-preview">${note.substring(0, 100)}...</div>
+          </div>
+        `).join('');
+      });
+    }
+
+    // Function to use a note from history
+    function useHistoryNote(index) {
+      const prevNotes = JSON.parse(localStorage.getItem('noteHistory') || '[]');
+      const selectedNote = prevNotes[index];
+      
+      if (selectedNote) {
+        const activeSection = document.querySelector('.note-section.active');
+        if (activeSection) {
+          const textarea = activeSection.querySelector('.note-input');
+          textarea.value = selectedNote;
+        }
+      }
+    }
+
+    // Enhanced note generation function
     async function generateNote(section) {
       const input = section.querySelector('.note-input');
       const output = section.querySelector('.note-output');
       const spinner = section.querySelector('.loading-spinner');
       const button = section.querySelector('.generate-button');
       const noteType = section.id.replace('-section', '');
+      const format = section.querySelector('.note-format').value;
+      const role = document.getElementById('role-select').value;
 
       if (!input.value.trim()) {
         alert('Please enter some text before generating the note.');
         return;
       }
 
-      // Show loading state
-      button.disabled = true;
-      spinner.style.display = 'block';
-      output.textContent = 'Generating your note...';
+      // First round of de-identification
+      const deidentifiedNote = deIdentifyNote(input.value);
 
-      try {
-        // Call OpenAI API via Netlify Function
-        const aiGeneratedNote = await generateAINote(input.value, noteType);
+      // Show preview dialog
+      showPreviewDialog(deidentifiedNote, format, role, async (confirmed) => {
+        if (!confirmed) return;
+
+        // Show loading state
+        button.disabled = true;
+        spinner.style.display = 'block';
+        output.textContent = 'Processing and generating your note...';
+
+        try {
+          // Generate enhanced prompt
+          const fullPrompt = generatePrompt(deidentifiedNote, format, noteType, role);
+
+          // Call OpenAI API via Netlify Function
+          const response = await fetch('/.netlify/functions/generateNote', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ note: fullPrompt })
+          });
+
+          if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+          }
+
+          const data = await response.json();
+          
+          if (!data.output) {
+            throw new Error('No output received from API');
+          }
+
+          // Final de-identification pass
+          const finalNote = deIdentifyNote(data.output);
+
+          // Save to history with metadata
+          const prevNotes = JSON.parse(localStorage.getItem('noteHistory') || '[]');
+          const noteData = {
+            content: finalNote,
+            timestamp: new Date().toISOString(),
+            format: format,
+            role: role,
+            type: noteType
+          };
+          prevNotes.unshift(noteData);
+          localStorage.setItem('noteHistory', JSON.stringify(prevNotes.slice(0, 5)));
+
+          // Store the generated note and metadata
+          localStorage.setItem('generatedNote', finalNote);
+          localStorage.setItem('noteMeta', JSON.stringify({
+            type: noteType.charAt(0).toUpperCase() + noteType.slice(1) + ' Note',
+            date: new Date().toLocaleString(),
+            format: format,
+            role: role
+          }));
+
+          // Update history display
+          updateNoteHistory();
+
+          // Redirect to the generated note page
+          window.location.href = 'generated-note.html';
+
+        } catch (error) {
+          console.error('Error generating note:', error);
+          output.textContent = `Error: ${error.message || 'An error occurred while generating the note'}. Please try again.`;
+          
+          // Clear storage in case of error
+          localStorage.removeItem('generatedNote');
+          localStorage.removeItem('noteMeta');
+        } finally {
+          // Hide loading state
+          button.disabled = false;
+          spinner.style.display = 'none';
+        }
+      });
+    }
+
+    // Speech Recognition Setup
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let isListening = false;
+
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      
+      // Initialize voice input functionality
+      function initVoiceInput() {
+        const voiceButtons = document.querySelectorAll('.voice-input-button');
+        let currentSection = null;
         
-        // Update output with AI response
-        output.textContent = aiGeneratedNote;
-      } catch (error) {
-        console.error('Error generating note:', error);
-        output.textContent = 'An error occurred while generating the note. Please try again.';
-      } finally {
-        // Hide loading state
-        button.disabled = false;
-        spinner.style.display = 'none';
+        voiceButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const section = button.dataset.section;
+            const textarea = button.parentElement.querySelector('.note-input');
+            const status = button.parentElement.querySelector('.voice-status');
+            
+            if (!isListening) {
+              // Start new recording
+              startRecording(section, textarea, button, status);
+            } else if (currentSection === section) {
+              // Stop current recording
+              stopRecording(button, status);
+            } else {
+              // Switch to new section
+              stopRecording(document.querySelector('.voice-input-button.listening'), 
+                          document.querySelector('.voice-status'));
+              startRecording(section, textarea, button, status);
+            }
+          });
+        });
+
+        function startRecording(section, textarea, button, status) {
+          recognition.start();
+          isListening = true;
+          currentSection = section;
+          button.classList.add('listening');
+          button.textContent = '🎙️ Stop Voice Input';
+          status.textContent = 'Listening...';
+
+          recognition.onresult = (event) => {
+            const transcript = Array.from(event.results)
+              .map(result => result[0].transcript)
+              .join(' ');
+            
+            // Insert at cursor position or append
+            const cursorPos = textarea.selectionStart;
+            const textBefore = textarea.value.substring(0, cursorPos);
+            const textAfter = textarea.value.substring(cursorPos);
+            textarea.value = textBefore + transcript + textAfter;
+          };
+
+          recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            status.textContent = `Error: ${event.error}`;
+            stopRecording(button, status);
+          };
+        }
+
+        function stopRecording(button, status) {
+          recognition.stop();
+          isListening = false;
+          currentSection = null;
+          button.classList.remove('listening');
+          button.textContent = '🎙️ Start Voice Input';
+          status.textContent = '';
+        }
       }
+
+      // Initialize voice input when DOM is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        initVoiceInput();
+        // ... existing DOMContentLoaded code ...
+      });
+    } else {
+      // Add fallback for browsers that don't support speech recognition
+      document.addEventListener('DOMContentLoaded', () => {
+        const voiceButtons = document.querySelectorAll('.voice-input-button');
+        voiceButtons.forEach(button => {
+          button.disabled = true;
+          button.textContent = '🚫 Voice Input Not Supported';
+          button.style.backgroundColor = '#999';
+          button.style.cursor = 'not-allowed';
+        });
+      });
     }
 
     // Initialize note sections
@@ -333,7 +1183,12 @@
           const sectionId = `${button.dataset.section}-section`;
           
           // Hide all sections
-          sections.forEach(section => section.classList.remove('active'));
+          sections.forEach(section => {
+            section.classList.remove('active');
+            // Remove any existing copy buttons
+            const copyButton = section.querySelector('.generate-button:not(:first-child)');
+            if (copyButton) copyButton.remove();
+          });
           
           // Show selected section
           document.getElementById(sectionId).classList.add('active');
@@ -348,7 +1203,181 @@
         const generateButton = section.querySelector('.generate-button');
         generateButton.addEventListener('click', () => generateNote(section));
       });
+
+      // Initialize note history on page load
+      updateNoteHistory();
+
+      // Initialize format selectors
+      const formatSelectors = document.querySelectorAll('.note-format');
+      
+      // Add note count badge to history button
+      const historyButton = document.querySelector('.history-button');
+      const noteCount = JSON.parse(localStorage.getItem('noteHistory') || '[]').length;
+      if (noteCount > 0) {
+        const badge = document.createElement('span');
+        badge.style.cssText = `
+          background: white;
+          color: #6c5ce7;
+          padding: 2px 8px;
+          border-radius: 12px;
+          font-size: 0.8rem;
+          font-weight: bold;
+          margin-left: 5px;
+        `;
+        badge.textContent = noteCount;
+        historyButton.appendChild(badge);
+      }
+
+      // Remove individual section history buttons since we have the main one
+      const viewHistoryButtons = document.querySelectorAll('.view-history-button');
+      viewHistoryButtons.forEach(btn => btn.remove());
+
+      // Check for reuse parameter and handle reused note
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('reuse') === 'true') {
+        const reusedNote = localStorage.getItem('reuseNote');
+        if (reusedNote) {
+          // Find the active section or default to initial
+          const activeSection = document.querySelector('.note-section.active') || 
+                              document.getElementById('initial-section');
+          
+          // Set the note content
+          const textarea = activeSection.querySelector('.note-input');
+          textarea.value = reusedNote;
+          
+          // Clear the reuse storage
+          localStorage.removeItem('reuseNote');
+          
+          // Show feedback
+          const feedback = document.createElement('div');
+          feedback.style.cssText = `
+            background: #2ecc71;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          `;
+          feedback.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            Previous note loaded successfully! You can now edit and regenerate it.
+          `;
+          
+          // Insert feedback before the textarea
+          textarea.parentNode.insertBefore(feedback, textarea);
+          
+          // Remove feedback after 5 seconds
+          setTimeout(() => feedback.remove(), 5000);
+          
+          // Scroll textarea into view
+          textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+      
+      formatSelectors.forEach(selector => {
+        selector.addEventListener('change', (e) => {
+          const section = e.target.id.split('-').pop();
+          const format = e.target.value;
+          
+          // Update format info
+          const infoElement = document.getElementById(`format-info-${section}`);
+          infoElement.textContent = formatInfo[format].description;
+          infoElement.classList.add('visible');
+          
+          // Update textarea placeholder
+          const textarea = e.target.closest('.note-section').querySelector('.note-input');
+          textarea.placeholder = formatInfo[format].placeholder;
+          
+          // Store selected format
+          localStorage.setItem(`selectedFormat-${section}`, format);
+        });
+        
+        // Trigger change event to set initial format info and placeholder
+        selector.dispatchEvent(new Event('change'));
+      });
+
+      // Initialize role selector
+      const roleSelect = document.getElementById('role-select');
+      const roleInfoDiv = document.getElementById('role-info');
+
+      // Load saved role
+      const savedRole = localStorage.getItem('selectedRole');
+      if (savedRole) {
+        roleSelect.value = savedRole;
+      }
+
+      function updateRoleInfo() {
+        const selectedRole = roleSelect.value;
+        roleInfoDiv.innerHTML = `
+          <i class="fas fa-info-circle"></i> ${roleInfo[selectedRole].description}
+        `;
+        localStorage.setItem('selectedRole', selectedRole);
+      }
+
+      roleSelect.addEventListener('change', updateRoleInfo);
+      updateRoleInfo();
     });
+
+    // Add this simplified PDF download function
+    async function downloadAsPDF() {
+      const noteText = localStorage.getItem('generatedNote');
+      if (!noteText) {
+        alert('Please generate a note first before downloading.');
+        return;
+      }
+
+      // Get metadata
+      const meta = JSON.parse(localStorage.getItem('noteMeta') || '{}');
+      
+      // Create container for PDF content
+      const container = document.createElement('div');
+      container.innerHTML = `
+        <div style="margin-bottom: 20px; font-family: 'Open Sans', sans-serif;">
+          <h2 style="color: #2d3436; margin-bottom: 10px;">${meta.type || 'Progress Note'}</h2>
+          <div style="color: #636e72; font-size: 0.9em;">
+            <p><strong>Date:</strong> ${meta.date || new Date().toLocaleString()}</p>
+            <p><strong>Format:</strong> ${meta.format || 'Standard'}</p>
+            <p><strong>Role:</strong> ${meta.role || 'Healthcare Professional'}</p>
+          </div>
+          <hr style="margin: 15px 0; border: none; border-top: 1px solid #dfe6e9;">
+        </div>
+        <pre style="white-space: pre-wrap; font-family: 'Open Sans', sans-serif; line-height: 1.6; margin: 0; padding: 0;">${noteText}</pre>
+      `;
+
+      // Configure PDF options
+      const opt = {
+        margin: 0.5,
+        filename: `${(meta.type || 'progress-note').toLowerCase().replace(/\s+/g, '-')}-${Date.now()}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+      try {
+        // Show loading state
+        const button = document.querySelector('.download-pdf-button');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+        button.disabled = true;
+
+        // Generate and save PDF
+        await html2pdf().from(container).set(opt).save();
+
+        // Restore button state
+        button.innerHTML = originalText;
+        button.disabled = false;
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('Error generating PDF. Please try again.');
+        
+        // Restore button state
+        const button = document.querySelector('.download-pdf-button');
+        button.innerHTML = originalText;
+        button.disabled = false;
+      }
+    }
   </script>
 </body>
 </html> 
