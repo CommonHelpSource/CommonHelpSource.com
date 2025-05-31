@@ -88,5 +88,41 @@
   "05034": "VT",
   "05035": "VT",
   "05036": "VT",
-  "05037": "VT"
+  "05037": "VT",
+  "02108": {
+    "city": "Boston",
+    "state": "MA",
+    "lat": 42.3601,
+    "lng": -71.0589
+  },
+  "02110": {
+    "city": "Boston",
+    "state": "MA",
+    "lat": 42.3590,
+    "lng": -71.0525
+  },
+  "02116": {
+    "city": "Boston",
+    "state": "MA",
+    "lat": 42.3505,
+    "lng": -71.0809
+  },
+  "02128": {
+    "city": "East Boston",
+    "state": "MA",
+    "lat": 42.3751,
+    "lng": -71.0301
+  },
+  "02130": {
+    "city": "Jamaica Plain",
+    "state": "MA",
+    "lat": 42.3097,
+    "lng": -71.1113
+  },
+  "01109": {
+    "city": "Springfield",
+    "state": "MA",
+    "lat": 42.1209,
+    "lng": -72.5170
+  }
 } 

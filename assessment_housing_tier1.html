@@ -359,8 +359,7 @@
       <div class="header">
         <h1>Housing Assessment - Tier 1</h1>
         <div class="location-info">
-          <div id="zip-display">Loading location...</div>
-          <div id="city-state-display"></div>
+          <div id="zip-display">ZIP Loading...</div>
         </div>
       </div>
 
@@ -437,18 +436,10 @@
   </div>
 
   <script type="module">
-    import { zipData } from './assets/data/zip-data.js';
-
-    // Function to get location info from ZIP
-    function getLocationFromZip(zip) {
-      return zipData[zip] || null;
-    }
-
     // Function to update location display
     function updateLocationDisplay() {
       const zip = localStorage.getItem('userZipCode');
       const zipDisplay = document.getElementById('zip-display');
-      const cityStateDisplay = document.getElementById('city-state-display');
       
       if (!zip || !/^\d{5}$/.test(zip)) {
         alert('Please start from the homepage to set your ZIP code.');
@@ -456,14 +447,7 @@
         return;
       }
 
-      const location = getLocationFromZip(zip);
       zipDisplay.textContent = `ZIP ${zip}`;
-
-      if (location) {
-        cityStateDisplay.textContent = `${location.city}, ${location.state}`;
-      } else {
-        cityStateDisplay.textContent = 'Location not found';
-      }
     }
 
     // Initialize location display on page load

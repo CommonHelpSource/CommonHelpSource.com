@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZIP Code Validation Test</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <style>
+        .test-section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        .test-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 4px;
+        }
+        
+        .test-result pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .success {
+            color: var(--success-color);
+        }
+        
+        .error {
+            color: var(--error-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ZIP Code Validation Test</h1>
+        </header>
+
+        <main>
+            <!-- Manual ZIP Entry Test -->
+            <div class="test-section">
+                <h2>Manual ZIP Entry Test</h2>
+                <div class="form-group">
+                    <label for="zipInput">Enter ZIP Code:</label>
+                    <input type="text" id="zipInput" maxlength="5" pattern="\d{5}">
+                    <button type="button" class="btn-primary" onclick="testManualZip()">Test ZIP</button>
+                </div>
+                <div id="manualTestResult" class="test-result"></div>
+            </div>
+
+            <!-- Location Display Test -->
+            <div class="test-section">
+                <h2>Location Display Test</h2>
+                <div class="location-info">
+                    <span id="zip-display"></span>
+                    <span id="location-display"></span>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn-primary" onclick="testLocationDisplay()">Test Display</button>
+                    <button type="button" class="btn-secondary" onclick="clearLocation()">Clear Location</button>
+                </div>
+                <div id="displayTestResult" class="test-result"></div>
+            </div>
+
+            <!-- Region Detection Test -->
+            <div class="test-section">
+                <h2>Region Detection Test</h2>
+                <div class="form-group">
+                    <label>Test ZIP codes:</label>
+                    <button type="button" class="btn-secondary" onclick="testRegion('02108')">Boston (02108)</button>
+                    <button type="button" class="btn-secondary" onclick="testRegion('33101')">Miami (33101)</button>
+                    <button type="button" class="btn-secondary" onclick="testRegion('60601')">Chicago (60601)</button>
+                    <button type="button" class="btn-secondary" onclick="testRegion('90001')">LA (90001)</button>
+                    <button type="button" class="btn-secondary" onclick="testRegion('00901')">PR (00901)</button>
+                </div>
+                <div id="regionTestResult" class="test-result"></div>
+            </div>
+
+            <!-- Distance Calculation Test -->
+            <div class="test-section">
+                <h2>10-Mile Radius Test</h2>
+                <div class="form-group">
+                    <label>Test coordinates:</label>
+                    <button type="button" class="btn-secondary" onclick="testDistance(
+                        {lat: 42.3601, lng: -71.0589},
+                        {lat: 42.3505, lng: -71.0809}
+                    )">Boston (5mi)</button>
+                    <button type="button" class="btn-secondary" onclick="testDistance(
+                        {lat: 42.3601, lng: -71.0589},
+                        {lat: 42.2626, lng: -71.0023}
+                    )">Boston (15mi)</button>
+                </div>
+                <div id="distanceTestResult" class="test-result"></div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { 
+            isValidZipCode, 
+            getLocationData, 
+            updateLocationDisplay,
+            initializeLocation,
+            isWithinRadius 
+        } from '/assets/js/zip-utils.js';
+
+        // Make functions available to window for button clicks
+        window.testManualZip = async () => {
+            const zipInput = document.getElementById('zipInput');
+            const resultDiv = document.getElementById('manualTestResult');
+            const zip = zipInput.value;
+
+            let html = '<h3>Validation Results:</h3>';
+
+            // Test basic validation
+            const isValid = isValidZipCode(zip);
+            html += `<p>Format validation: <span class="${isValid ? 'success' : 'error'}">${isValid ? 'PASS' : 'FAIL'}</span></p>`;
+
+            if (isValid) {
+                // Test location data
+                const locationData = await getLocationData(zip);
+                if (locationData) {
+                    html += '<p>Location data: <span class="success">FOUND</span></p>';
+                    html += '<pre>' + JSON.stringify(locationData, null, 2) + '</pre>';
+                } else {
+                    html += '<p>Location data: <span class="error">NOT FOUND</span></p>';
+                }
+            }
+
+            resultDiv.innerHTML = html;
+        };
+
+        window.testLocationDisplay = async () => {
+            const resultDiv = document.getElementById('displayTestResult');
+            const zip = localStorage.getItem('userZipCode');
+            
+            let html = '<h3>Display Test Results:</h3>';
+            
+            if (zip) {
+                const locationData = await getLocationData(zip);
+                if (locationData) {
+                    updateLocationDisplay(zip, locationData);
+                    html += '<p>Location display: <span class="success">UPDATED</span></p>';
+                    html += '<pre>Stored ZIP: ' + zip + '\n';
+                    html += 'City: ' + localStorage.getItem('userCity') + '\n';
+                    html += 'State: ' + localStorage.getItem('userState') + '</pre>';
+                } else {
+                    html += '<p>Location data: <span class="error">NOT FOUND</span></p>';
+                }
+            } else {
+                html += '<p>No ZIP code in localStorage</p>';
+            }
+            
+            resultDiv.innerHTML = html;
+        };
+
+        window.clearLocation = () => {
+            localStorage.removeItem('userZipCode');
+            localStorage.removeItem('userCity');
+            localStorage.removeItem('userState');
+            updateLocationDisplay(null, null);
+            document.getElementById('displayTestResult').innerHTML = '<p>Location data cleared</p>';
+        };
+
+        window.testRegion = async (zip) => {
+            const resultDiv = document.getElementById('regionTestResult');
+            const locationData = await getLocationData(zip);
+            
+            let html = `<h3>Region Test Results for ${zip}:</h3>`;
+            if (locationData) {
+                html += '<p>Region detection: <span class="success">PASS</span></p>';
+                html += '<pre>' + JSON.stringify(locationData, null, 2) + '</pre>';
+            } else {
+                html += '<p>Region detection: <span class="error">FAIL</span></p>';
+            }
+            
+            resultDiv.innerHTML = html;
+        };
+
+        window.testDistance = (point1, point2) => {
+            const resultDiv = document.getElementById('distanceTestResult');
+            const withinRadius = isWithinRadius(point1, point2);
+            
+            let html = '<h3>Distance Test Results:</h3>';
+            html += `<p>Points within 10 miles: <span class="${withinRadius ? 'success' : 'error'}">${withinRadius ? 'YES' : 'NO'}</span></p>`;
+            html += '<pre>Point 1: ' + JSON.stringify(point1, null, 2) + '\n';
+            html += 'Point 2: ' + JSON.stringify(point2, null, 2) + '</pre>';
+            
+            resultDiv.innerHTML = html;
+        };
+
+        // Initialize location display
+        initializeLocation();
+    </script>
+</body>
+</html> 
