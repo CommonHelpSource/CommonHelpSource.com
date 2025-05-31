@@ -3,276 +3,483 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Housing Assessment - CommonHelpSource</title>
+  <title>Housing Assessment Results - CommonHelpSource</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/styles.css">
   <style>
-    .summary-section {
+    :root {
+      --primary-color: #ff6b35;
+      --primary-hover: #ff8659;
+      --text-color: #2d3436;
+      --bg-color: #f5f6f7;
+      --border-color: #dfe6e9;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      padding: 20px;
       background: var(--bg-color);
-      padding: 15px;
-      border-radius: 8px;
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .results-card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      color: var(--primary-color);
+      font-size: 2rem;
+      margin: 0 0 10px;
+    }
+
+    .location-info {
+      color: #636e72;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    .summary-section {
       margin-bottom: 30px;
     }
 
     .summary-section h2 {
       color: var(--primary-color);
-      font-size: 1.2rem;
-      margin: 0 0 10px;
+      font-size: 1.4rem;
+      margin: 0 0 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border-color);
     }
 
     .summary-item {
       display: flex;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      padding: 8px;
+      background: var(--bg-color);
+      border-radius: 6px;
     }
 
     .summary-label {
       font-weight: 600;
-      margin-right: 10px;
       min-width: 200px;
+      margin-right: 20px;
     }
 
     .summary-value {
+      flex: 1;
+    }
+
+    .ai-prompt {
+      background: #2d3436;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .button {
+      flex: 1;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: background 0.3s ease;
+    }
+
+    .primary-button {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .primary-button:hover {
+      background: var(--primary-hover);
+    }
+
+    .secondary-button {
+      background: var(--bg-color);
       color: var(--text-color);
     }
 
-    /* Dark theme support for summary */
-    .dark-theme .summary-section {
+    .secondary-button:hover {
+      background: var(--border-color);
+    }
+
+    /* Dark theme support */
+    body.dark-theme {
+      --bg-color: #1a1a1a;
+      --text-color: #e0e0e0;
+      --border-color: #404040;
+    }
+
+    .dark-theme .results-card {
       background: #2d2d2d;
+    }
+
+    .dark-theme .summary-item {
+      background: #404040;
+    }
+
+    .dark-theme .ai-prompt {
+      background: #1a1a1a;
+    }
+
+    .ai-response {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      margin-top: 20px;
+      white-space: pre-wrap;
+    }
+
+    .dark-theme .ai-response {
+      background: #2d2d2d;
+      border-color: #404040;
+    }
+
+    .loading-spinner {
+      text-align: center;
+      padding: 20px;
+      color: #636e72;
+    }
+
+    .button-icon {
+      margin-right: 8px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .dark-theme .modal-content {
+      background: #2d2d2d;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .dark-theme .form-group input {
+      background: #404040;
+      border-color: #636e72;
+      color: white;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .results-card {
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .button-group {
+        display: none;
+      }
+
+      .ai-response {
+        border: none;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="assessment-card">
-      <div class="progress-container">
-        <div class="progress-bar">
-          <div class="progress-step completed">1</div>
-          <div class="progress-step completed">2</div>
-          <div class="progress-step active">3</div>
-          <div class="progress-step">4</div>
-        </div>
-        <div class="progress-labels">
-          <div class="progress-label completed">Start</div>
-          <div class="progress-label completed">Basic Info</div>
-          <div class="progress-label active">Details</div>
-          <div class="progress-label">Resources</div>
-        </div>
-      </div>
-
+    <div class="results-card">
       <div class="header">
-        <h1>Housing Assessment - Tier 2</h1>
-        <div class="location-info">
-          <div id="zip-display">ZIP Loading...</div>
-        </div>
+        <h1>Housing Assessment Results</h1>
+        <div class="location-info" id="location-info">Loading location...</div>
       </div>
 
-      <!-- Tier 1 Summary -->
       <div class="summary-section">
-        <h2>Your Previous Responses</h2>
-        <div id="tier1-summary"></div>
+        <h2>Your Assessment Summary</h2>
+        <div id="assessment-summary">Loading assessment data...</div>
       </div>
 
-      <form id="housingAssessmentForm">
-        <div class="question-group">
-          <label>What type of housing assistance are you seeking?</label>
-          <select name="assistance_type" required>
-            <option value="">Please select...</option>
-            <option value="rental">Rental assistance</option>
-            <option value="shelter">Shelter placement</option>
-            <option value="rapid">Rapid rehousing</option>
-            <option value="longterm">Long-term housing</option>
-            <option value="unsure">Unsure</option>
-          </select>
-          <span class="validation-icon">✓</span>
-          <div class="validation-message">Please select the type of assistance you need</div>
-        </div>
+      <div class="summary-section">
+        <h2>AI-Generated Assistance Prompt</h2>
+        <div id="ai-prompt" class="ai-prompt">Generating prompt...</div>
+      </div>
 
-        <div class="question-group">
-          <label>Do you have any income at this time?</label>
-          <div class="radio-group">
-            <div class="radio-option">
-              <input type="radio" id="income_yes" name="has_income" value="yes" required>
-              <label for="income_yes">Yes</label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" id="income_no" name="has_income" value="no">
-              <label for="income_no">No</label>
-            </div>
-          </div>
+      <div class="summary-section">
+        <h2>AI Recommendations</h2>
+        <div id="ai-response" class="ai-response">
+          <div class="loading-spinner">Generating personalized recommendations...</div>
         </div>
+      </div>
 
-        <div class="question-group">
-          <label>Are you currently receiving any government benefits?</label>
-          <div class="radio-group">
-            <div class="radio-option">
-              <input type="radio" id="benefits_yes" name="has_benefits" value="yes" required>
-              <label for="benefits_yes">Yes</label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" id="benefits_no" name="has_benefits" value="no">
-              <label for="benefits_no">No</label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" id="benefits_unsure" name="has_benefits" value="unsure">
-              <label for="benefits_unsure">Not Sure</label>
-            </div>
-          </div>
-        </div>
+      <div class="button-group">
+        <button onclick="window.print()" class="button secondary-button">
+          <span class="button-icon">🖨️</span> Print Summary
+        </button>
+        <button onclick="downloadSummary()" class="button secondary-button">
+          <span class="button-icon">⬇️</span> Download Summary
+        </button>
+        <button onclick="showEmailForm()" class="button primary-button">
+          <span class="button-icon">📧</span> Email Summary
+        </button>
+      </div>
 
-        <div id="validationMessage" class="validation-message">
-          Please answer all questions before continuing
+      <!-- Email Form Modal -->
+      <div id="emailModal" class="modal">
+        <div class="modal-content">
+          <h3>Send Summary via Email</h3>
+          <form id="emailForm" onsubmit="sendEmail(event)">
+            <div class="form-group">
+              <label for="email">Email Address:</label>
+              <input type="email" id="email" required>
+            </div>
+            <div class="button-group">
+              <button type="button" onclick="closeEmailModal()" class="button secondary-button">Cancel</button>
+              <button type="submit" class="button primary-button">Send Email</button>
+            </div>
+          </form>
         </div>
-
-        <div class="button-group">
-          <a href="assessment_housing_tier1.html" class="button secondary-button">Back to Tier 1</a>
-          <button type="button" onclick="submitAssessment()" class="button primary-button">Continue to Summary</button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 
-  <script type="module">
-    // Function to update location display
-    function updateLocationDisplay() {
-      const zip = localStorage.getItem('userZipCode');
-      const zipDisplay = document.getElementById('zip-display');
-      
-      if (!zip || !/^\d{5}$/.test(zip)) {
-        alert('Please start from the homepage to set your ZIP code.');
-        window.location.href = 'index.html';
-        return;
-      }
-
-      zipDisplay.textContent = `ZIP ${zip}`;
-    }
-
-    // Function to display Tier 1 summary
-    function displayTier1Summary() {
-      const tier1Data = JSON.parse(localStorage.getItem('housingAssessmentTier1'));
-      const summaryDiv = document.getElementById('tier1-summary');
-      
-      if (!tier1Data) {
-        alert('Please complete Tier 1 assessment first.');
-        window.location.href = 'assessment_housing_tier1.html';
-        return;
-      }
-
-      const situationMap = {
-        homeless: 'Currently homeless',
-        shelter: 'Staying in a shelter',
-        temporary: 'Temporary housing',
-        risk: 'At risk of losing housing',
-        stable: 'Stable housing but need assistance'
+  <script>
+    // Helper function to format answers for display
+    function formatAnswer(key, value) {
+      const formatMap = {
+        housing_situation: {
+          homeless: 'Currently homeless',
+          shelter: 'Staying in a shelter',
+          temporary: 'Temporary housing (with friends/family)',
+          risk: 'At risk of losing housing',
+          stable: 'Stable housing but need assistance'
+        },
+        assistance_type: {
+          rental: 'Rental assistance',
+          shelter: 'Shelter placement',
+          rapid: 'Rapid rehousing',
+          longterm: 'Long-term housing',
+          unsure: 'Unsure'
+        }
       };
 
-      const summaryHTML = `
-        <div class="summary-item">
-          <div class="summary-label">Housing Situation:</div>
-          <div class="summary-value">${situationMap[tier1Data.housing_situation]}</div>
-        </div>
-        <div class="summary-item">
-          <div class="summary-label">Need Emergency Shelter:</div>
-          <div class="summary-value">${tier1Data.emergency_shelter === 'yes' ? 'Yes' : 'No'}</div>
-        </div>
-        <div class="summary-item">
-          <div class="summary-label">Household Size:</div>
-          <div class="summary-value">${tier1Data.household_size} ${tier1Data.household_size === '1' ? 'person' : 'people'}</div>
-        </div>
-      `;
+      if (formatMap[key] && formatMap[key][value]) {
+        return formatMap[key][value];
+      }
 
-      summaryDiv.innerHTML = summaryHTML;
+      if (value === 'yes') return 'Yes';
+      if (value === 'no') return 'No';
+      if (value === 'unsure' || value === 'prefer_not') return 'Prefer not to say';
+
+      return value;
+    }
+
+    // Function to generate a natural language prompt
+    function generatePrompt(data, zip) {
+      return `Please help find housing resources for a client in ZIP code ${zip} with the following situation:
+
+- Current Status: ${formatAnswer('housing_situation', data.housing_situation)}
+- Household Size: ${data.household_size} ${data.household_size === '1' ? 'person' : 'people'}
+- Emergency Shelter Needed: ${data.emergency_shelter === 'yes' ? 'Yes' : 'No'}
+- Seeking: ${formatAnswer('assistance_type', data.assistance_type)}
+- Current Income: ${data.has_income === 'yes' ? 'Yes' : 'No'}
+- Receiving Benefits: ${formatAnswer('has_benefits', data.has_benefits)}
+
+Please provide:
+1. Local emergency resources if needed
+2. Relevant housing programs and assistance
+3. Benefits screening recommendations
+4. Next steps and contact information`;
+    }
+
+    // Function to generate summary text
+    function generateSummaryText(data, zip, aiResponse) {
+      return `Housing Assessment Summary
+Generated on ${new Date().toLocaleDateString()}
+
+Location: ZIP Code ${zip}
+
+Client Information:
+- Current Status: ${formatAnswer('housing_situation', data.housing_situation)}
+- Household Size: ${data.household_size} ${data.household_size === '1' ? 'person' : 'people'}
+- Emergency Shelter Needed: ${data.emergency_shelter === 'yes' ? 'Yes' : 'No'}
+- Seeking: ${formatAnswer('assistance_type', data.assistance_type)}
+- Current Income: ${data.has_income === 'yes' ? 'Yes' : 'No'}
+- Receiving Benefits: ${formatAnswer('has_benefits', data.has_benefits)}
+
+AI Recommendations:
+${aiResponse || 'Recommendations pending...'}`;
+    }
+
+    // Function to download summary
+    function downloadSummary() {
+      const zip = localStorage.getItem('userZipCode');
+      const assessmentData = JSON.parse(localStorage.getItem('housingAssessmentFull'));
+      const aiResponse = document.getElementById('ai-response').textContent;
+      
+      const summaryText = generateSummaryText(assessmentData, zip, aiResponse);
+      const blob = new Blob([summaryText], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      
+      a.href = url;
+      a.download = `housing-assessment-${zip}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
+
+    // Email modal functions
+    function showEmailForm() {
+      document.getElementById('emailModal').style.display = 'flex';
+    }
+
+    function closeEmailModal() {
+      document.getElementById('emailModal').style.display = 'none';
+    }
+
+    async function sendEmail(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value;
+      const zip = localStorage.getItem('userZipCode');
+      const assessmentData = JSON.parse(localStorage.getItem('housingAssessmentFull'));
+      const aiResponse = document.getElementById('ai-response').textContent;
+      
+      const summaryText = generateSummaryText(assessmentData, zip, aiResponse);
+
+      // Here you would typically send this to your email service
+      // For now, we'll just show a success message
+      alert(`Summary would be sent to ${email}`);
+      closeEmailModal();
     }
 
     // Initialize page
-    document.addEventListener('DOMContentLoaded', () => {
-      updateLocationDisplay();
-      displayTier1Summary();
-      
+    document.addEventListener('DOMContentLoaded', async () => {
       // Check for dark theme
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
       }
 
-      // Add validation listeners to all form elements
-      const form = document.getElementById('housingAssessmentForm');
-      const inputs = form.querySelectorAll('select, input[type="radio"]');
-      
-      inputs.forEach(input => {
-        if (input.type === 'radio') {
-          input.addEventListener('change', () => validateQuestion(input));
-        } else {
-          input.addEventListener('change', () => validateQuestion(input));
-          input.addEventListener('blur', () => validateQuestion(input));
-        }
-      });
-    });
+      // Get assessment data
+      const zip = localStorage.getItem('userZipCode');
+      const assessmentData = JSON.parse(localStorage.getItem('housingAssessmentFull'));
 
-    // Enhanced form validation
-    function validateQuestion(element) {
-      const group = element.closest('.question-group');
-      const validationIcon = group.querySelector('.validation-icon');
-      
-      if (element.checkValidity()) {
-        group.classList.remove('invalid');
-        group.classList.add('valid');
-        validationIcon.textContent = '✓';
-        validationIcon.classList.remove('invalid');
-        validationIcon.classList.add('valid');
-        return true;
-      } else {
-        group.classList.remove('valid');
-        group.classList.add('invalid');
-        validationIcon.textContent = '!';
-        validationIcon.classList.remove('valid');
-        validationIcon.classList.add('invalid');
-        return false;
-      }
-    }
-
-    // Enhanced form submission
-    window.submitAssessment = function() {
-      const form = document.getElementById('housingAssessmentForm');
-      const inputs = form.querySelectorAll('select, input[type="radio"]');
-      let isValid = true;
-
-      // Validate all inputs
-      inputs.forEach(input => {
-        if (!validateQuestion(input)) {
-          isValid = false;
-        }
-      });
-
-      if (!isValid) {
-        // Scroll to first invalid question
-        const firstInvalid = form.querySelector('.question-group.invalid');
-        if (firstInvalid) {
-          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+      // Validate data
+      if (!zip || !assessmentData) {
+        alert('Please complete the housing assessment first.');
+        window.location.href = 'assessment_housing_tier1.html';
         return;
       }
 
-      // Collect form data
-      const formData = {
-        assistance_type: form.assistance_type.value,
-        has_income: form.has_income.value,
-        has_benefits: form.has_benefits.value,
-        timestamp: new Date().toISOString()
-      };
+      // Update location display
+      document.getElementById('location-info').textContent = `ZIP Code: ${zip}`;
 
-      // Save to localStorage
-      localStorage.setItem('housingAssessmentTier2', JSON.stringify(formData));
+      // Generate summary HTML
+      const summaryItems = [
+        ['Current Housing Situation', 'housing_situation'],
+        ['Emergency Shelter Needed', 'emergency_shelter'],
+        ['Household Size', 'household_size'],
+        ['Type of Assistance Needed', 'assistance_type'],
+        ['Current Income', 'has_income'],
+        ['Receiving Benefits', 'has_benefits']
+      ];
 
-      // Show success state in progress bar
-      const currentStep = document.querySelector('.progress-step.active');
-      currentStep.classList.remove('active');
-      currentStep.classList.add('completed');
-      
-      // Animate transition
-      setTimeout(() => {
-        window.location.href = 'print.html';
-      }, 500);
-    };
+      const summaryHTML = summaryItems
+        .map(([label, key]) => `
+          <div class="summary-item">
+            <div class="summary-label">${label}</div>
+            <div class="summary-value">${formatAnswer(key, assessmentData[key])}</div>
+          </div>
+        `)
+        .join('');
+
+      document.getElementById('assessment-summary').innerHTML = summaryHTML;
+
+      // Generate and display AI prompt
+      const prompt = generatePrompt(assessmentData, zip);
+      document.getElementById('ai-prompt').textContent = prompt;
+
+      try {
+        // Call AI API
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ prompt })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to get AI response');
+        }
+
+        const data = await response.json();
+        document.getElementById('ai-response').innerHTML = `<div class="ai-content">${data.response}</div>`;
+      } catch (error) {
+        document.getElementById('ai-response').innerHTML = `
+          <div class="error-message">
+            Sorry, we couldn't generate recommendations at this time. 
+            Please try again later or contact support for assistance.
+          </div>`;
+      }
+    });
   </script>
 </body>
 </html> 

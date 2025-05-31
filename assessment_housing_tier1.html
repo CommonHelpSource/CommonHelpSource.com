@@ -357,13 +357,15 @@
       </div>
 
       <div class="header">
-        <h1>Housing Assessment - Tier 1</h1>
+        <h1>Housing Assessment</h1>
         <div class="location-info">
           <div id="zip-display">ZIP Loading...</div>
         </div>
       </div>
 
       <form id="housingAssessmentForm">
+        <!-- Tier 1 Questions -->
+        <h2>Basic Information</h2>
         <div class="question-group">
           <label>What is your current housing situation?</label>
           <select name="housing_situation" required>
@@ -423,13 +425,61 @@
           </select>
         </div>
 
+        <!-- Tier 2 Questions -->
+        <h2>Additional Details</h2>
+        <div class="question-group">
+          <label>What type of housing assistance are you seeking?</label>
+          <select name="assistance_type" required>
+            <option value="">Please select...</option>
+            <option value="rental">Rental assistance</option>
+            <option value="shelter">Shelter placement</option>
+            <option value="rapid">Rapid rehousing</option>
+            <option value="longterm">Long-term housing</option>
+            <option value="unsure">Unsure</option>
+          </select>
+          <span class="validation-icon">✓</span>
+          <div class="validation-message">Please select the type of assistance you need</div>
+        </div>
+
+        <div class="question-group">
+          <label>Do you have any income at this time?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="income_yes" name="has_income" value="yes" required>
+              <label for="income_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="income_no" name="has_income" value="no">
+              <label for="income_no">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-group">
+          <label>Are you currently receiving any government benefits?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="benefits_yes" name="has_benefits" value="yes" required>
+              <label for="benefits_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="benefits_no" name="has_benefits" value="no">
+              <label for="benefits_no">No</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="benefits_unsure" name="has_benefits" value="unsure">
+              <label for="benefits_unsure">Not Sure</label>
+            </div>
+          </div>
+        </div>
+
         <div id="validationMessage" class="validation-message">
           Please answer all questions before continuing
         </div>
 
         <div class="button-group">
           <a href="index.html" class="button secondary-button">Back to Home</a>
-          <button type="button" onclick="submitAssessment()" class="button primary-button">Continue to Tier 2</button>
+          <button type="button" onclick="submitAssessment()" class="button primary-button">Continue to Summary</button>
         </div>
       </form>
     </div>
@@ -521,15 +571,21 @@
 
       // Collect form data
       const formData = {
+        // Tier 1 data
         housing_situation: form.housing_situation.value,
         emergency_shelter: form.emergency_shelter.value,
         domestic_violence: form.domestic_violence.value,
         household_size: form.household_size.value,
+        // Tier 2 data
+        assistance_type: form.assistance_type.value,
+        has_income: form.has_income.value,
+        has_benefits: form.has_benefits.value,
+        // Metadata
         timestamp: new Date().toISOString()
       };
 
       // Save to localStorage
-      localStorage.setItem('housingAssessmentTier1', JSON.stringify(formData));
+      localStorage.setItem('housingAssessmentFull', JSON.stringify(formData));
 
       // Show success state in progress bar
       const currentStep = document.querySelector('.progress-step.active');
