@@ -283,7 +283,7 @@
 
         <div class="button-group">
           <a href="index.html" class="button secondary-button">Back to Home</a>
-          <button type="button" onclick="submitAssessment()" class="button primary-button">Continue to Summary</button>
+          <button type="button" onclick="submitAssessment(); return false;" class="button primary-button">Continue to Summary</button>
         </div>
       </form>
     </div>
@@ -341,18 +341,22 @@
 
     // Form submission
     window.submitAssessment = function() {
+      console.log('Submit function called');
       const form = document.getElementById('foodAssessmentForm');
       const inputs = form.querySelectorAll('input[type="radio"]');
       let isValid = true;
 
+      console.log('Validating inputs...');
       // Validate all inputs
       inputs.forEach(input => {
         if (!validateQuestion(input)) {
           isValid = false;
+          console.log('Invalid input found:', input.name);
         }
       });
 
       if (!isValid) {
+        console.log('Form validation failed');
         document.getElementById('validationMessage').style.display = 'block';
         const firstInvalid = form.querySelector('.question-group.invalid');
         if (firstInvalid) {
@@ -361,6 +365,7 @@
         return;
       }
 
+      console.log('Form is valid, collecting data...');
       // Collect form data
       const formData = {
         has_enough_food: form.has_enough_food.value,
@@ -371,9 +376,17 @@
         timestamp: new Date().toISOString()
       };
 
+      console.log('Form data:', formData);
+
       // Save to localStorage
-      localStorage.setItem('foodAssessmentFull', JSON.stringify(formData));
+      try {
+        localStorage.setItem('foodAssessmentFull', JSON.stringify(formData));
+        console.log('Data saved to localStorage');
+      } catch (error) {
+        console.error('Error saving to localStorage:', error);
+      }
       
+      console.log('Attempting redirect...');
       // Redirect to results page
       window.location.href = 'assessment_food_tier2.html';
     };
