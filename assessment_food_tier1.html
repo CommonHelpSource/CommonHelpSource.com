@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Food Support Assessment - CommonHelpSource</title>
+  <title>Food Assistance Assessment - CommonHelpSource</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/styles.css">
   <style>
     :root {
-      --primary-color: #ff6b35;
-      --primary-hover: #ff8659;
+      --primary-color: #2ecc71;
+      --primary-hover: #27ae60;
       --text-color: #2d3436;
       --bg-color: #f5f6f7;
+      --error-color: #e74c3c;
+      --success-color: #2ecc71;
     }
 
     body {
@@ -19,48 +22,131 @@
       background: var(--bg-color);
       color: var(--text-color);
       line-height: 1.6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       padding: 20px;
     }
 
     .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .assessment-card {
       background: white;
-      padding: 40px;
+      padding: 30px;
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .header {
       text-align: center;
-      max-width: 600px;
-      width: 100%;
+      margin-bottom: 40px;
     }
 
     h1 {
       color: var(--primary-color);
-      margin: 0 0 20px;
       font-size: 2rem;
+      margin: 0 0 10px;
     }
 
-    p {
-      margin: 0 0 30px;
+    .location-info {
       color: #636e72;
       font-size: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
     }
 
-    .back-button {
-      display: inline-block;
+    .question-group {
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .radio-option {
+      flex: 1;
+      position: relative;
+    }
+
+    .radio-option input[type="radio"] {
+      display: none;
+    }
+
+    .radio-option label {
+      display: block;
+      padding: 12px 20px;
+      background: var(--bg-color);
+      border: 2px solid #dfe6e9;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .radio-option input[type="radio"]:checked + label {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      color: white;
+    }
+
+    .validation-message {
+      color: var(--error-color);
+      margin-top: 5px;
+      display: none;
+      font-size: 0.9rem;
+    }
+
+    .question-group.invalid .validation-message {
+      display: block;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 40px;
+    }
+
+    .button {
+      flex: 1;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .primary-button {
       background: var(--primary-color);
       color: white;
-      text-decoration: none;
-      padding: 12px 24px;
-      border-radius: 6px;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
     }
 
-    .back-button:hover {
+    .primary-button:hover {
       background: var(--primary-hover);
+    }
+
+    .secondary-button {
+      background: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    .secondary-button:hover {
+      background: #dfe6e9;
     }
 
     /* Dark theme support */
@@ -69,30 +155,228 @@
       --text-color: #e0e0e0;
     }
 
-    .dark-theme .container {
+    .dark-theme .assessment-card {
       background: #2d2d2d;
     }
 
-    .dark-theme p {
-      color: #b0b0b0;
+    .dark-theme .radio-option label {
+      background: #2d2d2d;
+      border-color: #404040;
+    }
+
+    @media (max-width: 600px) {
+      .radio-group {
+        flex-direction: column;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Food Support Tier 1 Assessment Coming Soon</h1>
-    <p>This page is being built. Please check back soon.</p>
-    <a href="index.html" class="back-button">Back to Home</a>
+    <div class="assessment-card">
+      <div class="header">
+        <h1>Food Assistance Assessment</h1>
+        <div class="location-info">
+          <div id="zip-display">ZIP Loading...</div>
+        </div>
+      </div>
+
+      <form id="foodAssessmentForm">
+        <div class="question-group">
+          <label>Do you currently have enough food for yourself and your household?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="food_yes" name="has_enough_food" value="yes" required>
+              <label for="food_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="food_no" name="has_enough_food" value="no">
+              <label for="food_no">No</label>
+            </div>
+          </div>
+          <div class="validation-message">Please select an option</div>
+        </div>
+
+        <div class="question-group">
+          <label>Do you receive SNAP (food stamps)?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="snap_yes" name="receives_snap" value="yes" required>
+              <label for="snap_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="snap_no" name="receives_snap" value="no">
+              <label for="snap_no">No</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="snap_unsure" name="receives_snap" value="unsure">
+              <label for="snap_unsure">Not Sure</label>
+            </div>
+          </div>
+          <div class="validation-message">Please select an option</div>
+        </div>
+
+        <div class="question-group">
+          <label>Would you like help applying for SNAP or other food assistance?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="help_yes" name="wants_assistance" value="yes" required>
+              <label for="help_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="help_no" name="wants_assistance" value="no">
+              <label for="help_no">No</label>
+            </div>
+          </div>
+          <div class="validation-message">Please select an option</div>
+        </div>
+
+        <div class="question-group">
+          <label>Are you able to travel to a food pantry or delivery location?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="travel_yes" name="can_travel" value="yes" required>
+              <label for="travel_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="travel_no" name="can_travel" value="no">
+              <label for="travel_no">No</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="travel_sometimes" name="can_travel" value="sometimes">
+              <label for="travel_sometimes">Sometimes</label>
+            </div>
+          </div>
+          <div class="validation-message">Please select an option</div>
+        </div>
+
+        <div class="question-group">
+          <label>Do you have access to a kitchen or a way to cook food?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="kitchen_yes" name="has_kitchen" value="yes" required>
+              <label for="kitchen_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="kitchen_no" name="has_kitchen" value="no">
+              <label for="kitchen_no">No</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="kitchen_partial" name="has_kitchen" value="partial">
+              <label for="kitchen_partial">Partially</label>
+            </div>
+          </div>
+          <div class="validation-message">Please select an option</div>
+        </div>
+
+        <div id="validationMessage" class="validation-message">
+          Please answer all questions before continuing
+        </div>
+
+        <div class="button-group">
+          <a href="index.html" class="button secondary-button">Back to Home</a>
+          <button type="button" onclick="submitAssessment()" class="button primary-button">Continue to Summary</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script>
-    // Check for dark theme
+    // Function to update location display
+    function updateLocationDisplay() {
+      const zip = localStorage.getItem('userZipCode');
+      const zipDisplay = document.getElementById('zip-display');
+      
+      if (!zip || !/^\d{5}$/.test(zip)) {
+        alert('Please start from the homepage to set your ZIP code.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      zipDisplay.textContent = `ZIP ${zip}`;
+    }
+
+    // Function to validate a question
+    function validateQuestion(element) {
+      const group = element.closest('.question-group');
+      if (!group) return true;
+      
+      if (element.checkValidity()) {
+        group.classList.remove('invalid');
+        group.classList.add('valid');
+        return true;
+      } else {
+        group.classList.remove('valid');
+        group.classList.add('invalid');
+        return false;
+      }
+    }
+
+    // Initialize page
     document.addEventListener('DOMContentLoaded', () => {
+      updateLocationDisplay();
+      
+      // Check for dark theme
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
       }
+
+      // Add validation listeners
+      const form = document.getElementById('foodAssessmentForm');
+      const inputs = form.querySelectorAll('input[type="radio"]');
+      
+      inputs.forEach(input => {
+        input.addEventListener('change', () => validateQuestion(input));
+      });
     });
+
+    // Form submission
+    window.submitAssessment = function() {
+      const form = document.getElementById('foodAssessmentForm');
+      const inputs = form.querySelectorAll('input[type="radio"]');
+      let isValid = true;
+
+      // Validate all inputs
+      inputs.forEach(input => {
+        if (!validateQuestion(input)) {
+          isValid = false;
+        }
+      });
+
+      if (!isValid) {
+        document.getElementById('validationMessage').style.display = 'block';
+        const firstInvalid = form.querySelector('.question-group.invalid');
+        if (firstInvalid) {
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+
+      // Collect form data
+      const formData = {
+        has_enough_food: form.has_enough_food.value,
+        receives_snap: form.receives_snap.value,
+        wants_assistance: form.wants_assistance.value,
+        can_travel: form.can_travel.value,
+        has_kitchen: form.has_kitchen.value,
+        timestamp: new Date().toISOString()
+      };
+
+      // Save to localStorage
+      localStorage.setItem('foodAssessmentFull', JSON.stringify(formData));
+      
+      // Redirect to results page
+      window.location.href = 'assessment_food_tier2.html';
+    };
   </script>
 </body>
 </html> 

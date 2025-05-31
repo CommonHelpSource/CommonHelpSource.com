@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Assistance Results - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    :root {
+      --primary-color: #2ecc71;
+      --primary-hover: #27ae60;
+      --text-color: #2d3436;
+      --bg-color: #f5f6f7;
+      --success-color: #2ecc71;
+      --warning-color: #f1c40f;
+      --error-color: #e74c3c;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .results-card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      color: var(--primary-color);
+      font-size: 2rem;
+      margin: 0 0 10px;
+    }
+
+    .location-info {
+      color: #636e72;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    .summary-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: var(--bg-color);
+      border-radius: 8px;
+    }
+
+    .summary-section h2 {
+      color: var(--primary-color);
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    .summary-item {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #dfe6e9;
+    }
+
+    .summary-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .summary-label {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .summary-value {
+      color: #636e72;
+    }
+
+    .ai-response {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .ai-response h2 {
+      color: var(--primary-color);
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #636e72;
+    }
+
+    .loading::after {
+      content: "...";
+      animation: dots 1.5s steps(5, end) infinite;
+    }
+
+    @keyframes dots {
+      0%, 20% { content: "."; }
+      40% { content: ".."; }
+      60%, 100% { content: "..."; }
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      flex: 1;
+      min-width: 150px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .primary-button {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .primary-button:hover {
+      background: var(--primary-hover);
+    }
+
+    .secondary-button {
+      background: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    .secondary-button:hover {
+      background: #dfe6e9;
+    }
+
+    /* Dark theme support */
+    body.dark-theme {
+      --bg-color: #1a1a1a;
+      --text-color: #e0e0e0;
+    }
+
+    .dark-theme .results-card {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .summary-section,
+    .dark-theme .ai-response {
+      background: #363636;
+    }
+
+    .dark-theme .summary-value {
+      color: #b0b0b0;
+    }
+
+    @media (max-width: 600px) {
+      .button-group {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="results-card">
+      <div class="header">
+        <h1>Food Assistance Results</h1>
+        <div class="location-info">
+          <div id="zip-display">ZIP Loading...</div>
+        </div>
+      </div>
+
+      <div class="summary-section">
+        <h2>Your Assessment Summary</h2>
+        <div id="assessment-summary">Loading assessment data...</div>
+      </div>
+
+      <div class="ai-response">
+        <h2>Available Resources</h2>
+        <div id="ai-content" class="loading">Analyzing available resources in your area</div>
+      </div>
+
+      <div class="button-group">
+        <button onclick="printSummary()" class="button secondary-button">Print Summary</button>
+        <button onclick="downloadSummary()" class="button secondary-button">Download Summary</button>
+        <a href="index.html" class="button primary-button">Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Function to format assessment data for display
+    function formatAssessmentData(data) {
+      const questions = {
+        has_enough_food: "Current Food Situation",
+        receives_snap: "SNAP Benefits Status",
+        wants_assistance: "Interest in Assistance",
+        can_travel: "Transportation Access",
+        has_kitchen: "Kitchen Access"
+      };
+
+      const valueMap = {
+        yes: "Yes",
+        no: "No",
+        unsure: "Not Sure",
+        sometimes: "Sometimes",
+        partial: "Partial Access"
+      };
+
+      let html = '';
+      for (const [key, question] of Object.entries(questions)) {
+        const value = valueMap[data[key]] || data[key];
+        html += `
+          <div class="summary-item">
+            <div class="summary-label">${question}</div>
+            <div class="summary-value">${value}</div>
+          </div>
+        `;
+      }
+      return html;
+    }
+
+    // Function to generate AI prompt
+    function generateAIPrompt(data, zip) {
+      let prompt = `Based on the following food needs and ZIP code ${zip}, what are the best food resources available within 10 miles?\n\n`;
+      prompt += `Current situation:\n`;
+      prompt += `- ${data.has_enough_food === 'no' ? 'Does not have' : 'Has'} enough food\n`;
+      prompt += `- ${data.receives_snap === 'yes' ? 'Currently receives' : data.receives_snap === 'no' ? 'Does not receive' : 'Unsure about'} SNAP benefits\n`;
+      prompt += `- ${data.wants_assistance === 'yes' ? 'Interested' : 'Not interested'} in assistance\n`;
+      prompt += `- ${data.can_travel === 'yes' ? 'Can travel' : data.can_travel === 'no' ? 'Cannot travel' : 'Sometimes can travel'} to food locations\n`;
+      prompt += `- ${data.has_kitchen === 'yes' ? 'Has' : data.has_kitchen === 'no' ? 'Does not have' : 'Has partial'} kitchen access`;
+      return prompt;
+    }
+
+    // Function to get AI response
+    async function getAIResponse(prompt) {
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ prompt })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to get AI response');
+        }
+
+        const data = await response.json();
+        return data.response;
+      } catch (error) {
+        console.error('Error getting AI response:', error);
+        return 'Unable to get AI recommendations at this time. Please try again later.';
+      }
+    }
+
+    // Function to print summary
+    function printSummary() {
+      window.print();
+    }
+
+    // Function to download summary
+    function downloadSummary() {
+      const zip = localStorage.getItem('userZipCode');
+      const assessmentData = JSON.parse(localStorage.getItem('foodAssessmentFull'));
+      const aiContent = document.getElementById('ai-content').textContent;
+
+      let content = `Food Assistance Assessment Summary\n`;
+      content += `ZIP Code: ${zip}\n\n`;
+      content += `Assessment Results:\n`;
+      for (const [key, value] of Object.entries(assessmentData)) {
+        if (key !== 'timestamp') {
+          content += `${key}: ${value}\n`;
+        }
+      }
+      content += `\nAI Recommendations:\n${aiContent}`;
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'food-assessment-summary.txt';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+
+    // Initialize page
+    async function initializePage() {
+      // Check for dark theme
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+      }
+
+      // Get and display ZIP
+      const zip = localStorage.getItem('userZipCode');
+      if (!zip) {
+        alert('Please start from the homepage to set your ZIP code.');
+        window.location.href = 'index.html';
+        return;
+      }
+      document.getElementById('zip-display').textContent = `ZIP ${zip}`;
+
+      // Get and display assessment data
+      const assessmentData = localStorage.getItem('foodAssessmentFull');
+      if (!assessmentData) {
+        alert('No assessment data found. Please complete the assessment first.');
+        window.location.href = 'assessment_food_tier1.html';
+        return;
+      }
+
+      const data = JSON.parse(assessmentData);
+      document.getElementById('assessment-summary').innerHTML = formatAssessmentData(data);
+
+      // Get and display AI response
+      const prompt = generateAIPrompt(data, zip);
+      const aiResponse = await getAIResponse(prompt);
+      document.getElementById('ai-content').textContent = aiResponse;
+    }
+
+    document.addEventListener('DOMContentLoaded', initializePage);
+  </script>
+</body>
+</html> 
