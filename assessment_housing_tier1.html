@@ -478,6 +478,7 @@
     function validateQuestion(element) {
       const group = element.closest('.question-group');
       const validationIcon = group.querySelector('.validation-icon');
+      if (!validationIcon) return;
       
       if (element.checkValidity()) {
         group.classList.remove('invalid');
