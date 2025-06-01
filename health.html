@@ -313,6 +313,8 @@ Format the response as a JSON object with this structure:
         const recommendations = JSON.parse(result.content);
         displayRecommendations(recommendations);
 
+        console.log("OpenAI Response:", response);
+
       } catch (error) {
         console.error('Error:', error);
         document.getElementById('validation-message').textContent = `Error: ${error.message}. Please try again.`;

@@ -290,6 +290,89 @@
       background: var(--dark-primary);
       color: white;
     }
+
+    /* Navigation Grid Styles */
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 60px auto;
+      padding: 0 24px;
+    }
+
+    .nav-grid a {
+      background: white;
+      padding: 32px 24px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      text-decoration: none;
+      color: var(--text-color);
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 160px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-grid a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--primary-color);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .nav-grid a:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      color: var(--primary-color);
+    }
+
+    .nav-grid a:hover::before {
+      transform: scaleX(1);
+    }
+
+    /* Dark theme support */
+    .dark-theme .nav-grid a {
+      background: #2d3748;
+      color: #e2e8f0;
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .dark-theme .nav-grid a:hover {
+      background: #2d3748;
+      color: var(--primary-color);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    @media (max-width: 768px) {
+      .nav-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 0 16px;
+        margin: 40px auto;
+      }
+
+      .nav-grid a {
+        padding: 24px;
+        min-height: 120px;
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body class="dark-theme">
@@ -417,6 +500,34 @@
         <p>Professional note formatting and structuring tools for social workers and case managers.</p>
       </div>
     </div>
+
+    <!-- Navigation Grid Section -->
+    <section class="nav-grid">
+      <a href="/assessment/assessment_start.html">
+        <i class="fas fa-clipboard-list" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
+        Begin Assessment
+      </a>
+      <a href="#">
+        <i class="fas fa-user-md" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
+        Community Health Workers
+      </a>
+      <a href="/pro/pro-social-worker.html">
+        <i class="fas fa-hands-helping" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
+        Social Workers
+      </a>
+      <a href="/pages/food.html">
+        <i class="fas fa-utensils" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
+        Food Resources
+      </a>
+      <a href="/pages/id.html">
+        <i class="fas fa-id-card" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
+        ID & Documents
+      </a>
+      <a href="/pages/internet.html">
+        <i class="fas fa-wifi" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
+        Internet Access
+      </a>
+    </section>
   </div>
 
   <script>
