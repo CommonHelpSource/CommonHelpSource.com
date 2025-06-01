@@ -373,6 +373,98 @@
         font-size: 1rem;
       }
     }
+
+    /* Main Navigation Styles */
+    .main-nav {
+      width: 100%;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .main-nav-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .main-nav-button {
+      background: white;
+      padding: 32px 24px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      text-decoration: none;
+      color: var(--text-color);
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 160px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .main-nav-button i {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: var(--primary-color);
+      transition: all 0.3s ease;
+    }
+
+    .main-nav-button::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--primary-color);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .main-nav-button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .main-nav-button:hover::after {
+      transform: scaleX(1);
+    }
+
+    .main-nav-button:hover i {
+      transform: scale(1.1);
+    }
+
+    /* Dark theme support */
+    .dark-theme .main-nav-button {
+      background: #2d3748;
+      color: #e2e8f0;
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .dark-theme .main-nav-button:hover {
+      background: #2d3748;
+      color: var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+      .main-nav-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .main-nav-button {
+        min-height: 120px;
+        padding: 24px;
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body class="dark-theme">
@@ -501,32 +593,34 @@
       </div>
     </div>
 
-    <!-- Navigation Grid Section -->
-    <section class="nav-grid">
-      <a href="/assessment/assessment_start.html">
-        <i class="fas fa-clipboard-list" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
-        Begin Assessment
-      </a>
-      <a href="#">
-        <i class="fas fa-user-md" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
-        Community Health Workers
-      </a>
-      <a href="/pro/pro-social-worker.html">
-        <i class="fas fa-hands-helping" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
-        Social Workers
-      </a>
-      <a href="/pages/food.html">
-        <i class="fas fa-utensils" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
-        Food Resources
-      </a>
-      <a href="/pages/id.html">
-        <i class="fas fa-id-card" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
-        ID & Documents
-      </a>
-      <a href="/pages/internet.html">
-        <i class="fas fa-wifi" style="font-size: 24px; margin-bottom: 12px; color: var(--primary-color);"></i>
-        Internet Access
-      </a>
+    <!-- Main Navigation Section -->
+    <section class="main-nav">
+      <div class="main-nav-grid">
+        <a href="/assessment/assessment_start.html" class="main-nav-button">
+          <i class="fas fa-clipboard-list"></i>
+          Begin Assessment
+        </a>
+        <a href="/pro/pro-chw.html" class="main-nav-button">
+          <i class="fas fa-user-md"></i>
+          The Pro CHW
+        </a>
+        <a href="/pro/pro-social-worker.html" class="main-nav-button">
+          <i class="fas fa-hands-helping"></i>
+          The Pro Social Worker
+        </a>
+        <a href="/pages/food.html" class="main-nav-button">
+          <i class="fas fa-utensils"></i>
+          Explore Food Help
+        </a>
+        <a href="/pages/id.html" class="main-nav-button">
+          <i class="fas fa-id-card"></i>
+          Explore ID Help
+        </a>
+        <a href="/pages/internet.html" class="main-nav-button">
+          <i class="fas fa-wifi"></i>
+          Explore Internet Help
+        </a>
+      </div>
     </section>
   </div>
 
