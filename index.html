@@ -54,6 +54,44 @@
       margin-bottom: 40px;
     }
 
+    .cta-button {
+      display: inline-block;
+      background: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 20px 0 40px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(255, 107, 53, 0.2);
+    }
+
+    .cta-button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(255, 107, 53, 0.3);
+    }
+
+    .cta-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.3);
+    }
+
+    .cta-button:active {
+      transform: translateY(1px);
+    }
+
+    @media (max-width: 480px) {
+      .cta-button {
+        width: 100%;
+        text-align: center;
+        padding: 20px;
+        font-size: 1.1rem;
+      }
+    }
+
     .input-group {
       margin-bottom: 20px;
     }
@@ -265,6 +303,10 @@
       </div>
       <div class="tagline">Smart Access to Community Help, Powered by AI</div>
       
+      <a href="/assessment/housing_tier1.html" class="cta-button" role="button" aria-label="Begin Housing Assessment">
+        Begin Housing Assessment
+      </a>
+
       <div class="input-group">
         <label for="zip">Enter your ZIP code to get started</label>
         <div class="zip-input-container">

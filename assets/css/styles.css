@@ -556,4 +556,50 @@ textarea {
     white-space: pre-wrap;
     word-wrap: break-word;
     color: var(--text-color);
+}
+
+/* CTA Button Styles */
+.cta-button {
+  display: inline-block;
+  background: var(--primary-color);
+  color: white;
+  text-decoration: none;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 20px 0 40px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(255, 107, 53, 0.2);
+  text-align: center;
+}
+
+.cta-button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(255, 107, 53, 0.3);
+  color: white;
+  text-decoration: none;
+}
+
+.cta-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.3);
+  color: white;
+  text-decoration: none;
+}
+
+.cta-button:active {
+  transform: translateY(1px);
+  color: white;
+  text-decoration: none;
+}
+
+@media (max-width: 480px) {
+  .cta-button {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1rem;
+  }
 } 
