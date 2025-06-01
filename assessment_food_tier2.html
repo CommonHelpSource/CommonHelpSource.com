@@ -181,6 +181,84 @@
       color: #b0b0b0;
     }
 
+    /* Footer styles */
+    footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      color: #636e72;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--primary-hover);
+    }
+
+    .dark-theme footer {
+      color: #b0b0b0;
+    }
+
+    /* Powered By section styles */
+    #powered-by {
+      text-align: center;
+      padding: 40px 20px;
+      margin-top: 40px;
+      background: rgba(46, 204, 113, 0.05);
+      border-radius: 12px;
+    }
+
+    #powered-by h3 {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      margin: 0 0 20px;
+    }
+
+    #powered-by ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 30px;
+      display: inline-block;
+      text-align: left;
+    }
+
+    #powered-by li {
+      margin: 12px 0;
+      color: var(--text-color);
+      font-size: 1.1rem;
+    }
+
+    #powered-by a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    #powered-by a:hover {
+      color: var(--primary-hover);
+    }
+
+    #powered-by p {
+      max-width: 600px;
+      margin: 0 auto;
+      color: #636e72;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .dark-theme #powered-by {
+      background: rgba(46, 204, 113, 0.1);
+    }
+
+    .dark-theme #powered-by p {
+      color: #b0b0b0;
+    }
+
     @media (max-width: 600px) {
       .button-group {
         flex-direction: column;
@@ -219,6 +297,22 @@
       </div>
     </div>
   </div>
+
+  <section id="powered-by">
+    <h3>Powered By</h3>
+    <ul>
+      <li>⚙️ <a href="https://www.cursor.sh" target="_blank">Cursor</a> – for building smarter, faster with AI</li>
+      <li>🧠 <a href="https://platform.openai.com" target="_blank">ChatGPT</a> – to make complex support feel simple</li>
+      <li>🌐 <a href="https://www.netlify.com/" target="_blank">Netlify</a> – to host and deliver help, securely</li>
+      <li>📁 GitHub – for clean, collaborative version control</li>
+    </ul>
+    <p>We're committed to building digital tools that serve both communities and professionals. CommonHelpSource is where technology meets trust.</p>
+  </section>
+
+  <footer>
+    <p>Built with ❤️ using <a href="https://www.cursor.sh" target="_blank">Cursor</a>, GitHub, and Netlify.</p>
+    <p>CommonHelpSource is proudly powered by open tools and human purpose.</p>
+  </footer>
 
   <script>
     // Function to format assessment data for display
