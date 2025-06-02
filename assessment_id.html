@@ -421,22 +421,9 @@ Please provide a step-by-step plan for obtaining identification that includes:
       if (isValid) {
         // Save to localStorage
         localStorage.setItem('idAssessment', JSON.stringify(formData));
-
-        // Get ZIP code
-        const zip = localStorage.getItem('userZipCode');
-        if (!zip) {
-          alert('Please complete the initial assessment first.');
-          window.location.href = 'assessment_start.html';
-          return;
-        }
-
-        // Build and display summary
-        document.getElementById('summaryContent').textContent = buildSummary(formData);
-        document.getElementById('promptBox').textContent = buildPrompt(zip, formData);
-        document.getElementById('summarySection').classList.add('visible');
-
-        // Scroll to summary
-        document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth' });
+        
+        // Redirect to summary page
+        window.location.href = 'assessment_id_summary.html';
       }
     });
   </script>

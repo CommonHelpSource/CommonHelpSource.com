@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ID Assessment Summary - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c5282;
+      --primary-hover: #2b6cb0;
+      --accent-color: #4299e1;
+      --background-color: #f7fafc;
+      --text-color: #2d3748;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      flex-grow: 1;
+    }
+
+    .card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 40px;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      margin: 30px 0 20px;
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+
+    .steps-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 20px;
+    }
+
+    .step {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .step:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .button.secondary {
+      background-color: #718096;
+    }
+
+    .button.secondary:hover {
+      background-color: #4a5568;
+    }
+
+    .button i {
+      margin-right: 8px;
+    }
+
+    @media print {
+      .button-group {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      .card {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>ID Assessment Summary</h1>
+
+      <h2>Your Current Situation</h2>
+      <div id="summaryContent" class="summary-box"></div>
+
+      <h2>Recommended Steps</h2>
+      <div id="stepsContent" class="steps-box">
+        <div class="step">
+          <div class="step-title">1. Document Gathering</div>
+          <div id="documentSteps"></div>
+        </div>
+        <div class="step">
+          <div class="step-title">2. Location & Resources</div>
+          <div id="locationSteps"></div>
+        </div>
+        <div class="step">
+          <div class="step-title">3. Cost & Assistance</div>
+          <div id="costSteps"></div>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button onclick="window.print()" class="button">
+          <i class="fas fa-print"></i> Print Summary
+        </button>
+        <a href="assessment_id.html" class="button secondary">
+          <i class="fas fa-arrow-left"></i> Back to Assessment
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function formatDocuments(documents) {
+      if (!documents || documents.length === 0) return "don't have any identification documents";
+      
+      const docNames = {
+        'stateId': 'state ID/driver\'s license',
+        'birthCert': 'birth certificate',
+        'ssCard': 'Social Security card',
+        'passport': 'passport/immigration documents'
+      };
+      
+      const docs = documents.map(d => docNames[d]);
+      if (docs.length === 1) return `have your ${docs[0]}`;
+      if (docs.length === 2) return `have your ${docs[0]} and ${docs[1]}`;
+      return `have your ${docs.slice(0, -1).join(', ')}, and ${docs.slice(-1)}`;
+    }
+
+    function formatCitizenship(status) {
+      const statuses = {
+        'citizen': 'a U.S. citizen',
+        'permanent': 'a permanent resident with a Green Card',
+        'undocumented': 'undocumented'
+      };
+      return statuses[status] || status;
+    }
+
+    function buildSummary(data) {
+      return `You ${formatDocuments(data.documents)}.
+You ${data.hasAddress === 'yes' ? 'do' : 'do not'} have a permanent address for mail.
+You are ${formatCitizenship(data.citizenshipStatus)}.
+You ${data.hadPreviousId === 'yes' ? 'have' : data.hadPreviousId === 'no' ? 'have never' : 'are not sure if you have'} had a state ID before.
+You are ${data.isHomeless === 'yes' ? '' : 'not '}currently experiencing homelessness.`;
+    }
+
+    function generateRecommendations(data) {
+      // Document gathering steps
+      let docSteps = '';
+      if (!data.documents || data.documents.length === 0) {
+        docSteps = `
+          • Start with obtaining your birth certificate as it's often required for other IDs
+          • Next, get your Social Security card using your birth certificate
+          • Finally, use both documents to get your state ID`;
+      } else {
+        const missingDocs = [];
+        if (!data.documents.includes('birthCert')) missingDocs.push('birth certificate');
+        if (!data.documents.includes('ssCard')) missingDocs.push('Social Security card');
+        if (!data.documents.includes('stateId')) missingDocs.push('state ID');
+        
+        docSteps = missingDocs.length > 0 
+          ? `Based on what you have, you should focus on getting your: ${missingDocs.join(', ')}`
+          : `You have all the basic documents needed! Keep them in a safe place.`;
+      }
+      document.getElementById('documentSteps').innerHTML = docSteps;
+
+      // Location and resources steps
+      let locationSteps = `
+        • Visit your local vital records office for birth certificate requests
+        • Find your nearest Social Security Administration office
+        • Locate your state's DMV or ID issuing office
+        ${data.isHomeless === 'yes' ? '• Connect with local homeless services for address verification assistance' : ''}`;
+      document.getElementById('locationSteps').innerHTML = locationSteps;
+
+      // Cost and assistance steps
+      let costSteps = `
+        • Birth certificate fees vary by state ($10-30 typically)
+        • Social Security card replacement is free
+        • State ID fees vary ($10-30 typically)
+        • Fee waivers may be available if you're experiencing financial hardship
+        • Local non-profits may offer financial assistance for ID costs`;
+      document.getElementById('costSteps').innerHTML = costSteps;
+    }
+
+    // Load and display the assessment data
+    window.addEventListener('DOMContentLoaded', function() {
+      const assessmentData = JSON.parse(localStorage.getItem('idAssessment') || '{}');
+      if (Object.keys(assessmentData).length === 0) {
+        window.location.href = 'assessment_id.html';
+        return;
+      }
+
+      document.getElementById('summaryContent').textContent = buildSummary(assessmentData);
+      generateRecommendations(assessmentData);
+    });
+  </script>
+</body>
+</html> 
