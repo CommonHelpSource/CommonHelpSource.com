@@ -4,608 +4,354 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://ka-f.fontawesome.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://ka-f.fontawesome.com; connect-src 'self' https://ka-f.fontawesome.com">
-  <title>Treatment Plan Generator - CommonHelpSource</title>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <title>Treatment Plan Builder - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #00b894;
-      --primary-hover: #00a382;
-      --text-color: #2d3436;
+      --primary-color: #2d6a4f;
+      --primary-hover: #1b4332;
+      --accent-color: #c9b037;
+      --accent-hover: #b89b2d;
+      --background-color: #f7f9f7;
+      --text-color: #1a1a1a;
+      --card-background: white;
       --border-radius: 12px;
-      --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --success-color: #38a169;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
     }
 
     .container {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 40px 20px;
     }
 
-    .site-logo {
-      display: block;
-      max-width: 300px;
-      width: 80%;
-      height: auto;
-      margin: 20px auto;
-      transition: transform 0.2s;
-    }
-
-    .site-logo:hover {
-      transform: scale(1.02);
-    }
-
-    .page-header {
+    header {
       text-align: center;
       margin-bottom: 40px;
     }
 
-    .page-header h1 {
+    h1 {
       font-size: 2.5rem;
-      color: var(--text-color);
-      margin-bottom: 10px;
-    }
-
-    .page-header p {
-      font-size: 1.2rem;
-      color: #636e72;
-      margin: 0;
-    }
-
-    .form-group {
-      margin-bottom: 25px;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: var(--text-color);
-      font-size: 1.1rem;
-    }
-
-    select, textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #dfe6e9;
-      border-radius: var(--border-radius);
-      font-family: 'Open Sans', sans-serif;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-
-    select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.1);
-    }
-
-    textarea {
-      min-height: 200px;
-      resize: vertical;
-    }
-
-    .generate-button {
-      background: white;
-      color: var(--text-color);
-      padding: 15px 30px;
-      border: 2px solid var(--primary-color);
-      border-radius: var(--border-radius);
-      font-weight: 600;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      margin: 30px 0;
-    }
-
-    .generate-button:hover {
-      background: var(--primary-color);
-      color: white;
-      transform: translateY(-2px);
-    }
-
-    .generate-button:active {
-      transform: translateY(0);
-    }
-
-    .generate-button:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .generate-button.loading {
-      background: #f5f6fa;
-      border-color: #dfe6e9;
-      color: #636e72;
-    }
-
-    .generate-button.success {
-      background: #2ecc71;
-      border-color: #2ecc71;
-      color: white;
-    }
-
-    .output-container {
-      background: #fff;
-      border-radius: var(--border-radius);
-      padding: 25px;
-      margin-top: 30px;
-      box-shadow: var(--box-shadow);
-      border: 1px solid #dfe6e9;
-      display: none;
-    }
-
-    .output-content {
-      white-space: pre-wrap;
-      font-family: 'Open Sans', sans-serif;
-      line-height: 1.6;
+      font-weight: 700;
+      color: var(--primary-color);
       margin-bottom: 20px;
     }
 
-    .action-buttons {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      margin-top: 20px;
+    .description {
+      font-size: 1.1rem;
+      max-width: 800px;
+      margin: 0 auto 40px;
+      color: #4a5568;
+      text-align: center;
+      line-height: 1.8;
     }
 
-    .action-button {
-      padding: 12px 24px;
-      border: 2px solid #dfe6e9;
+    .goal-card {
+      background: var(--card-background);
       border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 32px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .goal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .goal-number {
+      font-size: 1.25rem;
       font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .remove-goal {
+      background: none;
+      border: none;
+      color: #e53e3e;
       cursor: pointer;
+      font-size: 1.1rem;
+      padding: 8px;
+      border-radius: 50%;
       transition: all 0.3s ease;
+    }
+
+    .remove-goal:hover {
+      background: #fff5f5;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--primary-color);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--border-radius);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 32px;
+    }
+
+    .button {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: white;
-      color: var(--text-color);
-      font-size: 1.1rem;
-    }
-
-    .action-button:hover {
-      transform: translateY(-2px);
-      border-color: var(--primary-color);
-      color: var(--primary-color);
-    }
-
-    .action-button:active {
-      transform: translateY(0);
-    }
-
-    .action-button.success {
-      background: #2ecc71;
-      color: white;
-      border-color: #2ecc71;
-    }
-
-    .loading-spinner {
-      display: none;
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .loading-spinner i {
-      color: var(--primary-color);
-      font-size: 1.5rem;
-    }
-
-    .format-info {
-      margin-top: 10px;
-      padding: 10px;
-      background: #f8f9fa;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      color: #636e72;
-      border-left: 3px solid var(--primary-color);
-    }
-
-    .template-sections {
-      background: #f8f9fa;
-      padding: 20px;
+      padding: 12px 24px;
+      border: none;
       border-radius: var(--border-radius);
-      border: 1px solid #dfe6e9;
-    }
-
-    .section-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .section-item {
-      padding: 10px 15px;
-      background: white;
-      border-radius: 6px;
-      border: 1px solid #dfe6e9;
-      font-size: 0.95rem;
-      color: var(--text-color);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
       transition: all 0.3s ease;
     }
 
-    .section-item:hover {
-      border-color: var(--primary-color);
-      transform: translateX(5px);
+    .button.primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .button.primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .button.secondary {
+      background-color: var(--accent-color);
+      color: var(--text-color);
+    }
+
+    .button.secondary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .button.outline {
+      border: 2px solid var(--primary-color);
+      background: transparent;
+      color: var(--primary-color);
+    }
+
+    .button.outline:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .button i {
+      margin-right: 8px;
+    }
+
+    #generatedPlan {
+      white-space: pre-wrap;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: var(--border-radius);
+      border-left: 4px solid var(--primary-color);
+      margin-top: 24px;
+      display: none;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      .button-group,
+      .remove-goal {
+        display: none !important;
+      }
+
+      .goal-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+      }
+
+      #generatedPlan {
+        display: block !important;
+        border: none;
+        padding: 0;
+      }
     }
 
     @media (max-width: 768px) {
-      .action-buttons {
-        flex-direction: column;
-      }
-      
-      .action-button {
-        width: 100%;
-        justify-content: center;
+      .container {
+        padding: 20px;
       }
 
-      .template-sections {
-        padding: 15px;
+      .goal-card {
+        padding: 24px;
       }
-      
-      .section-item {
-        font-size: 0.9rem;
-        padding: 8px 12px;
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <a href="index.html">
-      <img src="assets/images/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
-    </a>
+    <header>
+      <h1>Treatment Plan Builder</h1>
+      <p class="description">Create clear, goal-based treatment plans to support client progress.</p>
+    </header>
 
-    <div class="page-header">
-      <h1>🧠 AI-Powered Treatment Plan Generator</h1>
-      <p>Create structured, goal-based plans in seconds</p>
+    <div id="goalContainer"></div>
+
+    <div class="button-group">
+      <button id="addGoal" class="button outline">
+        <i class="fas fa-plus"></i> Add Another Goal
+      </button>
+      <button id="generatePlan" class="button primary">
+        <i class="fas fa-file-alt"></i> Generate Full Treatment Plan
+      </button>
+      <button id="printPlan" class="button secondary" style="display: none;">
+        <i class="fas fa-print"></i> Print This Plan
+      </button>
     </div>
 
-    <div class="form-group">
-      <label for="focus-area">Select focus area:</label>
-      <select id="focus-area">
-        <option value="">-- Choose a focus area --</option>
-        <option value="mental-health">Mental Health</option>
-        <option value="substance-use">Substance Use</option>
-        <option value="housing">Housing / Stability</option>
-        <option value="physical-health">Physical Health</option>
-        <option value="other">Other</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="format">Choose a format:</label>
-      <select id="format">
-        <option value="">-- Select format --</option>
-        <option value="smart">SMART Goals</option>
-        <option value="strength">Strength-Based</option>
-        <option value="narrative">Narrative</option>
-        <option value="clinical">Clinical Encounter</option>
-      </select>
-      <div id="format-info" class="format-info"></div>
-    </div>
-
-    <div class="form-group template-sections" style="display: none;">
-      <label>Required Sections:</label>
-      <div class="section-list">
-        <div class="section-item">1. Type of Encounter and Date/Time</div>
-        <div class="section-item">2. Reason for Visit/Discussion</div>
-        <div class="section-item">3. Key Observations and Attendees</div>
-        <div class="section-item">4. Education/Discussion Provided</div>
-        <div class="section-item">5. Changes to Goals or New Concerns</div>
-        <div class="section-item">6. Barriers to Outcomes</div>
-        <div class="section-item">7. Care Plan Completion</div>
-        <div class="section-item">8. Referrals/Actions/Authorizations Updates</div>
-        <div class="section-item">9. Next Visit or Follow-Up</div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="client-needs">Briefly describe the client's needs or situation:</label>
-      <textarea id="client-needs" placeholder="Enter details about the client's current situation, needs, and any relevant background information..."></textarea>
-    </div>
-
-    <button class="generate-button" onclick="generatePlan()">
-      🧠 Generate My Treatment Plan
-    </button>
-
-    <div class="loading-spinner">
-      <i class="fas fa-spinner fa-spin"></i> Generating your plan...
-    </div>
-
-    <div class="output-container">
-      <div class="output-content"></div>
-      <div class="action-buttons">
-        <button class="action-button" onclick="copyToClipboard()">
-          📋 Copy
-        </button>
-        <button class="action-button" onclick="printPlan()">
-          🖨️ Print
-        </button>
-        <button class="action-button" onclick="downloadAsPDF()">
-          ⬇️ Download PDF
-        </button>
-        <button class="action-button" onclick="emailPlan()">
-          📧 Email
-        </button>
-      </div>
-    </div>
+    <div id="generatedPlan"></div>
   </div>
 
-  <script src="https://kit.fontawesome.com/1234567890.js" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
-    // Format descriptions with enhanced prompting guidance
-    const formatInfo = {
-      smart: {
-        description: "SMART goals are Specific, Measurable, Achievable, Relevant, and Time-bound objectives that create clear action plans.",
-        placeholder: "Example: Client needs support with managing anxiety and developing coping skills...",
-        prompt: "Structure this plan using SMART goals (Specific, Measurable, Achievable, Relevant, Time-bound). Each objective should be concrete and measurable."
-      },
-      strength: {
-        description: "Strength-based planning focuses on the client's existing capabilities, resources, and potential for growth.",
-        placeholder: "Example: Client shows strong family support and motivation to change...",
-        prompt: "Use a strength-based approach that emphasizes the client's existing capabilities, support systems, and potential for growth. Build interventions around these strengths."
-      },
-      narrative: {
-        description: "Narrative format tells the client's story while integrating goals and interventions into a cohesive plan.",
-        placeholder: "Example: Client is seeking support for ongoing depression while maintaining sobriety...",
-        prompt: "Create a narrative treatment plan that tells the client's story while naturally integrating goals and interventions. Maintain a clear progression from challenges to solutions."
-      },
-      clinical: {
-        description: "A structured clinical encounter format that ensures comprehensive documentation of the visit, interventions, and follow-up plans.",
-        placeholder: "Enter client information and visit details. The system will structure it into the required clinical sections...",
-        prompt: `Structure this clinical encounter note into the following sections:
+    let goalCount = 0;
 
-1. Type of Encounter and Date/Time
-- Specify encounter type and exact timing
-
-2. Reason for Visit/Discussion
-- Primary concerns and topics addressed
-
-3. Key Observations and Attendees
-- Clinical observations and present participants
-
-4. Education/Discussion Provided
-- Information shared and client understanding
-
-5. Changes to Goals or New Concerns
-- Updates to treatment goals or new issues
-
-6. Barriers to Outcomes
-- Challenges affecting progress
-
-7. Care Plan Completion
-- Progress on existing care plan items
-
-8. Referrals/Actions/Authorizations Updates
-- New referrals and authorization status
-
-9. Next Visit or Follow-Up
-- Scheduled follow-up and pending actions`
-      }
-    };
-
-    // Update format info and template sections when selection changes
-    document.getElementById('format').addEventListener('change', function() {
-      const format = this.value;
-      const infoDiv = document.getElementById('format-info');
-      const textarea = document.getElementById('client-needs');
-      const templateSections = document.querySelector('.template-sections');
-      
-      if (format && formatInfo[format]) {
-        infoDiv.textContent = formatInfo[format].description;
-        textarea.placeholder = formatInfo[format].placeholder;
-        
-        // Show template sections only for clinical format
-        templateSections.style.display = format === 'clinical' ? 'block' : 'none';
-      } else {
-        infoDiv.textContent = '';
-        textarea.placeholder = 'Enter details about the client\'s current situation, needs, and any relevant background information...';
-        templateSections.style.display = 'none';
-      }
-    });
-
-    async function generatePlan() {
-      const focusArea = document.getElementById('focus-area').value;
-      const format = document.getElementById('format').value;
-      const clientNeeds = document.getElementById('client-needs').value;
-
-      if (!focusArea || !format || !clientNeeds.trim()) {
-        alert('Please fill in all fields before generating the plan.');
-        return;
-      }
-
-      // Show loading state
-      const button = document.querySelector('.generate-button');
-      const spinner = document.querySelector('.loading-spinner');
-      const originalText = button.innerHTML;
-      button.disabled = true;
-      button.classList.add('loading');
-      button.innerHTML = '⏳ Generating your plan...';
-      spinner.style.display = 'block';
-
-      // Construct enhanced prompt
-      const prompt = `
-You are a licensed clinician developing a treatment plan focused on: "${focusArea}" for a client in ZIP code ${localStorage.getItem('userZipCode') || 'unknown ZIP'}.
-${formatInfo[format].prompt}
-
-Guidelines:
-1. Use professional clinical language
-2. Ensure all HIPAA-compliant (use "client" or "member" for names)
-3. Include specific dates, times, and measurements where appropriate
-4. Be clear and concise while maintaining clinical accuracy
-5. Focus on actionable items and measurable outcomes
-6. Consider local resources and community context when relevant
-
-Client Description:
-"""${clientNeeds}"""
-
-Please structure the response according to the selected format, using appropriate headings and clear organization.
-`;
-
-      try {
-        // Call OpenAI API via Netlify Function
-        const response = await fetch('/.netlify/functions/generateNote', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ note: prompt })
-        });
-
-        if (!response.ok) {
-          throw new Error(`API request failed with status ${response.status}`);
-        }
-
-        const data = await response.json();
-        const finalPlan = data.output;
-        
-        // Display the generated plan
-        const outputContainer = document.querySelector('.output-container');
-        const outputContent = document.querySelector('.output-content');
-        outputContent.textContent = finalPlan;
-        outputContainer.style.display = 'block';
-
-        // Save to localStorage with metadata
-        localStorage.setItem('generatedPlan', finalPlan);
-        localStorage.setItem('planMeta', JSON.stringify({
-          focusArea,
-          format,
-          date: new Date().toLocaleString(),
-          type: 'Treatment Plan'
-        }));
-
-        // Show success state
-        button.classList.remove('loading');
-        button.classList.add('success');
-        button.innerHTML = '✅ Plan Generated!';
-        setTimeout(() => {
-          button.classList.remove('success');
-          button.innerHTML = originalText;
-          button.disabled = false;
-        }, 2000);
-
-        // Scroll to output
-        outputContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-      } catch (error) {
-        console.error('Error generating plan:', error);
-        alert('Error generating treatment plan. Please try again.');
-        
-        // Restore button state
-        button.classList.remove('loading');
-        button.innerHTML = originalText;
-        button.disabled = false;
-      } finally {
-        // Hide spinner
-        spinner.style.display = 'none';
-      }
-    }
-
-    function copyToClipboard() {
-      const planText = localStorage.getItem('generatedPlan');
-      if (!planText) {
-        alert('No treatment plan available to copy.');
-        return;
-      }
-
-      navigator.clipboard.writeText(planText)
-        .then(() => {
-          // Show success feedback
-          const button = document.querySelector('.action-button');
-          button.classList.add('success');
-          const originalText = button.innerHTML;
-          button.innerHTML = '✅ Copied!';
-          setTimeout(() => {
-            button.innerHTML = originalText;
-            button.classList.remove('success');
-          }, 2000);
-        })
-        .catch(err => {
-          console.error('Error copying text:', err);
-          alert('Error copying to clipboard. Please try again.');
-        });
-    }
-
-    function printPlan() {
-      window.print();
-    }
-
-    async function downloadAsPDF() {
-      const planText = localStorage.getItem('generatedPlan');
-      if (!planText) {
-        alert('No treatment plan available to download.');
-        return;
-      }
-
-      const meta = JSON.parse(localStorage.getItem('planMeta') || '{}');
-      
-      const container = document.createElement('div');
-      container.innerHTML = `
-        <div style="margin-bottom: 20px; font-family: 'Open Sans', sans-serif;">
-          <h2 style="color: #2d3436; margin-bottom: 10px;">Treatment Plan</h2>
-          <div style="color: #636e72; font-size: 0.9em;">
-            <p><strong>Focus Area:</strong> ${meta.focusArea || 'Not specified'}</p>
-            <p><strong>Format:</strong> ${meta.format || 'Standard'}</p>
-            <p><strong>Date:</strong> ${meta.date || new Date().toLocaleString()}</p>
-          </div>
-          <hr style="margin: 15px 0; border: none; border-top: 1px solid #dfe6e9;">
+    function createGoalCard() {
+      goalCount++;
+      const goalCard = document.createElement('div');
+      goalCard.className = 'goal-card';
+      goalCard.innerHTML = `
+        <div class="goal-header">
+          <div class="goal-number">Goal ${goalCount}</div>
+          ${goalCount > 1 ? `
+            <button class="remove-goal" onclick="removeGoal(this)">
+              <i class="fas fa-times"></i>
+            </button>
+          ` : ''}
         </div>
-        <pre style="white-space: pre-wrap; font-family: 'Open Sans', sans-serif; line-height: 1.6; margin: 0; padding: 0;">${planText}</pre>
+        <div class="form-group">
+          <label for="condition${goalCount}">Condition or concern being addressed:</label>
+          <textarea id="condition${goalCount}" placeholder="Describe the primary condition, issue, or concern that needs to be addressed..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="clientGoal${goalCount}">Client's goal in their own words:</label>
+          <textarea id="clientGoal${goalCount}" placeholder="Record the client's personal goal statement and desired outcomes..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="interventions${goalCount}">Clinical interventions or strategies:</label>
+          <textarea id="interventions${goalCount}" placeholder="List specific therapeutic interventions, techniques, or approaches to be used..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="support${goalCount}">Support services to involve:</label>
+          <textarea id="support${goalCount}" placeholder="Identify additional services, resources, or referrals needed..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="outcomes${goalCount}">Measurable outcomes or target behaviors:</label>
+          <textarea id="outcomes${goalCount}" placeholder="Define specific, measurable indicators of progress..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="timeline${goalCount}">Timeline and review plan:</label>
+          <textarea id="timeline${goalCount}" placeholder="Specify timeframe for goal achievement and when progress will be reviewed..."></textarea>
+        </div>
       `;
-
-      const opt = {
-        margin: 0.5,
-        filename: `treatment-plan-${Date.now()}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
-
-      try {
-        const button = document.querySelector('.action-button[onclick="downloadAsPDF()"]');
-        const originalText = button.innerHTML;
-        button.innerHTML = '⏳ Generating PDF...';
-        button.disabled = true;
-
-        await html2pdf().from(container).set(opt).save();
-
-        // Show success feedback
-        button.classList.add('success');
-        button.innerHTML = '✅ Downloaded!';
-        setTimeout(() => {
-          button.innerHTML = originalText;
-          button.disabled = false;
-          button.classList.remove('success');
-        }, 2000);
-      } catch (error) {
-        console.error('Error generating PDF:', error);
-        alert('Error generating PDF. Please try again.');
-        
-        const button = document.querySelector('.action-button[onclick="downloadAsPDF()"]');
-        button.innerHTML = originalText;
-        button.disabled = false;
-      }
+      document.getElementById('goalContainer').appendChild(goalCard);
     }
 
-    function emailPlan() {
-      const planText = localStorage.getItem('generatedPlan');
-      if (!planText) {
-        alert('No treatment plan available to email.');
+    function removeGoal(button) {
+      button.closest('.goal-card').remove();
+      updateGoalNumbers();
+    }
+
+    function updateGoalNumbers() {
+      document.querySelectorAll('.goal-card').forEach((card, index) => {
+        card.querySelector('.goal-number').textContent = `Goal ${index + 1}`;
+      });
+      goalCount = document.querySelectorAll('.goal-card').length;
+    }
+
+    function generatePlan() {
+      const goals = document.querySelectorAll('.goal-card');
+      if (goals.length === 0) {
+        alert('Please add at least one goal to generate a treatment plan.');
         return;
       }
 
-      const meta = JSON.parse(localStorage.getItem('planMeta') || '{}');
-      const subject = `Treatment Plan - ${meta.focusArea} - ${new Date().toLocaleDateString()}`;
-      const body = `Treatment Plan\n\nFocus Area: ${meta.focusArea}\nFormat: ${meta.format}\nDate: ${meta.date}\n\n${planText}`;
-      
-      window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      let planContent = `TREATMENT PLAN\nDate: ${new Date().toLocaleDateString()}\n\n`;
+
+      goals.forEach((goal, index) => {
+        planContent += `GOAL ${index + 1}\n`;
+        planContent += `==========\n\n`;
+        planContent += `Condition/Concern:\n${document.getElementById('condition' + (index + 1)).value}\n\n`;
+        planContent += `Client's Goal:\n${document.getElementById('clientGoal' + (index + 1)).value}\n\n`;
+        planContent += `Interventions:\n${document.getElementById('interventions' + (index + 1)).value}\n\n`;
+        planContent += `Support Services:\n${document.getElementById('support' + (index + 1)).value}\n\n`;
+        planContent += `Measurable Outcomes:\n${document.getElementById('outcomes' + (index + 1)).value}\n\n`;
+        planContent += `Timeline:\n${document.getElementById('timeline' + (index + 1)).value}\n\n`;
+        planContent += `----------------------------------------\n\n`;
+      });
+
+      const planElement = document.getElementById('generatedPlan');
+      planElement.textContent = planContent;
+      planElement.style.display = 'block';
+      document.getElementById('printPlan').style.display = 'inline-flex';
     }
+
+    document.getElementById('addGoal').addEventListener('click', createGoalCard);
+    document.getElementById('generatePlan').addEventListener('click', generatePlan);
+    document.getElementById('printPlan').addEventListener('click', () => window.print());
+
+    // Create first goal card on page load
+    createGoalCard();
   </script>
 </body>
 </html> 

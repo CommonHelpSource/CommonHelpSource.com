@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHW Progress Note Builder - CommonHelpSource</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5282;
+            --primary-hover: #2b6cb0;
+            --accent-color: #4299e1;
+            --background-color: #f7fafc;
+            --text-color: #2d3748;
+            --card-background: white;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --error-color: #e53e3e;
+            --success-color: #38a169;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            color: var(--text-color);
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        select:hover, input:hover, textarea:hover {
+            border-color: var(--accent-color);
+        }
+
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.4);
+        }
+
+        .note-template {
+            display: none;
+        }
+
+        .note-template.active {
+            display: block;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-hover);
+        }
+
+        .print-preview {
+            display: none;
+            background: white;
+            padding: 40px;
+            margin-top: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .print-preview.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+        }
+
+        @media print {
+            .no-print {
+                display: none;
+            }
+
+            .print-preview {
+                display: block;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../pro-chw.html" class="back-link no-print">
+            <i class="fas fa-arrow-left"></i> Back to Pro CHW Hub
+        </a>
+
+        <header class="no-print">
+            <h1>CHW Progress Note Builder</h1>
+        </header>
+
+        <div class="form-container no-print">
+            <div class="form-group">
+                <label for="noteType">Select Note Type</label>
+                <select id="noteType" onchange="showTemplate()" aria-label="Select note template type">
+                    <option value="">Choose a template...</option>
+                    <option value="extended">CHW Extended Note</option>
+                    <option value="newGoal">New Goal Note</option>
+                    <option value="goalUpdate">Existing Goal Update Note</option>
+                </select>
+            </div>
+
+            <!-- Extended Note Template -->
+            <form id="extendedNote" class="note-template">
+                <div class="form-group">
+                    <label for="clientName">Client Name</label>
+                    <input type="text" id="clientName" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="dateOfService">Date of Service</label>
+                    <input type="date" id="dateOfService" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="location">Location of Service</label>
+                    <input type="text" id="location" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration (minutes)</label>
+                    <input type="number" id="duration" min="1" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="presenting">Presenting Situation</label>
+                    <textarea id="presenting" required aria-required="true"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="intervention">Intervention Provided</label>
+                    <textarea id="intervention" required aria-required="true"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="followUp">Follow-up Plan</label>
+                    <textarea id="followUp" required aria-required="true"></textarea>
+                </div>
+            </form>
+
+            <!-- New Goal Note Template -->
+            <form id="newGoalNote" class="note-template">
+                <div class="form-group">
+                    <label for="goalClientName">Client Name</label>
+                    <input type="text" id="goalClientName" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="goalDate">Date</label>
+                    <input type="date" id="goalDate" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="goalCategory">Goal Category</label>
+                    <select id="goalCategory" required aria-required="true">
+                        <option value="">Select category...</option>
+                        <option value="housing">Housing</option>
+                        <option value="health">Health</option>
+                        <option value="employment">Employment</option>
+                        <option value="education">Education</option>
+                        <option value="financial">Financial</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="goalDescription">Goal Description</label>
+                    <textarea id="goalDescription" required aria-required="true"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="actionSteps">Action Steps</label>
+                    <textarea id="actionSteps" required aria-required="true"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="timeline">Timeline</label>
+                    <input type="text" id="timeline" required aria-required="true">
+                </div>
+            </form>
+
+            <!-- Goal Update Note Template -->
+            <form id="goalUpdateNote" class="note-template">
+                <div class="form-group">
+                    <label for="updateClientName">Client Name</label>
+                    <input type="text" id="updateClientName" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="updateDate">Date</label>
+                    <input type="date" id="updateDate" required aria-required="true">
+                </div>
+                <div class="form-group">
+                    <label for="originalGoal">Original Goal</label>
+                    <textarea id="originalGoal" required aria-required="true"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="progress">Progress Made</label>
+                    <textarea id="progress" required aria-required="true"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="barriers">Barriers Encountered</label>
+                    <textarea id="barriers" required aria-required="true"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="nextSteps">Next Steps</label>
+                    <textarea id="nextSteps" required aria-required="true"></textarea>
+                </div>
+            </form>
+
+            <button onclick="generateNote()" class="button" aria-label="Generate progress note">
+                Generate Note
+            </button>
+        </div>
+
+        <div id="printPreview" class="print-preview"></div>
+    </div>
+
+    <script>
+        function showTemplate() {
+            const noteType = document.getElementById('noteType').value;
+            const templates = document.querySelectorAll('.note-template');
+            
+            templates.forEach(template => {
+                template.style.display = 'none';
+            });
+
+            if (noteType) {
+                const selectedTemplate = document.getElementById(noteType + 'Note');
+                selectedTemplate.style.display = 'block';
+            }
+        }
+
+        function generateNote() {
+            const noteType = document.getElementById('noteType').value;
+            if (!noteType) return;
+
+            const preview = document.getElementById('printPreview');
+            let content = '';
+
+            switch (noteType) {
+                case 'extended':
+                    content = generateExtendedNote();
+                    break;
+                case 'newGoal':
+                    content = generateNewGoalNote();
+                    break;
+                case 'goalUpdate':
+                    content = generateGoalUpdateNote();
+                    break;
+            }
+
+            preview.innerHTML = content;
+            preview.classList.add('active');
+        }
+
+        function generateExtendedNote() {
+            const clientName = document.getElementById('clientName').value;
+            const date = document.getElementById('dateOfService').value;
+            const location = document.getElementById('location').value;
+            const duration = document.getElementById('duration').value;
+            const presenting = document.getElementById('presenting').value;
+            const intervention = document.getElementById('intervention').value;
+            const followUp = document.getElementById('followUp').value;
+
+            return `
+                <h2>CHW Extended Progress Note</h2>
+                <p><strong>Client Name:</strong> ${clientName}</p>
+                <p><strong>Date of Service:</strong> ${date}</p>
+                <p><strong>Location:</strong> ${location}</p>
+                <p><strong>Duration:</strong> ${duration} minutes</p>
+                <h3>Presenting Situation</h3>
+                <p>${presenting}</p>
+                <h3>Intervention Provided</h3>
+                <p>${intervention}</p>
+                <h3>Follow-up Plan</h3>
+                <p>${followUp}</p>
+            `;
+        }
+
+        function generateNewGoalNote() {
+            const clientName = document.getElementById('goalClientName').value;
+            const date = document.getElementById('goalDate').value;
+            const category = document.getElementById('goalCategory').value;
+            const description = document.getElementById('goalDescription').value;
+            const steps = document.getElementById('actionSteps').value;
+            const timeline = document.getElementById('timeline').value;
+
+            return `
+                <h2>New Goal Progress Note</h2>
+                <p><strong>Client Name:</strong> ${clientName}</p>
+                <p><strong>Date:</strong> ${date}</p>
+                <p><strong>Goal Category:</strong> ${category}</p>
+                <h3>Goal Description</h3>
+                <p>${description}</p>
+                <h3>Action Steps</h3>
+                <p>${steps}</p>
+                <h3>Timeline</h3>
+                <p>${timeline}</p>
+            `;
+        }
+
+        function generateGoalUpdateNote() {
+            const clientName = document.getElementById('updateClientName').value;
+            const date = document.getElementById('updateDate').value;
+            const originalGoal = document.getElementById('originalGoal').value;
+            const progress = document.getElementById('progress').value;
+            const barriers = document.getElementById('barriers').value;
+            const nextSteps = document.getElementById('nextSteps').value;
+
+            return `
+                <h2>Goal Update Progress Note</h2>
+                <p><strong>Client Name:</strong> ${clientName}</p>
+                <p><strong>Date:</strong> ${date}</p>
+                <h3>Original Goal</h3>
+                <p>${originalGoal}</p>
+                <h3>Progress Made</h3>
+                <p>${progress}</p>
+                <h3>Barriers Encountered</h3>
+                <p>${barriers}</p>
+                <h3>Next Steps</h3>
+                <p>${nextSteps}</p>
+            `;
+        }
+    </script>
+</body>
+</html> 

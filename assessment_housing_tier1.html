@@ -3,600 +3,328 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Housing Assessment - CommonHelpSource</title>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <title>Housing Assessment - Tier 1 - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #ff6b35;
-      --primary-hover: #ff8659;
-      --text-color: #2d3436;
-      --bg-color: #f5f6f7;
-      --error-color: #e74c3c;
-      --success-color: #2ecc71;
+      --primary-color: #2c5282;
+      --primary-hover: #2b6cb0;
+      --accent-color: #4299e1;
+      --background-color: #f7fafc;
+      --text-color: #2d3748;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --error-color: #e53e3e;
+      --success-color: #38a169;
     }
 
     body {
       margin: 0;
-      font-family: 'Open Sans', sans-serif;
-      background: var(--bg-color);
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
       color: var(--text-color);
       line-height: 1.6;
-      padding: 20px;
     }
 
     .container {
       max-width: 800px;
       margin: 0 auto;
+      padding: 40px 20px;
+      flex-grow: 1;
     }
 
-    .assessment-card {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 40px;
+    .card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 40px;
+      box-shadow: var(--box-shadow);
     }
 
     h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
       color: var(--primary-color);
-      font-size: 2rem;
-      margin: 0 0 10px;
-    }
-
-    .location-info {
-      color: #636e72;
-      font-size: 1.1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
+      margin-bottom: 40px;
+      text-align: center;
     }
 
     .question-group {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #e2e8f0;
     }
 
-    label {
-      display: block;
+    .question-group:last-of-type {
+      border-bottom: none;
+    }
+
+    .question {
+      font-size: 1.2rem;
       font-weight: 600;
-      margin-bottom: 10px;
       color: var(--text-color);
+      margin-bottom: 20px;
     }
 
-    .radio-group {
+    .options {
       display: flex;
-      gap: 15px;
-      margin-top: 10px;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    .radio-option {
+    .option {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option:hover {
+      background: #edf2f7;
+    }
+
+    .option input[type="radio"],
+    .option input[type="checkbox"] {
+      margin-right: 12px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .option label {
+      font-size: 1.1rem;
+      cursor: pointer;
+      user-select: none;
       flex: 1;
-      position: relative;
-    }
-
-    .radio-option input[type="radio"] {
-      display: none;
-    }
-
-    .radio-option label {
-      display: block;
-      padding: 12px 20px;
-      background: var(--bg-color);
-      border: 2px solid #dfe6e9;
-      border-radius: 8px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .radio-option input[type="radio"]:checked + label {
-      background: var(--primary-color);
-      border-color: var(--primary-color);
-      color: white;
-    }
-
-    select {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #dfe6e9;
-      border-radius: 8px;
-      font-size: 1rem;
-      background: white;
-      cursor: pointer;
-      transition: border-color 0.3s ease;
-    }
-
-    select:focus {
-      border-color: var(--primary-color);
-      outline: none;
     }
 
     .button-group {
       display: flex;
-      gap: 15px;
+      justify-content: space-between;
       margin-top: 40px;
     }
 
     .button {
-      flex: 1;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      text-decoration: none;
-      text-align: center;
-    }
-
-    .primary-button {
-      background: var(--primary-color);
-      color: white;
-    }
-
-    .primary-button:hover {
-      background: var(--primary-hover);
-    }
-
-    .secondary-button {
-      background: var(--bg-color);
-      color: var(--text-color);
-    }
-
-    .secondary-button:hover {
-      background: #dfe6e9;
-    }
-
-    .validation-message {
-      color: var(--error-color);
-      margin-top: 20px;
-      display: none;
-      text-align: center;
-    }
-
-    /* Dark theme support */
-    body.dark-theme {
-      --bg-color: #1a1a1a;
-      --text-color: #e0e0e0;
-    }
-
-    .dark-theme .assessment-card {
-      background: #2d2d2d;
-    }
-
-    .dark-theme .radio-option label {
-      background: #2d2d2d;
-      border-color: #404040;
-    }
-
-    .dark-theme select {
-      background: #2d2d2d;
-      border-color: #404040;
-      color: var(--text-color);
-    }
-
-    .dark-theme .secondary-button {
-      background: #404040;
-      color: var(--text-color);
-    }
-
-    .dark-theme .secondary-button:hover {
-      background: #505050;
-    }
-
-    @media (max-width: 600px) {
-      .radio-group {
-        flex-direction: column;
-      }
-
-      .button-group {
-        flex-direction: column;
-      }
-
-      .button {
-        width: 100%;
-      }
-    }
-
-    /* Progress indicator styles */
-    .progress-container {
-      margin-bottom: 30px;
-      padding: 0 20px;
-    }
-
-    .progress-bar {
-      display: flex;
-      justify-content: space-between;
-      position: relative;
-      margin-bottom: 30px;
-      counter-reset: step;
-    }
-
-    .progress-bar::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      height: 4px;
-      width: 100%;
-      background-color: #dfe6e9;
-      z-index: 1;
-    }
-
-    .progress-step {
-      width: 35px;
-      height: 35px;
-      background-color: white;
-      border: 4px solid #dfe6e9;
-      border-radius: 50%;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
       font-weight: 600;
-      color: #636e72;
-      position: relative;
-      z-index: 2;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
       transition: all 0.3s ease;
     }
 
-    .progress-step.active {
-      border-color: var(--primary-color);
-      color: var(--primary-color);
+    .button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
     }
 
-    .progress-step.completed {
-      background-color: var(--primary-color);
-      border-color: var(--primary-color);
-      color: white;
+    .button.secondary {
+      background-color: #718096;
     }
 
-    .progress-labels {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-      padding: 0 10px;
+    .button.secondary:hover {
+      background-color: #4a5568;
     }
 
-    .progress-label {
-      font-size: 0.9rem;
-      color: #636e72;
-      text-align: center;
-      flex: 1;
+    .button i {
+      margin-right: 8px;
     }
 
-    .progress-label.active {
-      color: var(--primary-color);
-      font-weight: 600;
+    .button.next i {
+      margin-right: 0;
+      margin-left: 8px;
     }
 
-    /* Enhanced validation styles */
-    .question-group {
-      position: relative;
-      padding-bottom: 20px;
-    }
-
-    .validation-icon {
-      position: absolute;
-      right: 10px;
-      top: 40px;
-      font-size: 1.2rem;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .validation-icon.valid {
-      color: var(--success-color);
-      opacity: 1;
-    }
-
-    .validation-icon.invalid {
+    .error-message {
       color: var(--error-color);
-      opacity: 1;
-    }
-
-    .validation-message {
       font-size: 0.9rem;
-      margin-top: 5px;
+      margin-top: 8px;
       display: none;
-      color: var(--error-color);
     }
 
-    .question-group.invalid .validation-message {
+    .error-message.visible {
       display: block;
     }
 
-    .question-group.invalid select,
-    .question-group.invalid .radio-group {
-      border-color: var(--error-color);
-    }
-
-    /* Dark theme enhancements */
-    .dark-theme .progress-step {
-      background-color: #2d2d2d;
-    }
-
-    .dark-theme .progress-bar::before {
-      background-color: #404040;
-    }
-
-    @media (max-width: 600px) {
-      .progress-labels {
-        display: none;
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
       }
-      
-      .progress-step {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9rem;
+
+      .card {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .question {
+        font-size: 1.1rem;
+      }
+
+      .option label {
+        font-size: 1rem;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="assessment-card">
-      <div class="progress-container">
-        <div class="progress-bar">
-          <div class="progress-step completed">1</div>
-          <div class="progress-step active">2</div>
-          <div class="progress-step">3</div>
-          <div class="progress-step">4</div>
-        </div>
-        <div class="progress-labels">
-          <div class="progress-label completed">Start</div>
-          <div class="progress-label active">Basic Info</div>
-          <div class="progress-label">Details</div>
-          <div class="progress-label">Resources</div>
-        </div>
-      </div>
+    <div class="card">
+      <h1>Housing Assessment – Tier 1</h1>
 
-      <div class="header">
-        <h1>Housing Assessment</h1>
-        <div class="location-info">
-          <div id="zip-display">ZIP Loading...</div>
-        </div>
-      </div>
-
-      <form id="housingAssessmentForm">
-        <!-- Tier 1 Questions -->
-        <h2>Basic Information</h2>
+      <form id="assessmentForm">
         <div class="question-group">
-          <label>What is your current housing situation?</label>
-          <select name="housing_situation" required>
-            <option value="">Please select...</option>
-            <option value="homeless">Currently homeless</option>
-            <option value="shelter">Staying in a shelter</option>
-            <option value="temporary">Temporary housing (with friends/family)</option>
-            <option value="risk">At risk of losing housing</option>
-            <option value="stable">Stable housing but need assistance</option>
-          </select>
-          <span class="validation-icon">✓</span>
-          <div class="validation-message">Please select your current housing situation</div>
-        </div>
-
-        <div class="question-group">
-          <label>Do you need immediate emergency shelter?</label>
-          <div class="radio-group">
-            <div class="radio-option">
-              <input type="radio" id="emergency_yes" name="emergency_shelter" value="yes" required>
-              <label for="emergency_yes">Yes</label>
+          <div class="question">1. What is your current housing situation?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="situation1" name="housingSituation" value="unhoused">
+              <label for="situation1">I'm unhoused / in shelter</label>
             </div>
-            <div class="radio-option">
-              <input type="radio" id="emergency_no" name="emergency_shelter" value="no">
-              <label for="emergency_no">No</label>
+            <div class="option">
+              <input type="radio" id="situation2" name="housingSituation" value="couchSurfing">
+              <label for="situation2">I'm couch-surfing or doubled up</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="situation3" name="housingSituation" value="facingEviction">
+              <label for="situation3">I'm facing eviction</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="situation4" name="housingSituation" value="stable">
+              <label for="situation4">I have stable housing</label>
             </div>
           </div>
+          <div class="error-message" id="housingSituationError">Please select your current housing situation</div>
         </div>
 
         <div class="question-group">
-          <label>Are you fleeing domestic violence?</label>
-          <div class="radio-group">
-            <div class="radio-option">
-              <input type="radio" id="dv_yes" name="domestic_violence" value="yes" required>
-              <label for="dv_yes">Yes</label>
+          <div class="question">2. Do you currently receive any rental assistance?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="assistance1" name="rentalAssistance" value="yes">
+              <label for="assistance1">Yes</label>
             </div>
-            <div class="radio-option">
-              <input type="radio" id="dv_no" name="domestic_violence" value="no">
-              <label for="dv_no">No</label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" id="dv_prefer" name="domestic_violence" value="prefer_not">
-              <label for="dv_prefer">Prefer not to say</label>
+            <div class="option">
+              <input type="radio" id="assistance2" name="rentalAssistance" value="no">
+              <label for="assistance2">No</label>
             </div>
           </div>
+          <div class="error-message" id="rentalAssistanceError">Please indicate if you receive rental assistance</div>
         </div>
 
         <div class="question-group">
-          <label>How many people are in your household?</label>
-          <select name="household_size" required>
-            <option value="">Please select...</option>
-            <option value="1">1 (just me)</option>
-            <option value="2">2 people</option>
-            <option value="3">3 people</option>
-            <option value="4">4 people</option>
-            <option value="5">5 people</option>
-            <option value="6+">6 or more</option>
-          </select>
-        </div>
-
-        <!-- Tier 2 Questions -->
-        <h2>Additional Details</h2>
-        <div class="question-group">
-          <label>What type of housing assistance are you seeking?</label>
-          <select name="assistance_type" required>
-            <option value="">Please select...</option>
-            <option value="rental">Rental assistance</option>
-            <option value="shelter">Shelter placement</option>
-            <option value="rapid">Rapid rehousing</option>
-            <option value="longterm">Long-term housing</option>
-            <option value="unsure">Unsure</option>
-          </select>
-          <span class="validation-icon">✓</span>
-          <div class="validation-message">Please select the type of assistance you need</div>
-        </div>
-
-        <div class="question-group">
-          <label>Do you have any income at this time?</label>
-          <div class="radio-group">
-            <div class="radio-option">
-              <input type="radio" id="income_yes" name="has_income" value="yes" required>
-              <label for="income_yes">Yes</label>
+          <div class="question">3. What is your biggest housing barrier right now?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="barrier1" name="housingBarrier" value="income">
+              <label for="barrier1">Income</label>
             </div>
-            <div class="radio-option">
-              <input type="radio" id="income_no" name="has_income" value="no">
-              <label for="income_no">No</label>
+            <div class="option">
+              <input type="radio" id="barrier2" name="housingBarrier" value="documentation">
+              <label for="barrier2">ID or documentation</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="barrier3" name="housingBarrier" value="criminal">
+              <label for="barrier3">Criminal record</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="barrier4" name="housingBarrier" value="eviction">
+              <label for="barrier4">Past eviction or debt</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="barrier5" name="housingBarrier" value="accessibility">
+              <label for="barrier5">Accessibility or disability needs</label>
             </div>
           </div>
+          <div class="error-message" id="housingBarrierError">Please select your biggest housing barrier</div>
         </div>
 
         <div class="question-group">
-          <label>Are you currently receiving any government benefits?</label>
-          <div class="radio-group">
-            <div class="radio-option">
-              <input type="radio" id="benefits_yes" name="has_benefits" value="yes" required>
-              <label for="benefits_yes">Yes</label>
+          <div class="question">4. Do you have any open applications for housing?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="applications1" name="openApplications" value="yes">
+              <label for="applications1">Yes</label>
             </div>
-            <div class="radio-option">
-              <input type="radio" id="benefits_no" name="has_benefits" value="no">
-              <label for="benefits_no">No</label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" id="benefits_unsure" name="has_benefits" value="unsure">
-              <label for="benefits_unsure">Not Sure</label>
+            <div class="option">
+              <input type="radio" id="applications2" name="openApplications" value="no">
+              <label for="applications2">No</label>
             </div>
           </div>
-        </div>
-
-        <div id="validationMessage" class="validation-message">
-          Please answer all questions before continuing
+          <div class="error-message" id="openApplicationsError">Please indicate if you have open housing applications</div>
         </div>
 
         <div class="button-group">
-          <a href="index.html" class="button secondary-button">Back to Home</a>
-          <button type="button" onclick="submitAssessment()" class="button primary-button">Continue to Summary</button>
+          <a href="assessment_start.html" class="button secondary">
+            <i class="fas fa-arrow-left"></i> Back
+          </a>
+          <button type="submit" class="button next">
+            Next <i class="fas fa-arrow-right"></i>
+          </button>
         </div>
       </form>
     </div>
   </div>
 
-  <script type="module">
-    // Function to update location display
-    function updateLocationDisplay() {
-      const zip = localStorage.getItem('userZipCode');
-      const zipDisplay = document.getElementById('zip-display');
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('assessmentForm');
       
-      if (!zip || !/^\d{5}$/.test(zip)) {
-        alert('Please start from the homepage to set your ZIP code.');
-        window.location.href = 'index.html';
-        return;
-      }
+      // Load saved answers if they exist
+      const savedAnswers = JSON.parse(localStorage.getItem('housingAssessmentTier1') || '{}');
+      Object.entries(savedAnswers).forEach(([name, value]) => {
+        const input = document.querySelector(`input[name="${name}"][value="${value}"]`);
+        if (input) input.checked = true;
+      });
 
-      zipDisplay.textContent = `ZIP ${zip}`;
-    }
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Reset error messages
+        document.querySelectorAll('.error-message').forEach(msg => {
+          msg.classList.remove('visible');
+        });
 
-    // Initialize location display on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      updateLocationDisplay();
-      
-      // Check for dark theme
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-      }
+        // Validate all questions are answered
+        const questions = ['housingSituation', 'rentalAssistance', 'housingBarrier', 'openApplications'];
+        let isValid = true;
 
-      // Add validation listeners to all form elements
-      const form = document.getElementById('housingAssessmentForm');
-      const inputs = form.querySelectorAll('select, input[type="radio"]');
-      
-      inputs.forEach(input => {
-        if (input.type === 'radio') {
-          input.addEventListener('change', () => validateQuestion(input));
-        } else {
-          input.addEventListener('change', () => validateQuestion(input));
-          input.addEventListener('blur', () => validateQuestion(input));
+        questions.forEach(question => {
+          const answered = form.querySelector(`input[name="${question}"]:checked`);
+          if (!answered) {
+            document.getElementById(`${question}Error`).classList.add('visible');
+            isValid = false;
+          }
+        });
+
+        if (isValid) {
+          // Save answers to localStorage
+          const answers = {};
+          questions.forEach(question => {
+            answers[question] = form.querySelector(`input[name="${question}"]:checked`).value;
+          });
+          localStorage.setItem('housingAssessmentTier1', JSON.stringify(answers));
+
+          // Proceed to next tier
+          window.location.href = 'assessment_housing_tier2.html';
         }
       });
     });
-
-    // Enhanced form validation
-    function validateQuestion(element) {
-      const group = element.closest('.question-group');
-      const validationIcon = group.querySelector('.validation-icon');
-      if (!validationIcon) return;
-      
-      if (element.checkValidity()) {
-        group.classList.remove('invalid');
-        group.classList.add('valid');
-        validationIcon.textContent = '✓';
-        validationIcon.classList.remove('invalid');
-        validationIcon.classList.add('valid');
-        return true;
-      } else {
-        group.classList.remove('valid');
-        group.classList.add('invalid');
-        validationIcon.textContent = '!';
-        validationIcon.classList.remove('valid');
-        validationIcon.classList.add('invalid');
-        return false;
-      }
-    }
-
-    // Enhanced form submission
-    window.submitAssessment = function() {
-      const form = document.getElementById('housingAssessmentForm');
-      const inputs = form.querySelectorAll('select, input[type="radio"]');
-      let isValid = true;
-
-      // Validate all inputs
-      inputs.forEach(input => {
-        if (!validateQuestion(input)) {
-          isValid = false;
-        }
-      });
-
-      if (!isValid) {
-        // Scroll to first invalid question
-        const firstInvalid = form.querySelector('.question-group.invalid');
-        if (firstInvalid) {
-          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return;
-      }
-
-      // Collect form data
-      const formData = {
-        // Tier 1 data
-        housing_situation: form.housing_situation.value,
-        emergency_shelter: form.emergency_shelter.value,
-        domestic_violence: form.domestic_violence.value,
-        household_size: form.household_size.value,
-        // Tier 2 data
-        assistance_type: form.assistance_type.value,
-        has_income: form.has_income.value,
-        has_benefits: form.has_benefits.value,
-        // Metadata
-        timestamp: new Date().toISOString()
-      };
-
-      // Save to localStorage
-      localStorage.setItem('housingAssessmentFull', JSON.stringify(formData));
-
-      // Show success state in progress bar
-      const currentStep = document.querySelector('.progress-step.active');
-      currentStep.classList.remove('active');
-      currentStep.classList.add('completed');
-      
-      // Animate transition
-      setTimeout(() => {
-        window.location.href = 'assessment_housing_tier2.html';
-      }, 500);
-    };
   </script>
 </body>
 </html> 

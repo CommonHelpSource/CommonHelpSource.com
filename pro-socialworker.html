@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR-ID"
+     crossorigin="anonymous"></script>
+  <title>Pro Social Worker Hub - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2F855A;
+      --primary-hover: #276749;
+      --accent-color: #D69E2E;
+      --accent-hover: #B7791F;
+      --background-color: #F0FFF4;
+      --text-color: #1A202C;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    header::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: var(--accent-color);
+      margin: 20px auto 0;
+      border-radius: 2px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .description {
+      font-size: 1.1rem;
+      max-width: 800px;
+      margin: 0 auto 40px;
+      color: #4A5568;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .tool-card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 32px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--text-color);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 240px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--accent-color);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+      transform-origin: left;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .tool-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .tool-card i {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .tool-card:hover i {
+      color: var(--accent-color);
+      transform: scale(1.1);
+    }
+
+    .tool-card h3 {
+      font-size: 1.25rem;
+      margin: 0 0 12px;
+      color: var(--primary-color);
+    }
+
+    .tool-card p {
+      font-size: 0.95rem;
+      margin: 0;
+      color: #4A5568;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+      color: var(--primary-hover);
+    }
+
+    @media (max-width: 768px) {
+      .tools-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .description {
+        font-size: 1rem;
+        padding: 0 20px;
+      }
+
+      .tool-card {
+        min-height: 200px;
+        padding: 24px;
+      }
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      background-color: #f4f4f4;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: #2d3748;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--primary-color);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <header>
+      <h1>Welcome to the Pro Social Worker Hub</h1>
+      <p class="description">
+        Your professional toolkit for streamlined documentation and therapeutic resources. Access customizable progress note formats, 
+        comprehensive treatment planning tools, and ready-to-use group therapy materials - designed to enhance your clinical practice 
+        and maximize time with clients.
+      </p>
+    </header>
+
+    <div class="tools-grid">
+      <a href="social-worker/progress-notes.html" class="tool-card">
+        <i class="fas fa-pen-fancy"></i>
+        <h3>Progress Note Builder</h3>
+        <p>Create professional, structured progress notes with customizable templates and SOAP format options</p>
+      </a>
+
+      <a href="social-worker/treatment-plans.html" class="tool-card">
+        <i class="fas fa-tasks"></i>
+        <h3>Treatment Plan Creator</h3>
+        <p>Develop comprehensive treatment plans with goals, objectives, and interventions aligned with best practices</p>
+      </a>
+
+      <a href="social-worker/group-materials.html" class="tool-card">
+        <i class="fas fa-users"></i>
+        <h3>Group Session Materials</h3>
+        <p>Access downloadable worksheets, activities, and structured group therapy resources</p>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="contact.html">Contact</a>
+  </footer>
+</body>
+</html> 

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://ka-f.fontawesome.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://ka-f.fontawesome.com; connect-src 'self' https://ka-f.fontawesome.com">
+  <title>Group Session Materials - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2d6a4f;
+      --primary-hover: #1b4332;
+      --accent-color: #c9b037;
+      --accent-hover: #b89b2d;
+      --background-color: #f7f9f7;
+      --text-color: #1a1a1a;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --success-color: #38a169;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .description {
+      font-size: 1.1rem;
+      max-width: 800px;
+      margin: 0 auto;
+      color: #4a5568;
+      line-height: 1.8;
+    }
+
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .material-card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .material-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+      background: var(--primary-color);
+      color: white;
+      padding: 20px;
+      position: relative;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .card-header i {
+      font-size: 2rem;
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      opacity: 0.3;
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    .card-description {
+      color: #4a5568;
+      margin-bottom: 24px;
+      min-height: 80px;
+    }
+
+    .view-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      background-color: transparent;
+      border: 2px solid var(--primary-color);
+      border-radius: var(--border-radius);
+      color: var(--primary-color);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .view-button:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .view-button i {
+      margin-right: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .materials-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .card-description {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Therapy Group Session Materials</h1>
+      <p class="description">Download ready-to-use plans, themes, and worksheets for behavioral health groups.</p>
+    </header>
+
+    <div class="materials-grid">
+      <!-- Relapse Prevention -->
+      <div class="material-card">
+        <div class="card-header">
+          <h2>Relapse Prevention</h2>
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Evidence-based tools and worksheets for identifying triggers, developing coping strategies, and creating personalized relapse prevention plans.
+          </p>
+          <a href="#" class="view-button">
+            <i class="fas fa-download"></i> View Materials
+          </a>
+          <!-- TODO: Link to materials later -->
+        </div>
+      </div>
+
+      <!-- Emotional Regulation -->
+      <div class="material-card">
+        <div class="card-header">
+          <h2>Emotional Regulation</h2>
+          <i class="fas fa-heart"></i>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            DBT-informed materials for understanding emotions, developing mindfulness skills, and building healthy coping mechanisms.
+          </p>
+          <a href="#" class="view-button">
+            <i class="fas fa-download"></i> View Materials
+          </a>
+          <!-- TODO: Link to materials later -->
+        </div>
+      </div>
+
+      <!-- Self-Esteem & Identity -->
+      <div class="material-card">
+        <div class="card-header">
+          <h2>Self-Esteem & Identity</h2>
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Activities and worksheets focused on building self-worth, exploring personal values, and strengthening identity development.
+          </p>
+          <a href="#" class="view-button">
+            <i class="fas fa-download"></i> View Materials
+          </a>
+          <!-- TODO: Link to materials later -->
+        </div>
+      </div>
+
+      <!-- Life Skills -->
+      <div class="material-card">
+        <div class="card-header">
+          <h2>Life Skills</h2>
+          <i class="fas fa-tasks"></i>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Practical exercises and resources for developing essential life skills, including communication, problem-solving, and goal setting.
+          </p>
+          <a href="#" class="view-button">
+            <i class="fas fa-download"></i> View Materials
+          </a>
+          <!-- TODO: Link to materials later -->
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

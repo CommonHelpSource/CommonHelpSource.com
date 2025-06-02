@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHW Progress Note Builder - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c5282;
+      --primary-hover: #2b6cb0;
+      --accent-color: #4299e1;
+      --background-color: #f7fafc;
+      --text-color: #2d3748;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --error-color: #e53e3e;
+      --success-color: #38a169;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      flex-grow: 1;
+    }
+
+    .card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 40px;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    select {
+      background-color: white;
+      cursor: pointer;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 20px;
+      margin-top: 40px;
+      justify-content: center;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .button.secondary {
+      background-color: #718096;
+    }
+
+    .button.secondary:hover {
+      background-color: #4a5568;
+    }
+
+    .button i {
+      margin-right: 8px;
+    }
+
+    .note-form {
+      display: none;
+    }
+
+    .note-form.active {
+      display: block;
+    }
+
+    .generated-note {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+      margin-top: 30px;
+      white-space: pre-wrap;
+      font-family: 'Montserrat', sans-serif;
+      display: none;
+    }
+
+    .generated-note.visible {
+      display: block;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .card {
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+      }
+
+      .button-group {
+        display: none;
+      }
+
+      .note-form {
+        display: none;
+      }
+
+      .generated-note {
+        display: block !important;
+        border: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      .card {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .label-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .mic-button {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mic-button:hover {
+      background: rgba(66, 153, 225, 0.1);
+    }
+
+    .mic-button.listening {
+      background: var(--accent-color);
+      color: white;
+      animation: pulse 2s infinite;
+    }
+
+    .listening-indicator {
+      font-size: 0.8rem;
+      color: var(--accent-color);
+      margin-left: 8px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .listening-indicator.visible {
+      opacity: 1;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(66, 153, 225, 0.4);
+      }
+      70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 10px rgba(66, 153, 225, 0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(66, 153, 225, 0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>CHW Progress Note Builder</h1>
+
+      <div class="form-group">
+        <label for="noteType">Select Note Type:</label>
+        <select id="noteType" onchange="switchNoteType()">
+          <option value="extended">CHW Extended Note</option>
+          <option value="newGoal">New Goal Note</option>
+          <option value="goalUpdate">Existing Goal Update Note</option>
+        </select>
+      </div>
+
+      <!-- Extended Note Form -->
+      <form id="extendedNoteForm" class="note-form active">
+        <div class="form-group">
+          <div class="label-group">
+            <label for="encounter">Type of Encounter and Date/Time:</label>
+            <button type="button" class="mic-button" onclick="startSpeechRecognition('encounter')">
+              <i class="fas fa-microphone"></i>
+              <span class="listening-indicator">Listening...</span>
+            </button>
+          </div>
+          <input type="text" id="encounter" required>
+        </div>
+        <div class="form-group">
+          <div class="label-group">
+            <label for="reason">Reason for Visit/Discussion:</label>
+            <button type="button" class="mic-button" onclick="startSpeechRecognition('reason')">
+              <i class="fas fa-microphone"></i>
+              <span class="listening-indicator">Listening...</span>
+            </button>
+          </div>
+          <textarea id="reason" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="observations">Key Observations and Attendees:</label>
+          <textarea id="observations" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="education">Education/Discussion Provided:</label>
+          <textarea id="education" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="changes">Changes to Goals or New Concerns:</label>
+          <textarea id="changes" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="barriers">Barriers to Outcomes:</label>
+          <textarea id="barriers" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="completion">Care Plan Completion:</label>
+          <textarea id="completion" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="referrals">Referrals/Actions/Authorizations Updates:</label>
+          <textarea id="referrals" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="nextVisit">Next Visit or Follow-Up:</label>
+          <textarea id="nextVisit" required></textarea>
+        </div>
+      </form>
+
+      <!-- New Goal Note Form -->
+      <form id="newGoalNoteForm" class="note-form">
+        <div class="form-group">
+          <div class="label-group">
+            <label for="condition">Condition impacting goal:</label>
+            <button type="button" class="mic-button" onclick="startSpeechRecognition('condition')">
+              <i class="fas fa-microphone"></i>
+              <span class="listening-indicator">Listening...</span>
+            </button>
+          </div>
+          <textarea id="condition" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="memberGoal">Member's goal:</label>
+          <textarea id="memberGoal" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="supports">Supports and services in place:</label>
+          <textarea id="supports" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="memberTask">Member task:</label>
+          <textarea id="memberTask" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="goalEducation">Education:</label>
+          <textarea id="goalEducation" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="nextSteps">Next Steps:</label>
+          <textarea id="nextSteps" required></textarea>
+        </div>
+      </form>
+
+      <!-- Goal Update Note Form -->
+      <form id="goalUpdateNoteForm" class="note-form">
+        <div class="form-group">
+          <div class="label-group">
+            <label for="progress">Progress towards goal:</label>
+            <button type="button" class="mic-button" onclick="startSpeechRecognition('progress')">
+              <i class="fas fa-microphone"></i>
+              <span class="listening-indicator">Listening...</span>
+            </button>
+          </div>
+          <textarea id="progress" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="updateSupports">Supports and services in place:</label>
+          <textarea id="updateSupports" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="updateMemberTask">Member task:</label>
+          <textarea id="updateMemberTask" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="updateEducation">Education:</label>
+          <textarea id="updateEducation" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="updateNextSteps">Next Steps:</label>
+          <textarea id="updateNextSteps" required></textarea>
+        </div>
+      </form>
+
+      <div class="button-group">
+        <button onclick="generateNote()" class="button">
+          <i class="fas fa-file-alt"></i> Generate Note
+        </button>
+        <button onclick="window.print()" class="button secondary">
+          <i class="fas fa-print"></i> Print Note
+        </button>
+      </div>
+
+      <div id="generatedNote" class="generated-note"></div>
+    </div>
+  </div>
+
+  <script>
+    let currentRecognition = null;
+
+    function initSpeechRecognition(targetId) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert('Speech recognition is not supported in this browser. Please use Chrome or Android.');
+        return null;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      const targetElement = document.getElementById(targetId);
+      const micButton = targetElement.parentElement.querySelector('.mic-button');
+      const indicator = micButton.querySelector('.listening-indicator');
+
+      recognition.onstart = () => {
+        micButton.classList.add('listening');
+        indicator.classList.add('visible');
+      };
+
+      recognition.onend = () => {
+        micButton.classList.remove('listening');
+        indicator.classList.remove('visible');
+        currentRecognition = null;
+      };
+
+      recognition.onresult = (event) => {
+        let finalTranscript = '';
+        let interimTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + ' ';
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        if (finalTranscript) {
+          targetElement.value = targetElement.value 
+            ? targetElement.value + ' ' + finalTranscript
+            : finalTranscript;
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        micButton.classList.remove('listening');
+        indicator.classList.remove('visible');
+        currentRecognition = null;
+      };
+
+      return recognition;
+    }
+
+    function startSpeechRecognition(targetId) {
+      if (currentRecognition) {
+        currentRecognition.stop();
+      }
+
+      document.querySelectorAll('.mic-button').forEach(button => {
+        button.classList.remove('listening');
+        button.querySelector('.listening-indicator').classList.remove('visible');
+      });
+
+      const recognition = initSpeechRecognition(targetId);
+      if (recognition) {
+        currentRecognition = recognition;
+        recognition.start();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && currentRecognition) {
+        currentRecognition.stop();
+      }
+    });
+
+    function switchNoteType() {
+      const noteType = document.getElementById('noteType').value;
+      document.querySelectorAll('.note-form').forEach(form => {
+        form.classList.remove('active');
+      });
+      document.getElementById(`${noteType}NoteForm`).classList.add('active');
+      document.getElementById('generatedNote').classList.remove('visible');
+    }
+
+    function generateNote() {
+      const noteType = document.getElementById('noteType').value;
+      let noteContent = '';
+      const currentDate = new Date().toLocaleString();
+
+      if (noteType === 'extended') {
+        noteContent = `CHW Extended Note
+Date: ${currentDate}
+
+Type of Encounter: ${document.getElementById('encounter').value}
+
+Reason for Visit/Discussion:
+${document.getElementById('reason').value}
+
+Key Observations and Attendees:
+${document.getElementById('observations').value}
+
+Education/Discussion Provided:
+${document.getElementById('education').value}
+
+Changes to Goals or New Concerns:
+${document.getElementById('changes').value}
+
+Barriers to Outcomes:
+${document.getElementById('barriers').value}
+
+Care Plan Completion:
+${document.getElementById('completion').value}
+
+Referrals/Actions/Authorizations Updates:
+${document.getElementById('referrals').value}
+
+Next Visit or Follow-Up:
+${document.getElementById('nextVisit').value}`;
+      } else if (noteType === 'newGoal') {
+        noteContent = `New Goal Note
+Date: ${currentDate}
+
+Condition impacting goal:
+${document.getElementById('condition').value}
+
+Member's goal:
+${document.getElementById('memberGoal').value}
+
+Supports and services in place:
+${document.getElementById('supports').value}
+
+Member task:
+${document.getElementById('memberTask').value}
+
+Education:
+${document.getElementById('goalEducation').value}
+
+Next Steps:
+${document.getElementById('nextSteps').value}`;
+      } else {
+        noteContent = `Goal Update Note
+Date: ${currentDate}
+
+Progress towards goal:
+${document.getElementById('progress').value}
+
+Supports and services in place:
+${document.getElementById('updateSupports').value}
+
+Member task:
+${document.getElementById('updateMemberTask').value}
+
+Education:
+${document.getElementById('updateEducation').value}
+
+Next Steps:
+${document.getElementById('updateNextSteps').value}`;
+      }
+
+      const generatedNote = document.getElementById('generatedNote');
+      generatedNote.textContent = noteContent;
+      generatedNote.classList.add('visible');
+    }
+
+    document.querySelectorAll('form').forEach(form => {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        generateNote();
+      });
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utilities Assessment - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c5282;
+      --primary-hover: #2b6cb0;
+      --accent-color: #4299e1;
+      --background-color: #f7fafc;
+      --text-color: #2d3748;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --error-color: #e53e3e;
+      --success-color: #38a169;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      flex-grow: 1;
+    }
+
+    .card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 40px;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .question-group {
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .question-group:last-of-type {
+      border-bottom: none;
+    }
+
+    .question {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option:hover {
+      background: #edf2f7;
+    }
+
+    .option input[type="radio"],
+    .option input[type="checkbox"] {
+      margin-right: 12px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .option label {
+      font-size: 1.1rem;
+      cursor: pointer;
+      user-select: none;
+      flex: 1;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+      gap: 20px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .button.secondary {
+      background-color: #718096;
+    }
+
+    .button.secondary:hover {
+      background-color: #4a5568;
+    }
+
+    .button i {
+      margin-right: 8px;
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 0.9rem;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    .summary-section {
+      display: none;
+      margin-top: 40px;
+    }
+
+    .summary-section.visible {
+      display: block;
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+      margin-bottom: 20px;
+    }
+
+    .prompt-box {
+      background: #2d3748;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      white-space: pre-wrap;
+      font-family: monospace;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      .card {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .question {
+        font-size: 1.1rem;
+      }
+
+      .option label {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Utilities Assessment</h1>
+
+      <form id="utilitiesAssessmentForm">
+        <div class="question-group">
+          <div class="question">1. Are you currently behind on any utility bills?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="behind1" name="isBehind" value="yes">
+              <label for="behind1">Yes</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="behind2" name="isBehind" value="no">
+              <label for="behind2">No</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="behind3" name="isBehind" value="unsure">
+              <label for="behind3">Not sure</label>
+            </div>
+          </div>
+          <div class="error-message" id="isBehindError">Please indicate if you are behind on utility bills</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">2. Which utilities are you struggling to afford?</div>
+          <div class="options">
+            <div class="option">
+              <input type="checkbox" id="util1" name="utilities" value="electricity">
+              <label for="util1">Electricity</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="util2" name="utilities" value="gas">
+              <label for="util2">Gas/Heating</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="util3" name="utilities" value="water">
+              <label for="util3">Water/Sewer</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="util4" name="utilities" value="internet">
+              <label for="util4">Internet</label>
+            </div>
+          </div>
+          <div class="error-message" id="utilitiesError">Please select at least one utility or none if not struggling</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">3. Have you applied for any utility assistance programs before?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="applied1" name="hasApplied" value="yes">
+              <label for="applied1">Yes</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="applied2" name="hasApplied" value="no">
+              <label for="applied2">No</label>
+            </div>
+          </div>
+          <div class="error-message" id="hasAppliedError">Please indicate if you have applied for assistance before</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">4. What is your current income situation?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="income1" name="incomeStatus" value="none">
+              <label for="income1">No income</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="income2" name="incomeStatus" value="ssi">
+              <label for="income2">SSI/SSDI</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="income3" name="incomeStatus" value="parttime">
+              <label for="income3">Minimum wage or part-time</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="income4" name="incomeStatus" value="fulltime">
+              <label for="income4">Stable full-time income</label>
+            </div>
+          </div>
+          <div class="error-message" id="incomeStatusError">Please select your income situation</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">5. Do you rent, own, or live with someone else?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="housing1" name="housingStatus" value="rent">
+              <label for="housing1">I rent</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="housing2" name="housingStatus" value="own">
+              <label for="housing2">I own</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="housing3" name="housingStatus" value="stay">
+              <label for="housing3">I stay with someone else</label>
+            </div>
+          </div>
+          <div class="error-message" id="housingStatusError">Please select your housing situation</div>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" class="button">
+            <i class="fas fa-lightbulb"></i> Generate Utilities Plan
+          </button>
+        </div>
+      </form>
+
+      <div id="summarySection" class="summary-section">
+        <h2>Your Utilities Assessment Summary</h2>
+        <div id="summaryContent" class="summary-box"></div>
+        
+        <h2>Suggested Next Steps</h2>
+        <div id="promptBox" class="prompt-box"></div>
+        <div id="aiResponse" class="summary-box">
+          <p><strong>Based on your situation, here's your recommended utilities assistance plan:</strong></p>
+          <p>This is a placeholder for the AI-generated response. When connected to the API, 
+          this will be replaced with personalized recommendations based on your assessment answers.</p>
+        </div>
+
+        <div class="button-group">
+          <button onclick="window.print()" class="button secondary">
+            <i class="fas fa-print"></i> Print Summary
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function formatUtilities(utilities) {
+      if (!utilities || utilities.length === 0) return "are not currently struggling with any utilities";
+      
+      const utilNames = {
+        'electricity': 'electricity',
+        'gas': 'gas/heating',
+        'water': 'water/sewer',
+        'internet': 'internet'
+      };
+      
+      const utils = utilities.map(u => utilNames[u]);
+      if (utils.length === 1) return `are struggling with ${utils[0]}`;
+      if (utils.length === 2) return `are struggling with ${utils[0]} and ${utils[1]}`;
+      return `are struggling with ${utils.slice(0, -1).join(', ')}, and ${utils.slice(-1)}`;
+    }
+
+    function formatIncome(status) {
+      const statuses = {
+        'none': 'no income',
+        'ssi': 'receiving SSI/SSDI',
+        'parttime': 'earning minimum wage or working part-time',
+        'fulltime': 'have stable full-time income'
+      };
+      return statuses[status] || status;
+    }
+
+    function formatHousing(status) {
+      const statuses = {
+        'rent': 'rent your home',
+        'own': 'own your home',
+        'stay': 'stay with someone else'
+      };
+      return statuses[status] || status;
+    }
+
+    function buildSummary(data) {
+      return `You are ${data.isBehind === 'yes' ? '' : data.isBehind === 'no' ? 'not ' : 'unsure if you are '}behind on utility bills.
+You ${formatUtilities(data.utilities)}.
+You ${data.hasApplied === 'yes' ? 'have' : 'have not'} applied for utility assistance programs before.
+You ${formatIncome(data.incomeStatus)}.
+You ${formatHousing(data.housingStatus)}.`;
+    }
+
+    function buildPrompt(zip, data) {
+      return `Hello, I live in ZIP code ${zip}. Based on my answers:
+- I am ${data.isBehind === 'yes' ? '' : data.isBehind === 'no' ? 'not ' : 'unsure if I am '}behind on utility bills
+- I ${formatUtilities(data.utilities)}
+- I ${data.hasApplied === 'yes' ? 'have' : 'have not'} applied for utility assistance before
+- I ${formatIncome(data.incomeStatus)}
+- I ${formatHousing(data.housingStatus)}
+
+Please provide a step-by-step plan for utility assistance that includes:
+1. Available utility assistance programs in my area
+2. Income-based programs I might qualify for
+3. Winter protection and shut-off prevention options
+4. Energy efficiency programs that could help reduce costs
+5. Local resources and organizations that can help with utilities`;
+    }
+
+    document.getElementById('utilitiesAssessmentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Reset error messages
+      document.querySelectorAll('.error-message').forEach(msg => {
+        msg.classList.remove('visible');
+      });
+
+      // Gather form data
+      const formData = {
+        isBehind: document.querySelector('input[name="isBehind"]:checked')?.value,
+        utilities: Array.from(document.querySelectorAll('input[name="utilities"]:checked')).map(cb => cb.value),
+        hasApplied: document.querySelector('input[name="hasApplied"]:checked')?.value,
+        incomeStatus: document.querySelector('input[name="incomeStatus"]:checked')?.value,
+        housingStatus: document.querySelector('input[name="housingStatus"]:checked')?.value
+      };
+
+      // Validate required fields
+      let isValid = true;
+      if (!formData.isBehind) {
+        document.getElementById('isBehindError').classList.add('visible');
+        isValid = false;
+      }
+      if (!formData.hasApplied) {
+        document.getElementById('hasAppliedError').classList.add('visible');
+        isValid = false;
+      }
+      if (!formData.incomeStatus) {
+        document.getElementById('incomeStatusError').classList.add('visible');
+        isValid = false;
+      }
+      if (!formData.housingStatus) {
+        document.getElementById('housingStatusError').classList.add('visible');
+        isValid = false;
+      }
+
+      if (isValid) {
+        // Save to localStorage
+        localStorage.setItem('utilitiesAssessment', JSON.stringify(formData));
+
+        // Get ZIP code
+        const zip = localStorage.getItem('userZipCode');
+        if (!zip) {
+          alert('Please complete the initial assessment first.');
+          window.location.href = 'assessment_start.html';
+          return;
+        }
+
+        // Build and display summary
+        document.getElementById('summaryContent').textContent = buildSummary(formData);
+        document.getElementById('promptBox').textContent = buildPrompt(zip, formData);
+        document.getElementById('summarySection').classList.add('visible');
+
+        // Scroll to summary
+        document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  </script>
+</body>
+</html> 

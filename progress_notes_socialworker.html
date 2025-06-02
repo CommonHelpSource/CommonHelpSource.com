@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Note Builder for Social Workers - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2d6a4f;
+      --primary-hover: #1b4332;
+      --accent-color: #c9b037;
+      --accent-hover: #b89b2d;
+      --background-color: #f7f9f7;
+      --text-color: #1a1a1a;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --success-color: #38a169;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--primary-color);
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--border-radius);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 24px;
+      background-color: white;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--border-radius);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: var(--border-radius);
+    }
+
+    .checklist-item input[type="checkbox"] {
+      margin-right: 12px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .checklist-content {
+      flex-grow: 1;
+    }
+
+    .checklist-content textarea {
+      margin-top: 12px;
+      min-height: 80px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 32px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .button.primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .button.primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .button.secondary {
+      background-color: var(--accent-color);
+      color: var(--text-color);
+    }
+
+    .button.secondary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .button i {
+      margin-right: 8px;
+    }
+
+    .note-section {
+      display: none;
+    }
+
+    .note-section.active {
+      display: block;
+    }
+
+    #generatedNote {
+      white-space: pre-wrap;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: var(--border-radius);
+      border-left: 4px solid var(--primary-color);
+      margin-top: 24px;
+      display: none;
+    }
+
+    .success-message {
+      color: var(--success-color);
+      text-align: center;
+      margin-top: 8px;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      .card {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Progress Note Builder for Social Workers</h1>
+    </header>
+
+    <div class="card">
+      <div class="form-group">
+        <label for="noteType">Select Note Format:</label>
+        <select id="noteType">
+          <option value="">Choose a format...</option>
+          <option value="soap">SOAP Note</option>
+          <option value="narrative">Narrative Note</option>
+          <option value="checklist">Checklist Note</option>
+        </select>
+      </div>
+
+      <!-- SOAP Note Format -->
+      <div id="soapNote" class="note-section">
+        <div class="form-group">
+          <label for="subjective">Subjective:</label>
+          <textarea id="subjective" placeholder="Client's statements, reported symptoms, concerns..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="objective">Objective:</label>
+          <textarea id="objective" placeholder="Observable facts, behaviors, appearance..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="assessment">Assessment:</label>
+          <textarea id="assessment" placeholder="Professional analysis, clinical impressions..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="plan">Plan:</label>
+          <textarea id="plan" placeholder="Treatment plan, next steps, referrals..."></textarea>
+        </div>
+      </div>
+
+      <!-- Narrative Note Format -->
+      <div id="narrativeNote" class="note-section">
+        <div class="form-group">
+          <label for="reasonContact">Reason for Contact:</label>
+          <textarea id="reasonContact" placeholder="Purpose of the session or interaction..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="observations">Observations:</label>
+          <textarea id="observations" placeholder="Clinical observations, client presentation..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="interventions">Interventions Provided:</label>
+          <textarea id="interventions" placeholder="Therapeutic interventions, support provided..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="clientResponse">Client Response:</label>
+          <textarea id="clientResponse" placeholder="Client's response to interventions..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="planFollowUp">Plan/Follow-Up:</label>
+          <textarea id="planFollowUp" placeholder="Next steps, follow-up plans..."></textarea>
+        </div>
+      </div>
+
+      <!-- Checklist Note Format -->
+      <div id="checklistNote" class="note-section">
+        <div class="checklist-item">
+          <input type="checkbox" id="riskAssessed">
+          <div class="checklist-content">
+            <label for="riskAssessed">Risk Assessed?</label>
+            <textarea id="riskNotes" placeholder="Details about risk assessment..."></textarea>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="safetyPlan">
+          <div class="checklist-content">
+            <label for="safetyPlan">Safety Plan Updated?</label>
+            <textarea id="safetyNotes" placeholder="Details about safety planning..."></textarea>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="referrals">
+          <div class="checklist-content">
+            <label for="referrals">Referrals Provided?</label>
+            <textarea id="referralNotes" placeholder="Details about referrals..."></textarea>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="education">
+          <div class="checklist-content">
+            <label for="education">Education Delivered?</label>
+            <textarea id="educationNotes" placeholder="Details about education provided..."></textarea>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="clientGoal">
+          <div class="checklist-content">
+            <label for="clientGoal">Client Goal Addressed?</label>
+            <textarea id="goalNotes" placeholder="Details about progress on client goals..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button id="generateNote" class="button primary">
+          <i class="fas fa-file-alt"></i> Generate Note
+        </button>
+        <button id="copyNote" class="button secondary" style="display: none;">
+          <i class="fas fa-copy"></i> Copy to Clipboard
+        </button>
+        <button id="printNote" class="button secondary" style="display: none;">
+          <i class="fas fa-print"></i> Print Note
+        </button>
+      </div>
+
+      <div id="generatedNote"></div>
+      <div id="copySuccess" class="success-message">Note copied to clipboard!</div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('noteType').addEventListener('change', function() {
+      // Hide all note sections
+      document.querySelectorAll('.note-section').forEach(section => {
+        section.classList.remove('active');
+      });
+
+      // Show selected note section
+      const selectedFormat = this.value;
+      if (selectedFormat) {
+        document.getElementById(selectedFormat + 'Note').classList.add('active');
+      }
+
+      // Hide generated note and buttons
+      document.getElementById('generatedNote').style.display = 'none';
+      document.getElementById('copyNote').style.display = 'none';
+      document.getElementById('printNote').style.display = 'none';
+      document.getElementById('copySuccess').style.display = 'none';
+    });
+
+    document.getElementById('generateNote').addEventListener('click', function() {
+      const noteType = document.getElementById('noteType').value;
+      let noteContent = '';
+      const date = new Date().toLocaleDateString();
+      const time = new Date().toLocaleTimeString();
+
+      switch (noteType) {
+        case 'soap':
+          noteContent = `SOAP NOTE\nDate: ${date}\nTime: ${time}\n\n` +
+            `SUBJECTIVE:\n${document.getElementById('subjective').value}\n\n` +
+            `OBJECTIVE:\n${document.getElementById('objective').value}\n\n` +
+            `ASSESSMENT:\n${document.getElementById('assessment').value}\n\n` +
+            `PLAN:\n${document.getElementById('plan').value}`;
+          break;
+
+        case 'narrative':
+          noteContent = `NARRATIVE NOTE\nDate: ${date}\nTime: ${time}\n\n` +
+            `REASON FOR CONTACT:\n${document.getElementById('reasonContact').value}\n\n` +
+            `OBSERVATIONS:\n${document.getElementById('observations').value}\n\n` +
+            `INTERVENTIONS PROVIDED:\n${document.getElementById('interventions').value}\n\n` +
+            `CLIENT RESPONSE:\n${document.getElementById('clientResponse').value}\n\n` +
+            `PLAN/FOLLOW-UP:\n${document.getElementById('planFollowUp').value}`;
+          break;
+
+        case 'checklist':
+          const checklistItems = [
+            { check: 'riskAssessed', notes: 'riskNotes', label: 'Risk Assessment' },
+            { check: 'safetyPlan', notes: 'safetyNotes', label: 'Safety Plan' },
+            { check: 'referrals', notes: 'referralNotes', label: 'Referrals' },
+            { check: 'education', notes: 'educationNotes', label: 'Education' },
+            { check: 'clientGoal', notes: 'goalNotes', label: 'Client Goals' }
+          ];
+
+          noteContent = `CHECKLIST NOTE\nDate: ${date}\nTime: ${time}\n\n`;
+          
+          checklistItems.forEach(item => {
+            const checked = document.getElementById(item.check).checked;
+            const notes = document.getElementById(item.notes).value;
+            noteContent += `${item.label}: ${checked ? '✓' : '✗'}\n`;
+            if (notes) noteContent += `Notes: ${notes}\n`;
+            noteContent += '\n';
+          });
+          break;
+
+        default:
+          alert('Please select a note format');
+          return;
+      }
+
+      const noteElement = document.getElementById('generatedNote');
+      noteElement.textContent = noteContent;
+      noteElement.style.display = 'block';
+
+      // Show copy and print buttons
+      document.getElementById('copyNote').style.display = 'inline-flex';
+      document.getElementById('printNote').style.display = 'inline-flex';
+    });
+
+    document.getElementById('copyNote').addEventListener('click', function() {
+      const noteContent = document.getElementById('generatedNote').textContent;
+      navigator.clipboard.writeText(noteContent).then(() => {
+        const successMsg = document.getElementById('copySuccess');
+        successMsg.style.display = 'block';
+        setTimeout(() => {
+          successMsg.style.display = 'none';
+        }, 2000);
+      });
+    });
+
+    document.getElementById('printNote').addEventListener('click', function() {
+      window.print();
+    });
+  </script>
+</body>
+</html> 

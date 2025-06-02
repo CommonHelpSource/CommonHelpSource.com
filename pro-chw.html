@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR-ID"
+     crossorigin="anonymous"></script>
+  <title>Pro CHW Hub - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c5282;
+      --primary-hover: #2b6cb0;
+      --background-color: #f7fafc;
+      --text-color: #2d3748;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .description {
+      font-size: 1.1rem;
+      max-width: 800px;
+      margin: 0 auto 40px;
+      color: #4a5568;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .tool-card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 32px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--text-color);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .tool-card:focus {
+      outline: 3px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+
+    .tool-card i {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .tool-card h3 {
+      font-size: 1.25rem;
+      margin: 0 0 12px;
+      color: var(--primary-color);
+    }
+
+    .tool-card p {
+      font-size: 0.95rem;
+      margin: 0;
+      color: #4a5568;
+      max-width: 280px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+      color: var(--primary-hover);
+    }
+
+    @media (max-width: 1024px) {
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .tools-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .description {
+        font-size: 1rem;
+        padding: 0 20px;
+      }
+
+      .tool-card {
+        min-height: 200px;
+        padding: 24px;
+      }
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      background-color: #f4f4f4;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: #2d3748;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: var(--primary-color);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <header>
+      <h1>Welcome to the Pro CHW Hub</h1>
+      <p class="description">
+        Your comprehensive resource center for Community Health Worker tools. Access assessment tools, 
+        county-specific housing matrices, and progress note builders - all designed to enhance your 
+        effectiveness in supporting community health.
+      </p>
+    </header>
+
+    <div class="tools-grid">
+      <a href="assessment_start.html" class="tool-card">
+        <i class="fas fa-house-user"></i>
+        <h3>Housing Assessment</h3>
+        <p>Start the step-by-step housing help tool</p>
+      </a>
+
+      <a href="housing_matrix.html" class="tool-card">
+        <i class="fas fa-table"></i>
+        <h3>Housing Matrix by County</h3>
+        <p>Browse local housing options and guides</p>
+      </a>
+
+      <a href="progress_notes_chw.html" class="tool-card">
+        <i class="fas fa-clipboard-list"></i>
+        <h3>CHW Progress Note Builder</h3>
+        <p>Document member goals and follow-up notes</p>
+      </a>
+
+      <a href="assessment_id.html" class="tool-card">
+        <i class="fas fa-id-card"></i>
+        <h3>ID Recovery Tool</h3>
+        <p>Get help obtaining ID, birth certificate, or SSN</p>
+      </a>
+
+      <a href="assessment_utilities.html" class="tool-card">
+        <i class="fas fa-bolt"></i>
+        <h3>Utilities Help Tool</h3>
+        <p>Find energy assistance and payment relief</p>
+      </a>
+
+      <a href="assessment_food.html" class="tool-card">
+        <i class="fas fa-utensils"></i>
+        <h3>Food Access Assessment</h3>
+        <p>Explore food benefits and local support</p>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="contact.html">Contact</a>
+  </footer>
+</body>
+</html> 

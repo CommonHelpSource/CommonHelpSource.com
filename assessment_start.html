@@ -3,528 +3,185 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Start Assessment - CommonHelpSource</title>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <title>Begin Assessment - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #ff6b35;
-      --primary-hover: #ff8659;
-      --text-color: #2d3436;
+      --primary-color: #2c5282;
+      --primary-hover: #2b6cb0;
+      --accent-color: #4299e1;
+      --background-color: #f7fafc;
+      --text-color: #2d3748;
+      --card-background: white;
       --border-radius: 12px;
-      --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     body {
       margin: 0;
-      font-family: 'Open Sans', sans-serif;
-      background: #f5f6f7;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
       color: var(--text-color);
       line-height: 1.6;
     }
 
-    .main-content {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
-    }
-
     .container {
-      width: 100%;
-      max-width: 1200px;
+      max-width: 800px;
       margin: 0 auto;
-    }
-
-    .location-banner {
-      background: white;
-      padding: 15px 20px;
-      border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
-      margin-bottom: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .location-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.1rem;
-    }
-
-    .location-pin {
-      color: var(--primary-color);
-      font-size: 1.4rem;
-    }
-
-    .zip-display {
-      font-weight: 600;
-      color: var(--text-color);
-    }
-
-    .zip-display.not-set {
-      color: #e74c3c;
-    }
-
-    .location-details {
+      padding: 40px 20px;
+      flex-grow: 1;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-    }
-
-    .location-label {
-      font-size: 0.9rem;
-      color: #636e72;
-    }
-
-    .change-location {
-      background: none;
-      border: 2px solid var(--primary-color);
-      color: var(--primary-color);
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
     }
 
-    .change-location:hover {
-      background: var(--primary-color);
-      color: white;
-    }
-
-    @media (max-width: 480px) {
-      .location-banner {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-      }
-
-      .location-info {
-        justify-content: center;
-      }
-    }
-
-    .assessment-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin-top: 30px;
-    }
-
-    .assessment-card {
-      background: white;
+    .card {
+      background: var(--card-background);
       border-radius: var(--border-radius);
-      padding: 25px;
+      padding: 40px;
       box-shadow: var(--box-shadow);
-      transition: transform 0.3s ease;
+      text-align: center;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: var(--text-color);
+      margin-bottom: 30px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 16px 32px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      border: none;
       cursor: pointer;
     }
 
-    .assessment-card:hover {
-      transform: translateY(-5px);
+    .button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
     }
 
-    .assessment-icon {
-      font-size: 2rem;
-      color: var(--primary-color);
-      margin-bottom: 15px;
+    .button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.4);
     }
 
-    .assessment-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin: 0 0 10px;
+    .button i {
+      margin-left: 8px;
     }
 
-    .assessment-desc {
-      color: #636e72;
-      margin: 0;
-      font-size: 0.95rem;
-    }
-
-    .site-logo {
-      display: block;
-      max-width: 300px;
-      width: 80%;
-      height: auto;
-      margin: 0 auto 40px;
-      transition: transform 0.2s;
-    }
-
-    .site-logo:hover {
-      transform: scale(1.02);
-    }
-
-    .city-state-display {
+    footer {
+      background: white;
+      padding: 16px;
+      text-align: center;
       font-size: 0.9rem;
-      color: #636e72;
-      margin-top: 4px;
+      color: #718096;
+      border-top: 1px solid #e2e8f0;
     }
 
-    .city-state-display.error {
-      color: #e74c3c;
-      font-style: italic;
+    .zip-code {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .back-link {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+      color: var(--primary-hover);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      .card {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .back-link {
+        position: static;
+        display: block;
+        margin-bottom: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="main-content">
-    <div class="container">
-      <a href="index.html">
-        <img src="assets/images/commonhelpsource-logo.png" alt="CommonHelpSource Logo" class="site-logo">
+  <a href="index.html" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Home
+  </a>
+
+  <div class="container">
+    <div class="card">
+      <h1>Housing Assessment</h1>
+      <p>
+        Welcome to the housing assessment tool. This will help identify the best housing resources 
+        and programs available in your area. The assessment takes about 5-10 minutes to complete.
+      </p>
+      <a href="assessment_housing_tier1.html" class="button" id="beginButton">
+        Begin Housing Assessment <i class="fas fa-arrow-right"></i>
       </a>
-
-      <div class="location-banner">
-        <div class="location-info">
-          <span class="location-pin">🧭</span>
-          <div class="location-details">
-            <div class="location-label">Your Location</div>
-            <div id="zip-display" class="zip-display">Checking location...</div>
-            <div id="city-state-display" class="city-state-display"></div>
-          </div>
-        </div>
-        <button class="change-location" onclick="changeLocation()">
-          <i class="fas fa-map-marker-alt"></i>
-          Change Location
-        </button>
-      </div>
-
-      <div class="assessment-grid">
-        <div class="assessment-card" onclick="startAssessment('housing')">
-          <div class="assessment-icon">🏠</div>
-          <h3 class="assessment-title">Housing Assistance</h3>
-          <p class="assessment-desc">Find emergency shelter, rental assistance, and housing resources in your area.</p>
-        </div>
-
-        <div class="assessment-card" onclick="startAssessment('food')">
-          <div class="assessment-icon">🍽️</div>
-          <h3 class="assessment-title">Food Support</h3>
-          <p class="assessment-desc">Connect with food banks, meal programs, and nutrition assistance services.</p>
-        </div>
-
-        <div class="assessment-card" onclick="startAssessment('health')">
-          <div class="assessment-icon">❤️</div>
-          <h3 class="assessment-title">Health Insurance</h3>
-          <p class="assessment-desc">Access healthcare coverage options and medical assistance programs.</p>
-        </div>
-
-        <div class="assessment-card" onclick="startAssessment('id')">
-          <div class="assessment-icon">📄</div>
-          <h3 class="assessment-title">ID & Documentation</h3>
-          <p class="assessment-desc">Get help obtaining identification, birth certificates, and other vital documents.</p>
-        </div>
-
-        <div class="assessment-card" onclick="startAssessment('utilities')">
-          <div class="assessment-icon">⚡</div>
-          <h3 class="assessment-title">Utilities & Fuel</h3>
-          <p class="assessment-desc">Find assistance with utility bills, energy costs, and weatherization.</p>
-        </div>
-
-        <div class="assessment-card" onclick="startAssessment('internet')">
-          <div class="assessment-icon">📱</div>
-          <h3 class="assessment-title">Internet Access</h3>
-          <p class="assessment-desc">Get connected with affordable internet and digital resources.</p>
-        </div>
-
-        <div class="assessment-card" onclick="startAssessment('transportation')">
-          <div class="assessment-icon">🚗</div>
-          <h3 class="assessment-title">Transportation</h3>
-          <p class="assessment-desc">Access transportation assistance and mobility resources.</p>
-        </div>
-
-        <div class="assessment-card" onclick="startAssessment('employment')">
-          <div class="assessment-icon">💼</div>
-          <h3 class="assessment-title">Employment</h3>
-          <p class="assessment-desc">Find job training, career resources, and employment opportunities.</p>
-        </div>
-
-        <div class="assessment-card" onclick="startAssessment('childcare')">
-          <div class="assessment-icon">👶</div>
-          <h3 class="assessment-title">Childcare & Education</h3>
-          <p class="assessment-desc">Connect with childcare assistance and educational support services.</p>
-        </div>
-      </div>
     </div>
   </div>
 
+  <footer>
+    Your ZIP: <span class="zip-code" id="zipDisplay">Loading...</span> – this will be used to customize results.
+  </footer>
+
   <script>
-    // Function to determine which region file to load based on ZIP prefix
-    function getRegionFileForZip(zipCode) {
-      if (!zipCode) return null;
-      
-      // Check for Puerto Rico first (specific prefixes)
-      if (zipCode.startsWith('00') || zipCode.startsWith('006')) {
-        return 'zip_puerto_rico.json';
-      }
-      
-      // Get first digit for other regions
-      const firstDigit = zipCode.charAt(0);
-      
-      // Map first digit to region
-      if (['0', '1', '2'].includes(firstDigit)) {
-        return 'zip_northeast.json';
-      } else if (firstDigit === '3') {
-        return 'zip_south.json';
-      } else if (['4', '5', '6'].includes(firstDigit)) {
-        return 'zip_midwest.json';
-      } else if (['7', '8', '9'].includes(firstDigit)) {
-        return 'zip_west.json';
-      }
-      
-      return null;
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get ZIP code from localStorage
+      const zipCode = localStorage.getItem('userZip') || 'Not set';
+      document.getElementById('zipDisplay').textContent = zipCode;
 
-    // Function to load JSON file
-    async function loadJsonFile(filename) {
-      try {
-        const response = await fetch(`assets/data/${filename}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+      // If no ZIP code is set, redirect to ZIP code entry page
+      if (zipCode === 'Not set') {
+        window.location.href = 'zip_entry.html';
+      }
+
+      // Add click handler for begin button
+      document.getElementById('beginButton').addEventListener('click', function(e) {
+        if (zipCode === 'Not set') {
+          e.preventDefault();
+          window.location.href = 'zip_entry.html';
         }
-        return await response.json();
-      } catch (error) {
-        console.error(`Error loading ${filename}:`, error);
-        return null;
-      }
-    }
-
-    // Function to update the display
-    function updateLocationDisplay(zipCode, locationData) {
-      const zipDisplay = document.getElementById('zip-display');
-      const cityStateDisplay = document.getElementById('city-state-display');
-      
-      if (!zipCode) {
-        zipDisplay.textContent = 'ZIP code not set';
-        zipDisplay.classList.add('not-set');
-        cityStateDisplay.textContent = 'Please set your location';
-        cityStateDisplay.classList.add('error');
-        return;
-      }
-
-      zipDisplay.textContent = `ZIP ${zipCode}`;
-      zipDisplay.classList.remove('not-set');
-
-      if (locationData) {
-        cityStateDisplay.textContent = `${locationData.city}, ${locationData.state}`;
-        cityStateDisplay.classList.remove('error');
-        // Save to localStorage
-        localStorage.setItem('userCity', locationData.city);
-        localStorage.setItem('userState', locationData.state);
-      } else {
-        cityStateDisplay.textContent = 'ZIP code not recognized';
-        cityStateDisplay.classList.add('error');
-        // Clear localStorage city/state
-        localStorage.removeItem('userCity');
-        localStorage.removeItem('userState');
-      }
-    }
-
-    // Main initialization function
-    async function initializeLocation() {
-      const zipCode = localStorage.getItem('userZipCode');
-      
-      if (!zipCode || !/^\d{5}$/.test(zipCode)) {
-        updateLocationDisplay(null, null);
-        return;
-      }
-
-      // Get the appropriate region file based on ZIP prefix
-      const regionFile = getRegionFileForZip(zipCode);
-      if (!regionFile) {
-        console.error('Could not determine region for ZIP:', zipCode);
-        updateLocationDisplay(zipCode, null);
-        return;
-      }
-
-      // Load the region-specific ZIP data
-      const zipData = await loadJsonFile(regionFile);
-      if (!zipData) {
-        console.error('Failed to load ZIP data for region:', regionFile);
-        updateLocationDisplay(zipCode, null);
-        return;
-      }
-
-      // Look up the location data
-      const locationData = zipData[zipCode];
-      updateLocationDisplay(zipCode, locationData);
-    }
-
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      initializeLocation();
-      
-      // Check for ZIP code and redirect if not set
-      const zip = localStorage.getItem('userZipCode');
-      if (!zip || !/^\d{5}$/.test(zip)) {
-        alert('Please start from the homepage to set your ZIP code.');
-        window.location.href = 'index.html';
-        return;
-      }
+      });
     });
-
-    // Function to change location
-    function changeLocation() {
-      localStorage.removeItem('userZipCode');
-      localStorage.removeItem('userCity');
-      localStorage.removeItem('userState');
-      window.location.href = 'index.html';
-    }
-
-    // Function to start specific assessment
-    function startAssessment(type) {
-      localStorage.setItem('selectedAssessment', type);
-      if (type === 'health') {
-        window.location.href = 'health.html';
-      } else {
-        window.location.href = `assessment_${type}_tier1.html`;
-      }
-    }
   </script>
-
-  <script type="module">
-    import { runZipCodeTests } from './tests/zip-validation.test.js';
-    import { zipData } from './assets/data/zip-data.js';
-
-    // Run tests in debug mode
-    document.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("debug") === "true") {
-        console.log("🔧 Debug Mode Active - Running ZIP Tests");
-        
-        // Create test results container
-        const testResults = document.createElement('div');
-        testResults.style.cssText = `
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          background: rgba(0, 0, 0, 0.8);
-          color: white;
-          padding: 15px;
-          border-radius: 8px;
-          font-family: monospace;
-          max-width: 400px;
-          max-height: 300px;
-          overflow-y: auto;
-          z-index: 9999;
-        `;
-        document.body.appendChild(testResults);
-
-        // Override console.log for test output
-        const originalLog = console.log;
-        const originalError = console.error;
-        
-        console.log = function(...args) {
-          originalLog.apply(console, args);
-          testResults.innerHTML += args.join(' ') + '<br>';
-        };
-        
-        console.error = function(...args) {
-          originalError.apply(console, args);
-          testResults.innerHTML += '<span style="color: #ff6b6b;">❌ ' + args.join(' ') + '</span><br>';
-        };
-
-        // Run the tests
-        runZipCodeTests();
-      }
-    });
-
-    // Function to get location info from ZIP
-    function getLocationFromZip(zip) {
-      return zipData[zip] || null;
-    }
-
-    // Function to update location display
-    function updateLocationDisplay() {
-      const zip = localStorage.getItem('userZipCode');
-      const zipDisplay = document.getElementById('zip-display');
-      const cityStateDisplay = document.getElementById('city-state-display');
-      
-      if (!zip || !/^\d{5}$/.test(zip)) {
-        zipDisplay.textContent = 'ZIP not set';
-        zipDisplay.classList.add('not-set');
-        cityStateDisplay.textContent = '';
-        return;
-      }
-
-      const location = getLocationFromZip(zip);
-      zipDisplay.textContent = `ZIP ${zip}`;
-      zipDisplay.classList.remove('not-set');
-
-      if (location) {
-        const { city, state } = location;
-        cityStateDisplay.textContent = `${city}, ${state}`;
-        cityStateDisplay.classList.remove('error');
-        
-        // Store city and state in localStorage
-        localStorage.setItem('userCity', city);
-        localStorage.setItem('userState', state);
-      } else {
-        cityStateDisplay.textContent = 'ZIP not recognized';
-        cityStateDisplay.classList.add('error');
-        
-        // Clear city and state from localStorage
-        localStorage.removeItem('userCity');
-        localStorage.removeItem('userState');
-      }
-    }
-
-    // Initialize location display on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      updateLocationDisplay();
-      
-      // Initialize the prompt builder utility with location info
-      window.promptBuilder = {
-        // Get the current location info
-        getLocationInfo: function() {
-          return {
-            zip: localStorage.getItem('userZipCode') || 'unknown ZIP',
-            city: localStorage.getItem('userCity') || 'unknown city',
-            state: localStorage.getItem('userState') || 'unknown state'
-          };
-        },
-        
-        // Generate a base prompt with location context
-        createBasePrompt: function(focus, format) {
-          const location = this.getLocationInfo();
-          return `You are an AI assistant helping with resource planning for ${location.city}, ${location.state} (ZIP ${location.zip}).
-The user selected the "${focus}" category and "${format}" format.
-Based on the client input below, generate a plan that is geographically relevant when possible.
-`;
-        },
-        
-        // Generate a complete prompt with all context
-        createFullPrompt: function({ focus, format, clientInput, additionalContext = {} }) {
-          const basePrompt = this.createBasePrompt(focus, format);
-          const contextStr = Object.entries(additionalContext)
-            .map(([key, value]) => `${key}: ${value}`)
-            .join('\n');
-          
-          return `${basePrompt}
-${contextStr ? `Additional Context:\n${contextStr}\n` : ''}
-Client Input:
-${clientInput}
-`;
-        }
-      };
-    });
-
-    // Update location info when changing location
-    window.changeLocation = function() {
-      localStorage.removeItem('userZipCode');
-      localStorage.removeItem('userCity');
-      localStorage.removeItem('userState');
-      window.location.href = 'index.html';
-    };
-  </script>
-
-  <!-- Load the assessment starter script -->
-  <script src="assets/js/start-assessment.js"></script>
 </body>
 </html> 

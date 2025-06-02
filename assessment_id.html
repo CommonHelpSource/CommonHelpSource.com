@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ID Assessment - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c5282;
+      --primary-hover: #2b6cb0;
+      --accent-color: #4299e1;
+      --background-color: #f7fafc;
+      --text-color: #2d3748;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --error-color: #e53e3e;
+      --success-color: #38a169;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      flex-grow: 1;
+    }
+
+    .card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 40px;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .question-group {
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .question-group:last-of-type {
+      border-bottom: none;
+    }
+
+    .question {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option:hover {
+      background: #edf2f7;
+    }
+
+    .option input[type="radio"],
+    .option input[type="checkbox"] {
+      margin-right: 12px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .option label {
+      font-size: 1.1rem;
+      cursor: pointer;
+      user-select: none;
+      flex: 1;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+      gap: 20px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .button.secondary {
+      background-color: #718096;
+    }
+
+    .button.secondary:hover {
+      background-color: #4a5568;
+    }
+
+    .button i {
+      margin-right: 8px;
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 0.9rem;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    .summary-section {
+      display: none;
+      margin-top: 40px;
+    }
+
+    .summary-section.visible {
+      display: block;
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+      margin-bottom: 20px;
+    }
+
+    .prompt-box {
+      background: #2d3748;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      white-space: pre-wrap;
+      font-family: monospace;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      .card {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .question {
+        font-size: 1.1rem;
+      }
+
+      .option label {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>ID Assessment</h1>
+
+      <form id="idAssessmentForm">
+        <div class="question-group">
+          <div class="question">1. Which documents do you currently have?</div>
+          <div class="options">
+            <div class="option">
+              <input type="checkbox" id="doc1" name="documents" value="stateId">
+              <label for="doc1">State ID or driver's license</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="doc2" name="documents" value="birthCert">
+              <label for="doc2">Birth certificate</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="doc3" name="documents" value="ssCard">
+              <label for="doc3">Social Security card</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="doc4" name="documents" value="passport">
+              <label for="doc4">Passport or immigration documents</label>
+            </div>
+          </div>
+          <div class="error-message" id="documentsError">Please select at least one option or none if you don't have any documents</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">2. Do you have a permanent address where mail can be sent?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="address1" name="hasAddress" value="yes">
+              <label for="address1">Yes</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="address2" name="hasAddress" value="no">
+              <label for="address2">No</label>
+            </div>
+          </div>
+          <div class="error-message" id="hasAddressError">Please indicate if you have a permanent address</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">3. Are you a U.S. citizen, permanent resident, or undocumented?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="status1" name="citizenshipStatus" value="citizen">
+              <label for="status1">U.S. citizen</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="status2" name="citizenshipStatus" value="permanent">
+              <label for="status2">Permanent resident (Green Card)</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="status3" name="citizenshipStatus" value="undocumented">
+              <label for="status3">Undocumented / no papers</label>
+            </div>
+          </div>
+          <div class="error-message" id="citizenshipStatusError">Please select your citizenship status</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">4. Have you ever had a state-issued ID before?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="prevId1" name="hadPreviousId" value="yes">
+              <label for="prevId1">Yes</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="prevId2" name="hadPreviousId" value="no">
+              <label for="prevId2">No</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="prevId3" name="hadPreviousId" value="unsure">
+              <label for="prevId3">I'm not sure</label>
+            </div>
+          </div>
+          <div class="error-message" id="hadPreviousIdError">Please indicate if you've had a state ID before</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">5. Are you currently experiencing homelessness?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="homeless1" name="isHomeless" value="yes">
+              <label for="homeless1">Yes</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="homeless2" name="isHomeless" value="no">
+              <label for="homeless2">No</label>
+            </div>
+          </div>
+          <div class="error-message" id="isHomelessError">Please indicate if you are experiencing homelessness</div>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" class="button">
+            <i class="fas fa-file-alt"></i> Generate ID Plan
+          </button>
+        </div>
+      </form>
+
+      <div id="summarySection" class="summary-section">
+        <h2>Your ID Assessment Summary</h2>
+        <div id="summaryContent" class="summary-box"></div>
+        
+        <h2>Suggested Next Steps</h2>
+        <div id="promptBox" class="prompt-box"></div>
+        <div id="aiResponse" class="summary-box">
+          <p><strong>Based on your situation, here's your recommended ID plan:</strong></p>
+          <p>This is a placeholder for the AI-generated response. When connected to the API, 
+          this will be replaced with personalized recommendations based on your assessment answers.</p>
+        </div>
+
+        <div class="button-group">
+          <button onclick="window.print()" class="button secondary">
+            <i class="fas fa-print"></i> Print Summary
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function formatDocuments(documents) {
+      if (!documents || documents.length === 0) return "don't have any identification documents";
+      
+      const docNames = {
+        'stateId': 'state ID/driver\'s license',
+        'birthCert': 'birth certificate',
+        'ssCard': 'Social Security card',
+        'passport': 'passport/immigration documents'
+      };
+      
+      const docs = documents.map(d => docNames[d]);
+      if (docs.length === 1) return `have your ${docs[0]}`;
+      if (docs.length === 2) return `have your ${docs[0]} and ${docs[1]}`;
+      return `have your ${docs.slice(0, -1).join(', ')}, and ${docs.slice(-1)}`;
+    }
+
+    function formatCitizenship(status) {
+      const statuses = {
+        'citizen': 'a U.S. citizen',
+        'permanent': 'a permanent resident with a Green Card',
+        'undocumented': 'undocumented'
+      };
+      return statuses[status] || status;
+    }
+
+    function buildSummary(data) {
+      return `You ${formatDocuments(data.documents)}.
+You ${data.hasAddress === 'yes' ? 'do' : 'do not'} have a permanent address for mail.
+You are ${formatCitizenship(data.citizenshipStatus)}.
+You ${data.hadPreviousId === 'yes' ? 'have' : data.hadPreviousId === 'no' ? 'have never' : 'are not sure if you have'} had a state ID before.
+You are ${data.isHomeless === 'yes' ? '' : 'not '}currently experiencing homelessness.`;
+    }
+
+    function buildPrompt(zip, data) {
+      return `Hello, I live in ZIP code ${zip}. Based on my answers:
+- I ${formatDocuments(data.documents)}.
+- I ${data.hasAddress === 'yes' ? 'do' : 'do not'} have a permanent address for receiving mail.
+- I am ${formatCitizenship(data.citizenshipStatus)}.
+- I ${data.hadPreviousId === 'yes' ? 'have' : data.hadPreviousId === 'no' ? 'have never' : 'am not sure if I have'} had a state ID before.
+- I am ${data.isHomeless === 'yes' ? '' : 'not '}currently experiencing homelessness.
+
+Please provide a step-by-step plan for obtaining identification that includes:
+1. Which documents I should get first based on what I have
+2. Where to go to get each document
+3. Estimated costs and fee waiver options
+4. Local resources that can help with the process`;
+    }
+
+    document.getElementById('idAssessmentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Reset error messages
+      document.querySelectorAll('.error-message').forEach(msg => {
+        msg.classList.remove('visible');
+      });
+
+      // Gather form data
+      const formData = {
+        documents: Array.from(document.querySelectorAll('input[name="documents"]:checked')).map(cb => cb.value),
+        hasAddress: document.querySelector('input[name="hasAddress"]:checked')?.value,
+        citizenshipStatus: document.querySelector('input[name="citizenshipStatus"]:checked')?.value,
+        hadPreviousId: document.querySelector('input[name="hadPreviousId"]:checked')?.value,
+        isHomeless: document.querySelector('input[name="isHomeless"]:checked')?.value
+      };
+
+      // Validate required fields
+      let isValid = true;
+      if (!formData.hasAddress) {
+        document.getElementById('hasAddressError').classList.add('visible');
+        isValid = false;
+      }
+      if (!formData.citizenshipStatus) {
+        document.getElementById('citizenshipStatusError').classList.add('visible');
+        isValid = false;
+      }
+      if (!formData.hadPreviousId) {
+        document.getElementById('hadPreviousIdError').classList.add('visible');
+        isValid = false;
+      }
+      if (!formData.isHomeless) {
+        document.getElementById('isHomelessError').classList.add('visible');
+        isValid = false;
+      }
+
+      if (isValid) {
+        // Save to localStorage
+        localStorage.setItem('idAssessment', JSON.stringify(formData));
+
+        // Get ZIP code
+        const zip = localStorage.getItem('userZipCode');
+        if (!zip) {
+          alert('Please complete the initial assessment first.');
+          window.location.href = 'assessment_start.html';
+          return;
+        }
+
+        // Build and display summary
+        document.getElementById('summaryContent').textContent = buildSummary(formData);
+        document.getElementById('promptBox').textContent = buildPrompt(zip, formData);
+        document.getElementById('summarySection').classList.add('visible');
+
+        // Scroll to summary
+        document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  </script>
+</body>
+</html> 

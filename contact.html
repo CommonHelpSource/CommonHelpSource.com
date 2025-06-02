@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://ka-f.fontawesome.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://ka-f.fontawesome.com; connect-src 'self' https://ka-f.fontawesome.com">
+  <title>Contact Us - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2d6a4f;
+      --primary-hover: #1b4332;
+      --accent-color: #c9b037;
+      --accent-hover: #b89b2d;
+      --background-color: #f7f9f7;
+      --text-color: #1a1a1a;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .contact-card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 40px;
+      text-align: center;
+    }
+
+    .contact-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .welcome-text {
+      font-size: 1.2rem;
+      color: #4a5568;
+      margin-bottom: 40px;
+    }
+
+    .contact-description {
+      color: #2d3748;
+      margin-bottom: 32px;
+      font-size: 1.1rem;
+    }
+
+    .email-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 32px;
+      background-color: #f8fafc;
+      border-radius: var(--border-radius);
+      margin: 20px 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .email-container:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--box-shadow);
+    }
+
+    .email-icon {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+    }
+
+    .email-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .email-link:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .contact-card {
+        padding: 24px;
+      }
+
+      .email-container {
+        padding: 16px 24px;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .email-link {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Contact Us</h1>
+    </header>
+
+    <div class="contact-card">
+      <div class="contact-content">
+        <p class="welcome-text">
+          We'd love to hear from you.
+        </p>
+
+        <p class="contact-description">
+          For general questions, partnerships, or accessibility support, email:
+        </p>
+
+        <div class="email-container">
+          <i class="fas fa-envelope email-icon"></i>
+          <a href="mailto:ccastro@commonhelpsource.com" class="email-link">
+            ccastro@commonhelpsource.com
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

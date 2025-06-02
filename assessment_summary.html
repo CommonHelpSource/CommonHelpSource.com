@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Housing Assessment Results - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c5282;
+      --primary-hover: #2b6cb0;
+      --accent-color: #4299e1;
+      --background-color: #f7fafc;
+      --text-color: #2d3748;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --error-color: #e53e3e;
+      --success-color: #38a169;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      flex-grow: 1;
+    }
+
+    .card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 40px;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 30px;
+    }
+
+    h1, h2 {
+      color: var(--primary-color);
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      border-bottom: 2px solid var(--accent-color);
+      padding-bottom: 10px;
+    }
+
+    .summary-item {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 8px;
+      font-size: 1.1rem;
+    }
+
+    .location-info {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      margin-bottom: 30px;
+    }
+
+    .prompt-box {
+      background: #2d3748;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      white-space: pre-wrap;
+      font-family: monospace;
+      line-height: 1.6;
+    }
+
+    .ai-response {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+      margin: 20px 0;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: var(--primary-color);
+      font-style: italic;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 20px;
+      margin-top: 40px;
+      justify-content: center;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .button.secondary {
+      background-color: #718096;
+    }
+
+    .button.secondary:hover {
+      background-color: #4a5568;
+    }
+
+    .button i {
+      margin-right: 8px;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .card {
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+      }
+
+      .button-group {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      .card {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .summary-item {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Your Housing Assessment Results</h1>
+      <div id="locationInfo" class="location-info">Loading location...</div>
+      
+      <h2>Your Situation Summary</h2>
+      <div id="summaryContent">
+        <div class="loading">Loading your assessment data...</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Your Housing Plan</h2>
+      <div id="promptBox" class="prompt-box">Generating your personalized prompt...</div>
+      <div id="aiResponse" class="ai-response">
+        <div class="loading">Generating your personalized housing plan...</div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button onclick="window.print()" class="button">
+        <i class="fas fa-print"></i> Print This Page
+      </button>
+      <a href="assessment_start.html" class="button secondary">
+        <i class="fas fa-home"></i> Back to Start
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Helper function to format answers for display
+    function formatHousingSituation(value) {
+      const situations = {
+        'unhoused': 'currently unhoused or in a shelter',
+        'couchSurfing': 'currently couch-surfing or doubled up',
+        'facingEviction': 'facing eviction',
+        'stable': 'in stable housing'
+      };
+      return situations[value] || value;
+    }
+
+    function formatDocuments(documents) {
+      if (!documents || documents.length === 0) return "don't have any of the required documents";
+      
+      const docNames = {
+        'id': 'ID',
+        'ssn': 'Social Security card',
+        'birth': 'birth certificate'
+      };
+      
+      const docs = documents.map(d => docNames[d]);
+      if (docs.length === 1) return `have your ${docs[0]}`;
+      if (docs.length === 2) return `have your ${docs[0]} and ${docs[1]}`;
+      return `have your ${docs.slice(0, -1).join(', ')}, and ${docs.slice(-1)}`;
+    }
+
+    function formatCitizenship(status) {
+      const statuses = {
+        'citizen': 'a U.S. citizen',
+        'permanent': 'a permanent resident with a Green Card',
+        'undocumented': 'undocumented'
+      };
+      return statuses[status] || status;
+    }
+
+    // Function to build the natural language summary
+    function buildSummary(zip, tier1, tier2) {
+      const summaryItems = [
+        `You are ${formatHousingSituation(tier1.housingSituation)}.`,
+        `You ${tier1.rentalAssistance === 'yes' ? 'do' : 'do not'} receive rental assistance.`,
+        `Your biggest housing barrier is ${tier1.housingBarrier}.`,
+        `You ${tier1.openApplications === 'yes' ? 'have' : 'have not'} applied for housing programs.`,
+        `You ${tier2.hasIncome === 'yes' ? 'do' : 'do not'} have income right now.`,
+        `You ${formatDocuments(tier2.documents)}.`,
+        `You are ${formatCitizenship(tier2.citizenshipStatus)}.`,
+        `You ${tier2.isSeniorOrDisabled === 'yes' ? 'do' : 'do not'} identify as a senior or person with a disability.`
+      ];
+
+      return summaryItems.map(item => `<div class="summary-item">${item}</div>`).join('');
+    }
+
+    // Function to build the ChatGPT prompt
+    function buildPrompt(zip, city, state, tier1, tier2) {
+      return `Hello, I live in ZIP code ${zip} – ${city}, ${state}. Based on my answers:
+- I am ${formatHousingSituation(tier1.housingSituation)}.
+- I ${tier2.hasIncome === 'yes' ? 'do' : "don't"} have income.
+- I ${formatDocuments(tier2.documents)}.
+- I am ${formatCitizenship(tier2.citizenshipStatus)}.
+- I ${tier1.openApplications === 'yes' ? 'have' : "haven't"} applied for housing already.
+- My main barrier is ${tier1.housingBarrier}.
+- I ${tier2.isSeniorOrDisabled === 'yes' ? 'do' : 'do not'} identify as a senior or person with a disability.
+
+Please provide a step-by-step housing plan that includes:
+1. Immediate next steps based on my situation
+2. List of specific programs I might qualify for
+3. Documents I need to gather
+4. Local resources and contact information`;
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Get data from localStorage
+      const zip = localStorage.getItem('userZipCode');
+      const tier1Data = JSON.parse(localStorage.getItem('housingAssessmentTier1') || '{}');
+      const tier2Data = JSON.parse(localStorage.getItem('housingAssessmentTier2') || '{}');
+
+      // Validate data
+      if (!zip || !tier1Data || !tier2Data) {
+        alert('Please complete the housing assessment first.');
+        window.location.href = 'assessment_start.html';
+        return;
+      }
+
+      // Update location info (placeholder - would normally fetch from API)
+      document.getElementById('locationInfo').textContent = `ZIP Code: ${zip}`;
+
+      // Build and display summary
+      document.getElementById('summaryContent').innerHTML = buildSummary(zip, tier1Data, tier2Data);
+
+      // Build and display prompt
+      const prompt = buildPrompt(zip, 'City', 'State', tier1Data, tier2Data);
+      document.getElementById('promptBox').textContent = prompt;
+
+      try {
+        // Placeholder for Netlify Function call
+        // const response = await fetch('/.netlify/functions/getChatGPTResponse', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ prompt })
+        // });
+        // const data = await response.json();
+        
+        // Placeholder response
+        document.getElementById('aiResponse').innerHTML = `
+          <p><strong>Based on your situation, here's your recommended housing plan:</strong></p>
+          <p>This is a placeholder for the AI-generated response. When connected to the Netlify Function, 
+          this will be replaced with personalized recommendations based on your assessment answers.</p>
+        `;
+      } catch (error) {
+        document.getElementById('aiResponse').innerHTML = `
+          <p>Sorry, we couldn't generate your housing plan at this time. Please try again later or contact support for assistance.</p>
+        `;
+      }
+    });
+  </script>
+</body>
+</html> 

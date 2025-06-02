@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Access Assessment - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c5282;
+      --primary-hover: #2b6cb0;
+      --accent-color: #4299e1;
+      --background-color: #f7fafc;
+      --text-color: #2d3748;
+      --card-background: white;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --error-color: #e53e3e;
+      --success-color: #38a169;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      flex-grow: 1;
+    }
+
+    .card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 40px;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .question-group {
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .question-group:last-of-type {
+      border-bottom: none;
+    }
+
+    .question {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option:hover {
+      background: #edf2f7;
+    }
+
+    .option input[type="radio"],
+    .option input[type="checkbox"] {
+      margin-right: 12px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .option label {
+      font-size: 1.1rem;
+      cursor: pointer;
+      user-select: none;
+      flex: 1;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+      gap: 20px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .button.secondary {
+      background-color: #718096;
+    }
+
+    .button.secondary:hover {
+      background-color: #4a5568;
+    }
+
+    .button i {
+      margin-right: 8px;
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 0.9rem;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    .summary-section {
+      display: none;
+      margin-top: 40px;
+    }
+
+    .summary-section.visible {
+      display: block;
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+      margin-bottom: 20px;
+    }
+
+    .prompt-box {
+      background: #2d3748;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      white-space: pre-wrap;
+      font-family: monospace;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      .card {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .question {
+        font-size: 1.1rem;
+      }
+
+      .option label {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Food Access Assessment</h1>
+
+      <form id="foodAssessmentForm">
+        <div class="question-group">
+          <div class="question">1. Do you currently have enough food to meet your daily needs?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="food1" name="hasEnoughFood" value="yes">
+              <label for="food1">Yes</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="food2" name="hasEnoughFood" value="no">
+              <label for="food2">No</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="food3" name="hasEnoughFood" value="sometimes">
+              <label for="food3">Sometimes</label>
+            </div>
+          </div>
+          <div class="error-message" id="hasEnoughFoodError">Please indicate if you have enough food</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">2. Are you currently enrolled in any food assistance programs?</div>
+          <div class="options">
+            <div class="option">
+              <input type="checkbox" id="prog1" name="programs" value="snap">
+              <label for="prog1">SNAP/EBT</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="prog2" name="programs" value="wic">
+              <label for="prog2">WIC</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="prog3" name="programs" value="meals">
+              <label for="prog3">Meals on Wheels / Senior Nutrition</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="prog4" name="programs" value="none">
+              <label for="prog4">None of the above</label>
+            </div>
+          </div>
+          <div class="error-message" id="programsError">Please select at least one option</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">3. Do you have access to a working kitchen or place to store food?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="kitchen1" name="hasKitchen" value="yes">
+              <label for="kitchen1">Yes</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="kitchen2" name="hasKitchen" value="no">
+              <label for="kitchen2">No</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="kitchen3" name="hasKitchen" value="shared">
+              <label for="kitchen3">Shared kitchen only</label>
+            </div>
+          </div>
+          <div class="error-message" id="hasKitchenError">Please indicate if you have kitchen access</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">4. Are you able to travel to a grocery store or food pantry?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="travel1" name="canTravel" value="yes">
+              <label for="travel1">Yes</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="travel2" name="canTravel" value="no">
+              <label for="travel2">No — I need delivery or help with transportation</label>
+            </div>
+          </div>
+          <div class="error-message" id="canTravelError">Please indicate if you can travel to get food</div>
+        </div>
+
+        <div class="question-group">
+          <div class="question">5. Are you a senior (60+) or a parent/guardian with young children?</div>
+          <div class="options">
+            <div class="option">
+              <input type="radio" id="status1" name="specialStatus" value="yes">
+              <label for="status1">Yes</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="status2" name="specialStatus" value="no">
+              <label for="status2">No</label>
+            </div>
+          </div>
+          <div class="error-message" id="specialStatusError">Please indicate if you are a senior or have young children</div>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" class="button">
+            <i class="fas fa-utensils"></i> Generate Food Plan
+          </button>
+        </div>
+      </form>
+
+      <div id="summarySection" class="summary-section">
+        <h2>Your Food Access Summary</h2>
+        <div id="summaryContent" class="summary-box"></div>
+        
+        <h2>Suggested Next Steps</h2>
+        <div id="promptBox" class="prompt-box"></div>
+        <div id="aiResponse" class="summary-box">
+          <p><strong>Based on your situation, here's your recommended food assistance plan:</strong></p>
+          <p>This is a placeholder for the AI-generated response. When connected to the API, 
+          this will be replaced with personalized recommendations based on your assessment answers.</p>
+        </div>
+
+        <div class="button-group">
+          <button onclick="window.print()" class="button secondary">
+            <i class="fas fa-print"></i> Print Summary
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function formatPrograms(programs) {
+      if (!programs || programs.length === 0 || (programs.length === 1 && programs[0] === 'none')) {
+        return "are not enrolled in any food assistance programs";
+      }
+      
+      const progNames = {
+        'snap': 'SNAP/EBT',
+        'wic': 'WIC',
+        'meals': 'Meals on Wheels/Senior Nutrition'
+      };
+      
+      const progs = programs.filter(p => p !== 'none').map(p => progNames[p]);
+      if (progs.length === 1) return `are enrolled in ${progs[0]}`;
+      if (progs.length === 2) return `are enrolled in ${progs[0]} and ${progs[1]}`;
+      return `are enrolled in ${progs.slice(0, -1).join(', ')}, and ${progs.slice(-1)}`;
+    }
+
+    function formatKitchen(status) {
+      const statuses = {
+        'yes': 'have access to a working kitchen',
+        'no': 'do not have access to a kitchen',
+        'shared': 'have access to a shared kitchen only'
+      };
+      return statuses[status] || status;
+    }
+
+    function buildSummary(data) {
+      return `You ${data.hasEnoughFood === 'yes' ? 'have' : data.hasEnoughFood === 'no' ? 'do not have' : 'sometimes have'} enough food to meet your daily needs.
+You ${formatPrograms(data.programs)}.
+You ${formatKitchen(data.hasKitchen)}.
+You ${data.canTravel === 'yes' ? 'are' : 'are not'} able to travel to get food.
+You ${data.specialStatus === 'yes' ? 'are' : 'are not'} a senior or have young children.`;
+    }
+
+    function buildPrompt(zip, data) {
+      return `Hello, I live in ZIP code ${zip}. Based on my answers:
+- I ${data.hasEnoughFood === 'yes' ? 'have' : data.hasEnoughFood === 'no' ? 'do not have' : 'sometimes have'} enough food to meet my daily needs
+- I ${formatPrograms(data.programs)}
+- I ${formatKitchen(data.hasKitchen)}
+- I ${data.canTravel === 'yes' ? 'can' : 'cannot'} travel to get food
+- I ${data.specialStatus === 'yes' ? 'am' : 'am not'} a senior or have young children
+
+Please provide a step-by-step plan for food assistance that includes:
+1. Available food assistance programs I might qualify for
+2. Local food pantries and meal programs
+3. Transportation or delivery options if needed
+4. Special programs for seniors or families with children
+5. Tips for maximizing food benefits and resources`;
+    }
+
+    // Handle "None of the above" checkbox logic
+    document.getElementById('prog4').addEventListener('change', function(e) {
+      if (e.target.checked) {
+        document.querySelectorAll('input[name="programs"]').forEach(cb => {
+          if (cb !== e.target) cb.checked = false;
+        });
+      }
+    });
+
+    document.querySelectorAll('input[name="programs"]').forEach(cb => {
+      if (cb.id !== 'prog4') {
+        cb.addEventListener('change', function(e) {
+          if (e.target.checked) {
+            document.getElementById('prog4').checked = false;
+          }
+        });
+      }
+    });
+
+    document.getElementById('foodAssessmentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Reset error messages
+      document.querySelectorAll('.error-message').forEach(msg => {
+        msg.classList.remove('visible');
+      });
+
+      // Gather form data
+      const formData = {
+        hasEnoughFood: document.querySelector('input[name="hasEnoughFood"]:checked')?.value,
+        programs: Array.from(document.querySelectorAll('input[name="programs"]:checked')).map(cb => cb.value),
+        hasKitchen: document.querySelector('input[name="hasKitchen"]:checked')?.value,
+        canTravel: document.querySelector('input[name="canTravel"]:checked')?.value,
+        specialStatus: document.querySelector('input[name="specialStatus"]:checked')?.value
+      };
+
+      // Validate required fields
+      let isValid = true;
+      if (!formData.hasEnoughFood) {
+        document.getElementById('hasEnoughFoodError').classList.add('visible');
+        isValid = false;
+      }
+      if (formData.programs.length === 0) {
+        document.getElementById('programsError').classList.add('visible');
+        isValid = false;
+      }
+      if (!formData.hasKitchen) {
+        document.getElementById('hasKitchenError').classList.add('visible');
+        isValid = false;
+      }
+      if (!formData.canTravel) {
+        document.getElementById('canTravelError').classList.add('visible');
+        isValid = false;
+      }
+      if (!formData.specialStatus) {
+        document.getElementById('specialStatusError').classList.add('visible');
+        isValid = false;
+      }
+
+      if (isValid) {
+        // Save to localStorage
+        localStorage.setItem('foodAssessment', JSON.stringify(formData));
+
+        // Get ZIP code
+        const zip = localStorage.getItem('userZipCode');
+        if (!zip) {
+          alert('Please complete the initial assessment first.');
+          window.location.href = 'assessment_start.html';
+          return;
+        }
+
+        // Build and display summary
+        document.getElementById('summaryContent').textContent = buildSummary(formData);
+        document.getElementById('promptBox').textContent = buildPrompt(zip, formData);
+        document.getElementById('summarySection').classList.add('visible');
+
+        // Scroll to summary
+        document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  </script>
+</body>
+</html> 
