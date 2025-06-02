@@ -25,9 +25,13 @@
       display: flex;
       flex-direction: column;
       font-family: 'Montserrat', sans-serif;
-      background-color: var(--background-color);
       color: var(--text-color);
       line-height: 1.6;
+      background-image: url('assets/TheProCHWBackground.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
 
     .container {
@@ -35,6 +39,8 @@
       margin: 0 auto;
       padding: 40px 20px;
       flex-grow: 1;
+      position: relative;
+      z-index: 1;
     }
 
     .card {
@@ -43,6 +49,8 @@
       padding: 40px;
       box-shadow: var(--box-shadow);
       margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     h1 {
@@ -177,7 +185,8 @@
         <h2>AI-Generated Plan</h2>
         <div class="prompt-box" id="promptContent"></div>
         
-        <div class="ai-response">
+        <div class="ai-response" id="aiResponse">
+          <!-- TODO: Connect GPT via /api/chatgpt.js -->
           <p><strong>Your personalized ID plan will appear here soon!</strong></p>
           <p>We're working on connecting to our AI system to provide you with detailed, location-specific guidance for obtaining your ID documents. This will include:</p>
           <ul>
@@ -238,30 +247,64 @@ You are ${data.isHomeless === 'yes' ? '' : 'not '}currently experiencing homeles
     }
 
     function buildPrompt(data) {
-      const zip = localStorage.getItem('userZipCode') || '[ZIP code pending]';
-      return `Please help this person obtain their ID documents. Here is their situation:
+      const zipData = JSON.parse(localStorage.getItem('zipData') || '{}');
+      const zip = zipData.zip || localStorage.getItem('userZipCode') || '[ZIP pending]';
+      const city = zipData.city || '[City pending]';
+      const state = zipData.state || '[State pending]';
 
-Location: ZIP code ${zip}
+      const documentsList = data.documents && data.documents.length > 0
+        ? formatDocuments(data.documents)
+        : "don't have any identification documents";
 
-Current Documents:
-- ${formatDocuments(data.documents)}
+      return `Hello, I live in ZIP code ${zip} – ${city}, ${state}. I ${documentsList}. I am ${formatCitizenship(data.citizenshipStatus)}. I am ${data.isHomeless === 'yes' ? '' : 'not '}experiencing homelessness, and I ${data.hasAddress === 'yes' ? 'do' : 'do not'} have a mailing address.
 
-Status:
-- Citizenship: ${formatCitizenship(data.citizenshipStatus)}
-- Housing: ${data.isHomeless === 'yes' ? 'Currently experiencing homelessness' : 'Has stable housing'}
-- Mailing Address: ${data.hasAddress === 'yes' ? 'Has a permanent address' : 'No permanent address'}
-- ID History: ${data.hadPreviousId === 'yes' ? 'Has had state ID before' : data.hadPreviousId === 'no' ? 'Never had state ID' : 'Unsure about previous ID'}
-
-Please provide:
-1. Step-by-step instructions for obtaining needed documents
-2. Local office locations and requirements
+Please provide a detailed plan for obtaining my needed ID documents. Include:
+1. Step-by-step instructions based on my current documents
+2. Local office locations and requirements in ${city}, ${state}
 3. Estimated costs and fee waiver options
-4. Available support services in their area
-5. Special considerations based on their housing/citizenship status`;
+4. Available support services in my area
+5. Special considerations based on my housing/citizenship status`;
+    }
+
+    async function getAIResponse(prompt) {
+      try {
+        const response = await fetch('/api/chatgpt.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ prompt })
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data.response;
+      } catch (error) {
+        console.error('Error fetching AI response:', error);
+        return null;
+      }
+    }
+
+    async function displayResults(assessmentData) {
+      const prompt = buildPrompt(assessmentData);
+      document.getElementById('promptContent').textContent = prompt;
+
+      /* TODO: Uncomment when API is ready
+      const aiResponse = await getAIResponse(prompt);
+      if (aiResponse) {
+        document.getElementById('aiResponse').innerHTML = `
+          <h3>Your Personalized ID Plan</h3>
+          <div class="ai-content">${aiResponse}</div>
+        `;
+      }
+      */
     }
 
     // Load and display the assessment data
-    window.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('DOMContentLoaded', async function() {
       const assessmentData = JSON.parse(localStorage.getItem('idAssessment') || '{}');
       if (Object.keys(assessmentData).length === 0) {
         window.location.href = 'assessment_id.html';
@@ -269,7 +312,7 @@ Please provide:
       }
 
       document.getElementById('summaryContent').textContent = buildSummary(assessmentData);
-      document.getElementById('promptContent').textContent = buildPrompt(assessmentData);
+      await displayResults(assessmentData);
     });
   </script>
 </body>
