@@ -225,73 +225,81 @@
               <input type="radio" id="behind2" name="isBehind" value="no">
               <label for="behind2">No</label>
             </div>
-            <div class="option">
-              <input type="radio" id="behind3" name="isBehind" value="unsure">
-              <label for="behind3">Not sure</label>
-            </div>
           </div>
-          <div class="error-message" id="isBehindError">Please indicate if you are behind on utility bills</div>
+          <div class="error-message" id="isBehindError">Please indicate if you're behind on bills</div>
         </div>
 
         <div class="question-group">
           <div class="question">2. Which utilities are you struggling to afford?</div>
           <div class="options">
             <div class="option">
-              <input type="checkbox" id="util1" name="utilities" value="electricity">
-              <label for="util1">Electricity</label>
+              <input type="checkbox" id="utility1" name="utilities" value="electricity">
+              <label for="utility1">Electricity</label>
             </div>
             <div class="option">
-              <input type="checkbox" id="util2" name="utilities" value="gas">
-              <label for="util2">Gas/Heating</label>
+              <input type="checkbox" id="utility2" name="utilities" value="gas">
+              <label for="utility2">Gas</label>
             </div>
             <div class="option">
-              <input type="checkbox" id="util3" name="utilities" value="water">
-              <label for="util3">Water/Sewer</label>
+              <input type="checkbox" id="utility3" name="utilities" value="water">
+              <label for="utility3">Water</label>
             </div>
             <div class="option">
-              <input type="checkbox" id="util4" name="utilities" value="internet">
-              <label for="util4">Internet</label>
+              <input type="checkbox" id="utility4" name="utilities" value="internet">
+              <label for="utility4">Internet</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="utility5" name="utilities" value="phone">
+              <label for="utility5">Phone</label>
             </div>
           </div>
-          <div class="error-message" id="utilitiesError">Please select at least one utility or none if not struggling</div>
+          <div class="error-message" id="utilitiesError">Please select at least one utility or none if not applicable</div>
         </div>
 
         <div class="question-group">
-          <div class="question">3. Have you applied for any utility assistance programs before?</div>
+          <div class="question">3. Have you applied for utility help before?</div>
           <div class="options">
             <div class="option">
-              <input type="radio" id="applied1" name="hasApplied" value="yes">
+              <input type="radio" id="applied1" name="appliedBefore" value="yes">
               <label for="applied1">Yes</label>
             </div>
             <div class="option">
-              <input type="radio" id="applied2" name="hasApplied" value="no">
+              <input type="radio" id="applied2" name="appliedBefore" value="no">
               <label for="applied2">No</label>
             </div>
+            <div class="option">
+              <input type="radio" id="applied3" name="appliedBefore" value="unsure">
+              <label for="applied3">I'm not sure</label>
+            </div>
           </div>
-          <div class="error-message" id="hasAppliedError">Please indicate if you have applied for assistance before</div>
+          <div class="error-message" id="appliedBeforeError">Please indicate if you've applied for help before</div>
         </div>
 
         <div class="question-group">
           <div class="question">4. What is your current income situation?</div>
           <div class="options">
             <div class="option">
-              <input type="radio" id="income1" name="incomeStatus" value="none">
-              <label for="income1">No income</label>
+              <input type="radio" id="income1" name="incomeStatus" value="employed">
+              <label for="income1">Employed (full-time or part-time)</label>
             </div>
             <div class="option">
-              <input type="radio" id="income2" name="incomeStatus" value="ssi">
-              <label for="income2">SSI/SSDI</label>
+              <input type="radio" id="income2" name="incomeStatus" value="unemployed">
+              <label for="income2">Currently unemployed</label>
             </div>
             <div class="option">
-              <input type="radio" id="income3" name="incomeStatus" value="parttime">
-              <label for="income3">Minimum wage or part-time</label>
+              <input type="radio" id="income3" name="incomeStatus" value="disability">
+              <label for="income3">Receiving disability benefits</label>
             </div>
             <div class="option">
-              <input type="radio" id="income4" name="incomeStatus" value="fulltime">
-              <label for="income4">Stable full-time income</label>
+              <input type="radio" id="income4" name="incomeStatus" value="retired">
+              <label for="income4">Retired</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="income5" name="incomeStatus" value="other">
+              <label for="income5">Other income source</label>
             </div>
           </div>
-          <div class="error-message" id="incomeStatusError">Please select your income situation</div>
+          <div class="error-message" id="incomeStatusError">Please select your income status</div>
         </div>
 
         <div class="question-group">
@@ -299,15 +307,15 @@
           <div class="options">
             <div class="option">
               <input type="radio" id="housing1" name="housingStatus" value="rent">
-              <label for="housing1">I rent</label>
+              <label for="housing1">I rent my home</label>
             </div>
             <div class="option">
               <input type="radio" id="housing2" name="housingStatus" value="own">
-              <label for="housing2">I own</label>
+              <label for="housing2">I own my home</label>
             </div>
             <div class="option">
-              <input type="radio" id="housing3" name="housingStatus" value="stay">
-              <label for="housing3">I stay with someone else</label>
+              <input type="radio" id="housing3" name="housingStatus" value="living_with">
+              <label for="housing3">I live with family/friends</label>
             </div>
           </div>
           <div class="error-message" id="housingStatusError">Please select your housing situation</div>
@@ -315,92 +323,14 @@
 
         <div class="button-group">
           <button type="submit" class="button">
-            <i class="fas fa-lightbulb"></i> Generate Utilities Plan
+            <i class="fas fa-file-alt"></i> Generate Utilities Plan
           </button>
         </div>
       </form>
-
-      <div id="summarySection" class="summary-section">
-        <h2>Your Utilities Assessment Summary</h2>
-        <div id="summaryContent" class="summary-box"></div>
-        
-        <h2>Suggested Next Steps</h2>
-        <div id="promptBox" class="prompt-box"></div>
-        <div id="aiResponse" class="summary-box">
-          <p><strong>Based on your situation, here's your recommended utilities assistance plan:</strong></p>
-          <p>This is a placeholder for the AI-generated response. When connected to the API, 
-          this will be replaced with personalized recommendations based on your assessment answers.</p>
-        </div>
-
-        <div class="button-group">
-          <button onclick="window.print()" class="button secondary">
-            <i class="fas fa-print"></i> Print Summary
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 
   <script>
-    function formatUtilities(utilities) {
-      if (!utilities || utilities.length === 0) return "are not currently struggling with any utilities";
-      
-      const utilNames = {
-        'electricity': 'electricity',
-        'gas': 'gas/heating',
-        'water': 'water/sewer',
-        'internet': 'internet'
-      };
-      
-      const utils = utilities.map(u => utilNames[u]);
-      if (utils.length === 1) return `are struggling with ${utils[0]}`;
-      if (utils.length === 2) return `are struggling with ${utils[0]} and ${utils[1]}`;
-      return `are struggling with ${utils.slice(0, -1).join(', ')}, and ${utils.slice(-1)}`;
-    }
-
-    function formatIncome(status) {
-      const statuses = {
-        'none': 'no income',
-        'ssi': 'receiving SSI/SSDI',
-        'parttime': 'earning minimum wage or working part-time',
-        'fulltime': 'have stable full-time income'
-      };
-      return statuses[status] || status;
-    }
-
-    function formatHousing(status) {
-      const statuses = {
-        'rent': 'rent your home',
-        'own': 'own your home',
-        'stay': 'stay with someone else'
-      };
-      return statuses[status] || status;
-    }
-
-    function buildSummary(data) {
-      return `You are ${data.isBehind === 'yes' ? '' : data.isBehind === 'no' ? 'not ' : 'unsure if you are '}behind on utility bills.
-You ${formatUtilities(data.utilities)}.
-You ${data.hasApplied === 'yes' ? 'have' : 'have not'} applied for utility assistance programs before.
-You ${formatIncome(data.incomeStatus)}.
-You ${formatHousing(data.housingStatus)}.`;
-    }
-
-    function buildPrompt(zip, data) {
-      return `Hello, I live in ZIP code ${zip}. Based on my answers:
-- I am ${data.isBehind === 'yes' ? '' : data.isBehind === 'no' ? 'not ' : 'unsure if I am '}behind on utility bills
-- I ${formatUtilities(data.utilities)}
-- I ${data.hasApplied === 'yes' ? 'have' : 'have not'} applied for utility assistance before
-- I ${formatIncome(data.incomeStatus)}
-- I ${formatHousing(data.housingStatus)}
-
-Please provide a step-by-step plan for utility assistance that includes:
-1. Available utility assistance programs in my area
-2. Income-based programs I might qualify for
-3. Winter protection and shut-off prevention options
-4. Energy efficiency programs that could help reduce costs
-5. Local resources and organizations that can help with utilities`;
-    }
-
     document.getElementById('utilitiesAssessmentForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -413,7 +343,7 @@ Please provide a step-by-step plan for utility assistance that includes:
       const formData = {
         isBehind: document.querySelector('input[name="isBehind"]:checked')?.value,
         utilities: Array.from(document.querySelectorAll('input[name="utilities"]:checked')).map(cb => cb.value),
-        hasApplied: document.querySelector('input[name="hasApplied"]:checked')?.value,
+        appliedBefore: document.querySelector('input[name="appliedBefore"]:checked')?.value,
         incomeStatus: document.querySelector('input[name="incomeStatus"]:checked')?.value,
         housingStatus: document.querySelector('input[name="housingStatus"]:checked')?.value
       };
@@ -424,8 +354,8 @@ Please provide a step-by-step plan for utility assistance that includes:
         document.getElementById('isBehindError').classList.add('visible');
         isValid = false;
       }
-      if (!formData.hasApplied) {
-        document.getElementById('hasAppliedError').classList.add('visible');
+      if (!formData.appliedBefore) {
+        document.getElementById('appliedBeforeError').classList.add('visible');
         isValid = false;
       }
       if (!formData.incomeStatus) {
@@ -440,22 +370,9 @@ Please provide a step-by-step plan for utility assistance that includes:
       if (isValid) {
         // Save to localStorage
         localStorage.setItem('utilitiesAssessment', JSON.stringify(formData));
-
-        // Get ZIP code
-        const zip = localStorage.getItem('userZipCode');
-        if (!zip) {
-          alert('Please complete the initial assessment first.');
-          window.location.href = 'assessment_start.html';
-          return;
-        }
-
-        // Build and display summary
-        document.getElementById('summaryContent').textContent = buildSummary(formData);
-        document.getElementById('promptBox').textContent = buildPrompt(zip, formData);
-        document.getElementById('summarySection').classList.add('visible');
-
-        // Scroll to summary
-        document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth' });
+        
+        // Redirect to summary page
+        window.location.href = 'assessment_utilities_summary.html';
       }
     });
   </script>

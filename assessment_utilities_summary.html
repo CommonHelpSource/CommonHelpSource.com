@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utilities Assessment Summary - CommonHelpSource</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c5282;
+      --primary-hover: #2b6cb0;
+      --accent-color: #4299e1;
+      --background-color: #f7fafc;
+      --text-color: #2d3748;
+      --card-background: rgba(255, 255, 255, 0.95);
+      --border-radius: 12px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      color: var(--text-color);
+      line-height: 1.6;
+      background-image: url('assets/pro-chw-background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      flex-grow: 1;
+    }
+
+    .card {
+      background: var(--card-background);
+      border-radius: var(--border-radius);
+      padding: 40px;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      padding: 24px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+      margin-bottom: 30px;
+      line-height: 1.8;
+    }
+
+    .prompt-box {
+      display: none;
+      background: #2d3748;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      white-space: pre-wrap;
+      font-family: monospace;
+      line-height: 1.6;
+    }
+
+    .placeholder-box {
+      background: #f8fafc;
+      padding: 30px;
+      border-radius: 8px;
+      border: 2px dashed #cbd5e0;
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .placeholder-box i {
+      font-size: 3rem;
+      color: #a0aec0;
+      margin-bottom: 20px;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .button i {
+      margin-right: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      .card {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Your Utilities Assessment Summary</h1>
+      
+      <div id="summaryContent" class="summary-box">
+        Loading your assessment results...
+      </div>
+
+      <div id="promptBox" class="prompt-box"></div>
+
+      <h2>Your Personalized Plan</h2>
+      <div class="placeholder-box">
+        <i class="fas fa-clipboard-list"></i>
+        <p>Your personalized utility assistance plan will appear here soon.</p>
+        <p>Our team is working on analyzing your situation and creating customized recommendations.</p>
+      </div>
+
+      <div class="button-group">
+        <a href="pro-chw.html" class="button">
+          <i class="fas fa-arrow-left"></i> Back to Pro CHW Tools
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Helper functions to format the summary text
+    function formatUtilities(utilities) {
+      if (!utilities || utilities.length === 0) {
+        return "are not currently struggling with any specific utilities";
+      }
+      
+      if (utilities.length === 1) {
+        return `are struggling to afford ${utilities[0]}`;
+      }
+      
+      if (utilities.length === 2) {
+        return `are struggling to afford ${utilities[0]} and ${utilities[1]}`;
+      }
+      
+      const lastUtility = utilities[utilities.length - 1];
+      const otherUtilities = utilities.slice(0, -1).join(', ');
+      return `are struggling to afford ${otherUtilities}, and ${lastUtility}`;
+    }
+
+    function formatIncome(status) {
+      const statuses = {
+        'employed': 'are currently employed',
+        'unemployed': 'are currently unemployed',
+        'disability': 'are receiving disability benefits',
+        'retired': 'are retired',
+        'other': 'have other sources of income'
+      };
+      return statuses[status] || status;
+    }
+
+    function formatHousing(status) {
+      const statuses = {
+        'rent': 'rent your home',
+        'own': 'own your home',
+        'living_with': 'live with family or friends'
+      };
+      return statuses[status] || status;
+    }
+
+    function formatAppliedBefore(status) {
+      const statuses = {
+        'yes': 'have applied for utility assistance before',
+        'no': 'have not applied for utility assistance before',
+        'unsure': 'are unsure if you have applied for utility assistance before'
+      };
+      return statuses[status] || status;
+    }
+
+    // Load and display the assessment data
+    window.addEventListener('DOMContentLoaded', function() {
+      const assessmentData = JSON.parse(localStorage.getItem('utilitiesAssessment'));
+      const userZip = localStorage.getItem('userZipCode') || '[ZIP code not provided]';
+      
+      if (!assessmentData) {
+        document.getElementById('summaryContent').innerHTML = `
+          <p>No assessment data found. Please complete the <a href="assessment_utilities.html">utilities assessment</a> first.</p>
+        `;
+        return;
+      }
+
+      // Build the summary text
+      const summaryText = `
+        You ${assessmentData.isBehind === 'yes' ? 'are' : 'are not'} behind on utility bills. You ${formatUtilities(assessmentData.utilities)}. 
+        You ${formatIncome(assessmentData.incomeStatus)} and ${formatHousing(assessmentData.housingStatus)}. 
+        You ${formatAppliedBefore(assessmentData.appliedBefore)}.
+      `;
+
+      // Display the summary
+      document.getElementById('summaryContent').textContent = summaryText;
+
+      // Build the ChatGPT prompt
+      const prompt = `Hello, I live in ZIP code ${userZip}. Here's my situation:
+- I ${assessmentData.isBehind === 'yes' ? 'am' : 'am not'} behind on utility bills
+- I ${formatUtilities(assessmentData.utilities)}
+- I ${formatIncome(assessmentData.incomeStatus)}
+- I ${formatHousing(assessmentData.housingStatus)}
+- I ${formatAppliedBefore(assessmentData.appliedBefore)}
+
+Please provide a personalized utility assistance plan that includes:
+1. Available utility assistance programs in my area
+2. Income-based programs I might qualify for
+3. Winter protection and shut-off prevention options
+4. Energy efficiency programs that could help reduce costs
+5. Local resources and organizations that can help with utilities`;
+
+      // Store the prompt in console (for development)
+      console.log('ChatGPT Prompt:', prompt);
+      
+      // Store in hidden prompt box (for development)
+      document.getElementById('promptBox').textContent = prompt;
+    });
+  </script>
+</body>
+</html> 

@@ -134,14 +134,6 @@
       transform: translateY(-2px);
     }
 
-    .button.secondary {
-      background-color: #718096;
-    }
-
-    .button.secondary:hover {
-      background-color: #4a5568;
-    }
-
     .button i {
       margin-right: 8px;
     }
@@ -155,34 +147,6 @@
 
     .error-message.visible {
       display: block;
-    }
-
-    .summary-section {
-      display: none;
-      margin-top: 40px;
-    }
-
-    .summary-section.visible {
-      display: block;
-    }
-
-    .summary-box {
-      background: #f8fafc;
-      padding: 20px;
-      border-radius: 8px;
-      border-left: 4px solid var(--accent-color);
-      margin-bottom: 20px;
-    }
-
-    .prompt-box {
-      background: #2d3748;
-      color: white;
-      padding: 20px;
-      border-radius: 8px;
-      margin: 20px 0;
-      white-space: pre-wrap;
-      font-family: monospace;
-      line-height: 1.6;
     }
 
     @media (max-width: 768px) {
@@ -219,60 +183,63 @@
           <div class="options">
             <div class="option">
               <input type="radio" id="food1" name="hasEnoughFood" value="yes">
-              <label for="food1">Yes</label>
+              <label for="food1">Yes, I have enough food</label>
             </div>
             <div class="option">
-              <input type="radio" id="food2" name="hasEnoughFood" value="no">
-              <label for="food2">No</label>
+              <input type="radio" id="food2" name="hasEnoughFood" value="sometimes">
+              <label for="food2">Sometimes, but not always</label>
             </div>
             <div class="option">
-              <input type="radio" id="food3" name="hasEnoughFood" value="sometimes">
-              <label for="food3">Sometimes</label>
+              <input type="radio" id="food3" name="hasEnoughFood" value="no">
+              <label for="food3">No, I often don't have enough food</label>
             </div>
           </div>
           <div class="error-message" id="hasEnoughFoodError">Please indicate if you have enough food</div>
         </div>
 
         <div class="question-group">
-          <div class="question">2. Are you currently enrolled in any food assistance programs?</div>
+          <div class="question">2. Are you enrolled in any food assistance programs?</div>
           <div class="options">
             <div class="option">
-              <input type="checkbox" id="prog1" name="programs" value="snap">
-              <label for="prog1">SNAP/EBT</label>
+              <input type="checkbox" id="program1" name="programs" value="snap">
+              <label for="program1">SNAP/Food Stamps</label>
             </div>
             <div class="option">
-              <input type="checkbox" id="prog2" name="programs" value="wic">
-              <label for="prog2">WIC</label>
+              <input type="checkbox" id="program2" name="programs" value="wic">
+              <label for="program2">WIC</label>
             </div>
             <div class="option">
-              <input type="checkbox" id="prog3" name="programs" value="meals">
-              <label for="prog3">Meals on Wheels / Senior Nutrition</label>
+              <input type="checkbox" id="program3" name="programs" value="meals_on_wheels">
+              <label for="program3">Meals on Wheels</label>
             </div>
             <div class="option">
-              <input type="checkbox" id="prog4" name="programs" value="none">
-              <label for="prog4">None of the above</label>
+              <input type="checkbox" id="program4" name="programs" value="food_pantry">
+              <label for="program4">Food Pantry/Food Bank</label>
+            </div>
+            <div class="option">
+              <input type="checkbox" id="program5" name="programs" value="none">
+              <label for="program5">Not enrolled in any programs</label>
             </div>
           </div>
-          <div class="error-message" id="programsError">Please select at least one option</div>
         </div>
 
         <div class="question-group">
-          <div class="question">3. Do you have access to a working kitchen or place to store food?</div>
+          <div class="question">3. Do you have a kitchen or a place to store food?</div>
           <div class="options">
             <div class="option">
-              <input type="radio" id="kitchen1" name="hasKitchen" value="yes">
-              <label for="kitchen1">Yes</label>
+              <input type="radio" id="kitchen1" name="hasKitchen" value="full">
+              <label for="kitchen1">Yes, I have a full kitchen</label>
             </div>
             <div class="option">
-              <input type="radio" id="kitchen2" name="hasKitchen" value="no">
-              <label for="kitchen2">No</label>
+              <input type="radio" id="kitchen2" name="hasKitchen" value="limited">
+              <label for="kitchen2">Limited kitchen access (microwave/mini-fridge)</label>
             </div>
             <div class="option">
-              <input type="radio" id="kitchen3" name="hasKitchen" value="shared">
-              <label for="kitchen3">Shared kitchen only</label>
+              <input type="radio" id="kitchen3" name="hasKitchen" value="none">
+              <label for="kitchen3">No kitchen or food storage available</label>
             </div>
           </div>
-          <div class="error-message" id="hasKitchenError">Please indicate if you have kitchen access</div>
+          <div class="error-message" id="hasKitchenError">Please indicate your kitchen access</div>
         </div>
 
         <div class="question-group">
@@ -280,29 +247,41 @@
           <div class="options">
             <div class="option">
               <input type="radio" id="travel1" name="canTravel" value="yes">
-              <label for="travel1">Yes</label>
+              <label for="travel1">Yes, I have reliable transportation</label>
             </div>
             <div class="option">
-              <input type="radio" id="travel2" name="canTravel" value="no">
-              <label for="travel2">No — I need delivery or help with transportation</label>
+              <input type="radio" id="travel2" name="canTravel" value="sometimes">
+              <label for="travel2">Sometimes, but transportation is difficult</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="travel3" name="canTravel" value="no">
+              <label for="travel3">No, I cannot travel to get food</label>
             </div>
           </div>
-          <div class="error-message" id="canTravelError">Please indicate if you can travel to get food</div>
+          <div class="error-message" id="canTravelError">Please indicate your ability to travel</div>
         </div>
 
         <div class="question-group">
-          <div class="question">5. Are you a senior (60+) or a parent/guardian with young children?</div>
+          <div class="question">5. Are you a senior (60+) or parent/guardian with children?</div>
           <div class="options">
             <div class="option">
-              <input type="radio" id="status1" name="specialStatus" value="yes">
-              <label for="status1">Yes</label>
+              <input type="radio" id="status1" name="householdStatus" value="senior">
+              <label for="status1">Yes, I am 60 or older</label>
             </div>
             <div class="option">
-              <input type="radio" id="status2" name="specialStatus" value="no">
-              <label for="status2">No</label>
+              <input type="radio" id="status2" name="householdStatus" value="parent">
+              <label for="status2">Yes, I have children in my care</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="status3" name="householdStatus" value="both">
+              <label for="status3">Yes, both senior and have children</label>
+            </div>
+            <div class="option">
+              <input type="radio" id="status4" name="householdStatus" value="no">
+              <label for="status4">No, neither</label>
             </div>
           </div>
-          <div class="error-message" id="specialStatusError">Please indicate if you are a senior or have young children</div>
+          <div class="error-message" id="householdStatusError">Please indicate your household status</div>
         </div>
 
         <div class="button-group">
@@ -311,98 +290,10 @@
           </button>
         </div>
       </form>
-
-      <div id="summarySection" class="summary-section">
-        <h2>Your Food Access Summary</h2>
-        <div id="summaryContent" class="summary-box"></div>
-        
-        <h2>Suggested Next Steps</h2>
-        <div id="promptBox" class="prompt-box"></div>
-        <div id="aiResponse" class="summary-box">
-          <p><strong>Based on your situation, here's your recommended food assistance plan:</strong></p>
-          <p>This is a placeholder for the AI-generated response. When connected to the API, 
-          this will be replaced with personalized recommendations based on your assessment answers.</p>
-        </div>
-
-        <div class="button-group">
-          <button onclick="window.print()" class="button secondary">
-            <i class="fas fa-print"></i> Print Summary
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 
   <script>
-    function formatPrograms(programs) {
-      if (!programs || programs.length === 0 || (programs.length === 1 && programs[0] === 'none')) {
-        return "are not enrolled in any food assistance programs";
-      }
-      
-      const progNames = {
-        'snap': 'SNAP/EBT',
-        'wic': 'WIC',
-        'meals': 'Meals on Wheels/Senior Nutrition'
-      };
-      
-      const progs = programs.filter(p => p !== 'none').map(p => progNames[p]);
-      if (progs.length === 1) return `are enrolled in ${progs[0]}`;
-      if (progs.length === 2) return `are enrolled in ${progs[0]} and ${progs[1]}`;
-      return `are enrolled in ${progs.slice(0, -1).join(', ')}, and ${progs.slice(-1)}`;
-    }
-
-    function formatKitchen(status) {
-      const statuses = {
-        'yes': 'have access to a working kitchen',
-        'no': 'do not have access to a kitchen',
-        'shared': 'have access to a shared kitchen only'
-      };
-      return statuses[status] || status;
-    }
-
-    function buildSummary(data) {
-      return `You ${data.hasEnoughFood === 'yes' ? 'have' : data.hasEnoughFood === 'no' ? 'do not have' : 'sometimes have'} enough food to meet your daily needs.
-You ${formatPrograms(data.programs)}.
-You ${formatKitchen(data.hasKitchen)}.
-You ${data.canTravel === 'yes' ? 'are' : 'are not'} able to travel to get food.
-You ${data.specialStatus === 'yes' ? 'are' : 'are not'} a senior or have young children.`;
-    }
-
-    function buildPrompt(zip, data) {
-      return `Hello, I live in ZIP code ${zip}. Based on my answers:
-- I ${data.hasEnoughFood === 'yes' ? 'have' : data.hasEnoughFood === 'no' ? 'do not have' : 'sometimes have'} enough food to meet my daily needs
-- I ${formatPrograms(data.programs)}
-- I ${formatKitchen(data.hasKitchen)}
-- I ${data.canTravel === 'yes' ? 'can' : 'cannot'} travel to get food
-- I ${data.specialStatus === 'yes' ? 'am' : 'am not'} a senior or have young children
-
-Please provide a step-by-step plan for food assistance that includes:
-1. Available food assistance programs I might qualify for
-2. Local food pantries and meal programs
-3. Transportation or delivery options if needed
-4. Special programs for seniors or families with children
-5. Tips for maximizing food benefits and resources`;
-    }
-
-    // Handle "None of the above" checkbox logic
-    document.getElementById('prog4').addEventListener('change', function(e) {
-      if (e.target.checked) {
-        document.querySelectorAll('input[name="programs"]').forEach(cb => {
-          if (cb !== e.target) cb.checked = false;
-        });
-      }
-    });
-
-    document.querySelectorAll('input[name="programs"]').forEach(cb => {
-      if (cb.id !== 'prog4') {
-        cb.addEventListener('change', function(e) {
-          if (e.target.checked) {
-            document.getElementById('prog4').checked = false;
-          }
-        });
-      }
-    });
-
     document.getElementById('foodAssessmentForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -417,17 +308,13 @@ Please provide a step-by-step plan for food assistance that includes:
         programs: Array.from(document.querySelectorAll('input[name="programs"]:checked')).map(cb => cb.value),
         hasKitchen: document.querySelector('input[name="hasKitchen"]:checked')?.value,
         canTravel: document.querySelector('input[name="canTravel"]:checked')?.value,
-        specialStatus: document.querySelector('input[name="specialStatus"]:checked')?.value
+        householdStatus: document.querySelector('input[name="householdStatus"]:checked')?.value
       };
 
       // Validate required fields
       let isValid = true;
       if (!formData.hasEnoughFood) {
         document.getElementById('hasEnoughFoodError').classList.add('visible');
-        isValid = false;
-      }
-      if (formData.programs.length === 0) {
-        document.getElementById('programsError').classList.add('visible');
         isValid = false;
       }
       if (!formData.hasKitchen) {
@@ -438,31 +325,34 @@ Please provide a step-by-step plan for food assistance that includes:
         document.getElementById('canTravelError').classList.add('visible');
         isValid = false;
       }
-      if (!formData.specialStatus) {
-        document.getElementById('specialStatusError').classList.add('visible');
+      if (!formData.householdStatus) {
+        document.getElementById('householdStatusError').classList.add('visible');
         isValid = false;
       }
 
       if (isValid) {
         // Save to localStorage
         localStorage.setItem('foodAssessment', JSON.stringify(formData));
-
-        // Get ZIP code
-        const zip = localStorage.getItem('userZipCode');
-        if (!zip) {
-          alert('Please complete the initial assessment first.');
-          window.location.href = 'assessment_start.html';
-          return;
-        }
-
-        // Build and display summary
-        document.getElementById('summaryContent').textContent = buildSummary(formData);
-        document.getElementById('promptBox').textContent = buildPrompt(zip, formData);
-        document.getElementById('summarySection').classList.add('visible');
-
-        // Scroll to summary
-        document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth' });
+        
+        // Redirect to summary page
+        window.location.href = 'assessment_food_summary.html';
       }
+    });
+
+    // Handle mutual exclusivity for "none" option in programs
+    document.querySelectorAll('input[name="programs"]').forEach(checkbox => {
+      checkbox.addEventListener('change', function(e) {
+        const noneCheckbox = document.getElementById('program5');
+        if (this === noneCheckbox) {
+          // If "none" is checked, uncheck all others
+          document.querySelectorAll('input[name="programs"]').forEach(cb => {
+            if (cb !== noneCheckbox) cb.checked = false;
+          });
+        } else {
+          // If any other is checked, uncheck "none"
+          noneCheckbox.checked = false;
+        }
+      });
     });
   </script>
 </body>
