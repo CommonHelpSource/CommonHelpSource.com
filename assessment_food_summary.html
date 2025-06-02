@@ -27,7 +27,7 @@
       font-family: 'Montserrat', sans-serif;
       color: var(--text-color);
       line-height: 1.6;
-      background-image: url('assets/pro-chw-background.jpg');
+      background-image: url('assets/images/TheProCHWBackground.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -39,6 +39,15 @@
       margin: 0 auto;
       padding: 40px 20px;
       flex-grow: 1;
+    }
+
+    .banner {
+      width: 100%;
+      max-width: 800px;
+      height: auto;
+      margin-bottom: 30px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
     }
 
     .card {
@@ -100,6 +109,44 @@
       margin-bottom: 20px;
     }
 
+    .gpt-result {
+      padding: 30px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin: 30px 0;
+      line-height: 1.8;
+    }
+
+    .gpt-result.loading {
+      text-align: center;
+      color: #4a5568;
+    }
+
+    .gpt-result.error {
+      text-align: center;
+      color: #e53e3e;
+      background: #fff5f5;
+      border: 1px solid #feb2b2;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e2e8f0;
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     .button-group {
       display: flex;
       justify-content: center;
@@ -152,6 +199,7 @@
 </head>
 <body>
   <div class="container">
+    <img src="assets/images/TheProCHWBanner.png" alt="Pro CHW Banner" class="banner">
     <div class="card">
       <h1>Your Food Access Summary</h1>
       
@@ -162,10 +210,9 @@
       <div id="promptBox" class="prompt-box"></div>
 
       <h2>Your Personalized Plan</h2>
-      <div class="placeholder-box">
-        <i class="fas fa-utensils"></i>
-        <p>Your personalized food access plan will appear here soon.</p>
-        <p>Our team is working on analyzing your situation and creating customized recommendations.</p>
+      <div id="gptResult" class="gpt-result loading">
+        <div class="loading-spinner"></div>
+        <p>Generating your personalized plan...</p>
       </div>
 
       <div class="button-group">
@@ -239,6 +286,32 @@
       return statuses[status] || status;
     }
 
+    // Function to show error state
+    function showError() {
+      const gptResult = document.getElementById('gptResult');
+      gptResult.className = 'gpt-result error';
+      gptResult.innerHTML = `
+        <p>Sorry, we're having trouble generating your plan. Please try again later.</p>
+      `;
+    }
+
+    // Function to show loading state
+    function showLoading() {
+      const gptResult = document.getElementById('gptResult');
+      gptResult.className = 'gpt-result loading';
+      gptResult.innerHTML = `
+        <div class="loading-spinner"></div>
+        <p>Generating your personalized plan...</p>
+      `;
+    }
+
+    // Function to show GPT result
+    function showGPTResult(result) {
+      const gptResult = document.getElementById('gptResult');
+      gptResult.className = 'gpt-result';
+      gptResult.innerHTML = result;
+    }
+
     // Load and display the assessment data
     window.addEventListener('DOMContentLoaded', function() {
       const assessmentData = JSON.parse(localStorage.getItem('foodAssessment'));
@@ -248,6 +321,7 @@
         document.getElementById('summaryContent').innerHTML = `
           <p>No assessment data found. Please complete the <a href="assessment_food.html">food access assessment</a> first.</p>
         `;
+        showError();
         return;
       }
 
@@ -281,6 +355,37 @@ Please provide a personalized food support plan that includes:
       
       // Store in hidden prompt box (for development)
       document.getElementById('promptBox').textContent = prompt;
+
+      // Show loading state while waiting for GPT response
+      showLoading();
+
+      // TODO: When API is ready, make the call here
+      // For now, we'll keep showing the loading state
+      // Example API call structure:
+      /*
+      try {
+        const response = await fetch('/api/generate-plan', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            prompt: prompt,
+            type: 'food'
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('API call failed');
+        }
+        
+        const result = await response.json();
+        showGPTResult(result.plan);
+      } catch (error) {
+        console.error('Error generating plan:', error);
+        showError();
+      }
+      */
     });
   </script>
 </body>
