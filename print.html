@@ -70,8 +70,8 @@
 <body>
   <h1>Assessment Summary</h1>
   <div class="summary-section">
-    <h2>Housing Tier 1</h2>
-    <pre id="tier1"></pre>
+    <h2>Housing Assessment</h2>
+    <pre id="summaryOutput"></pre>
 
     <h2>AI Recommendations</h2>
     <div id="aiResponse">Loading AI recommendations...</div>
@@ -90,16 +90,16 @@
     let fullSummary = "";
 
     function loadSummary() {
-      const t1 = JSON.parse(localStorage.getItem("housing_tier1") || "{}");
-      document.getElementById("tier1").innerText = JSON.stringify(t1, null, 2);
-      fullSummary = `Housing Tier 1:\n${JSON.stringify(t1, null, 2)}`;
+      const summary = JSON.parse(localStorage.getItem("housingAssessmentFull") || "{}");
+      document.getElementById("summaryOutput").innerText = JSON.stringify(summary, null, 2);
+      fullSummary = `Housing Assessment:\n${JSON.stringify(summary, null, 2)}`;
     }
 
     async function fetchAISuggestions() {
       const zip = localStorage.getItem("zip") || "Unknown";
-      const t1 = localStorage.getItem("housing_tier1") || "";
+      const summary = localStorage.getItem("housingAssessmentFull") || "";
 
-      const prompt = `User in ZIP code ${zip} completed a housing needs assessment.\nTier 1: ${t1}\n\nBased on this information, provide a list of recommended housing resources, supports, and next steps.`;
+      const prompt = `User in ZIP code ${zip} completed a housing needs assessment. Responses:\n${summary}\n\nBased on this information, provide a list of recommended housing resources, supports, and next steps within 10 miles of this ZIP code.`;
 
       const response = await fetch("https://f664b9af-0e6d-47ed-a486-24684f20aa44-00-3c83wqqi42ouj.riker.replit.dev/chat", {
         method: "POST",
@@ -117,7 +117,7 @@
         alert("Please enter an email address.");
         return;
       }
-      const subject = "CommonHelpSource Tier 1 Summary";
+      const subject = "CommonHelpSource Assessment Summary";
       const body = encodeURIComponent(fullSummary);
       window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${body}`;
       document.getElementById("emailStatus").innerText = "Opening your email client to send the summary...";
@@ -127,7 +127,7 @@
       const blob = new Blob([fullSummary], { type: "text/plain" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "housing_tier1_summary.txt";
+      link.download = "housing_summary.txt";
       link.click();
     }
 
@@ -136,3 +136,4 @@
   </script>
 </body>
 </html>
+
