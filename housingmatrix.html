@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Massachusetts Housing Matrix - CommonHelpSource</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5282;
+            --primary-hover: #2b6cb0;
+            --background-color: #f7fafc;
+            --text-color: #2d3748;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+
+        .region {
+            margin-bottom: 1rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .region-toggle {
+            width: 100%;
+            padding: 1.5rem;
+            background: white;
+            border: none;
+            border-bottom: 2px solid var(--border-color);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .region-toggle::after {
+            content: '▼';
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .region-toggle.active::after {
+            transform: rotate(180deg);
+        }
+
+        .region-toggle:hover {
+            background-color: var(--background-color);
+        }
+
+        .county-list {
+            display: none;
+            padding: 1rem;
+            background: white;
+        }
+
+        .county-list.active {
+            display: block;
+        }
+
+        .county-list a {
+            display: block;
+            padding: 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: var(--border-radius);
+        }
+
+        .county-list a:hover {
+            background-color: var(--background-color);
+            color: var(--primary-color);
+            transform: translateX(10px);
+        }
+
+        .description {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #4a5568;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .region-toggle {
+                padding: 1rem;
+                font-size: 1.1rem;
+            }
+
+            .county-list a {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Massachusetts Housing Matrix</h1>
+        <p class="description">Select your region and county to view available housing resources</p>
+
+        <div class="region">
+            <button class="region-toggle">Western Massachusetts</button>
+            <div class="county-list">
+                <a href="hampden_housing_matrix.html">Hampden County</a>
+                <a href="hampshire_housing_matrix.html">Hampshire County</a>
+                <a href="franklin_housing_matrix.html">Franklin County</a>
+                <a href="berkshire_housing_matrix.html">Berkshire County</a>
+            </div>
+        </div>
+
+        <div class="region">
+            <button class="region-toggle">Central Massachusetts</button>
+            <div class="county-list">
+                <a href="worcester_housing_matrix.html">Worcester County</a>
+            </div>
+        </div>
+
+        <div class="region">
+            <button class="region-toggle">Eastern Massachusetts</button>
+            <div class="county-list">
+                <a href="suffolk_housing_matrix.html">Suffolk County</a>
+                <a href="middlesex_housing_matrix.html">Middlesex County</a>
+                <a href="norfolk_housing_matrix.html">Norfolk County</a>
+                <a href="essex_housing_matrix.html">Essex County</a>
+            </div>
+        </div>
+
+        <div class="region">
+            <button class="region-toggle">Southeastern / Cape & Islands</button>
+            <div class="county-list">
+                <a href="barnstable_housing_matrix.html">Barnstable County</a>
+                <a href="bristol_housing_matrix.html">Bristol County</a>
+                <a href="plymouth_housing_matrix.html">Plymouth County</a>
+                <a href="dukes_housing_matrix.html">Dukes County</a>
+                <a href="nantucket_housing_matrix.html">Nantucket County</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle accordion functionality
+        document.querySelectorAll('.region-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                // Toggle active class on the button
+                button.classList.toggle('active');
+                
+                // Get the county list associated with this button
+                const countyList = button.nextElementSibling;
+                
+                // Toggle the county list visibility
+                countyList.classList.toggle('active');
+                
+                // Close other open lists
+                document.querySelectorAll('.county-list.active').forEach(list => {
+                    if (list !== countyList) {
+                        list.classList.remove('active');
+                        list.previousElementSibling.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
