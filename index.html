@@ -21,6 +21,56 @@
       height: 100vh;
     }
 
+    /* Navigation styles */
+    nav {
+      background-color: #2d3748;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav li {
+      margin: 0;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      nav a {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+    }
+
     .split-container {
       display: flex;
       height: 100vh;
@@ -194,6 +244,19 @@
   </style>
 </head>
 <body>
+  <!-- Navigation menu -->
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="assessment/assessment_start.html">Start Assessment</a></li>
+      <li><a href="pro/pro-social-worker.html">CHW Progress Notes</a></li>
+      <li><a href="pro/treatmentplans.html">Treatment Plans</a></li>
+      <li><a href="pro/previous-notes.html">Previous Notes</a></li>
+      <li><a href="pro/generated-note.html">Generated Notes</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+  </nav>
+
   <!-- Add the new homepage split section -->
   <div class="homepage-split">
     <div class="left-banner">
