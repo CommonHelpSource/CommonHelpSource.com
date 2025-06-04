@@ -157,9 +157,58 @@
       color: var(--primary-color);
       text-decoration: underline;
     }
+
+    /* New styles for homepage split banners */
+    .homepage-split {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px;
+      margin-bottom: 40px;
+    }
+
+    .left-banner,
+    .right-banner {
+      flex: 1;
+      transition: transform 0.3s ease;
+    }
+
+    .left-banner:hover,
+    .right-banner:hover {
+      transform: scale(1.02);
+    }
+
+    .left-banner img,
+    .right-banner img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .homepage-split {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Add the new homepage split section -->
+  <div class="homepage-split">
+    <div class="left-banner">
+      <a href="pro/pro-chw.html">
+        <img src="assets/images/pro-chw-banner.png" alt="Pro CHW Banner">
+      </a>
+    </div>
+    <div class="right-banner">
+      <a href="pro/pro-social-worker.html">
+        <img src="assets/images/pro-socialworker-banner.png" alt="Pro Social Worker Banner">
+      </a>
+    </div>
+  </div>
+
+  <!-- Original split container -->
   <div class="split-container">
     <div class="split chw">
       <a href="pro-chw.html">
