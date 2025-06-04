@@ -113,7 +113,7 @@
 <body>
     <div class="container">
         <section class="hero-section">
-            <img src="../assets/images/pro-chw-banner.png" alt="Pro CHW Banner" class="hero-image">
+            <img src="../assets/images/TheProCHWBanner.png" alt="Pro CHW Banner" class="hero-image">
         </section>
 
         <main>
@@ -149,7 +149,7 @@
             beginButton.disabled = !isValid;
             
             if (isValid) {
-                localStorage.setItem('user_zip', zipCode);
+                localStorage.setItem('userZip', zipCode);
             }
         });
 
@@ -167,7 +167,7 @@
                         
                         if (data.postcode) {
                             zipInput.value = data.postcode;
-                            localStorage.setItem('user_zip', data.postcode);
+                            localStorage.setItem('userZip', data.postcode);
                             beginButton.disabled = false;
                         }
                     } catch (error) {
@@ -190,12 +190,12 @@
 
         // Start assessment
         function startAssessment() {
-            window.location.href = '/assessment/assessment_start.html';
+            window.location.href = '../assessment/assessment_start.html';
         }
 
         // Check for existing ZIP code in localStorage
         window.addEventListener('DOMContentLoaded', function() {
-            const savedZip = localStorage.getItem('user_zip');
+            const savedZip = localStorage.getItem('userZip');
             if (savedZip) {
                 zipInput.value = savedZip;
                 beginButton.disabled = false;
